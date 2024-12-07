@@ -10,16 +10,13 @@ import CustomeButton from "../../../../components/buttons/CustomeButton";
 import imagePath from "../../../../constants/imagePath";
 import { router } from "expo-router";
 import Slider from "@react-native-community/slider";
-import PageLoading from "../../../../components/loading/PageLoading";
-import LoginSignupModel from "../../../../components/models/Login_Signup";
-import { splashScreensWelcome } from "../../../../constants/splashScreen";
 import ReferalModel from "../../../../components/models/ReferalModel";
+import { Ionicons } from "@expo/vector-icons";
 
-const equity_exceptation = () => {
+const equity_expectation = () => {
   const [selectedOption, setSelectedOption] = useState("offer");
   const [minEquity, setMinEquity] = useState(1);
   const [maxEquity, setMaxEquity] = useState(50);
-  const swiperRef = useRef(null);
   const [isModalVisible, setModalVisible] = useState(false);
 
   const handleModalVisibility = () => {
@@ -30,23 +27,22 @@ const equity_exceptation = () => {
     setModalVisible(true);
   };
 
+  // Determine if sliders are active (only for "custom" selection)
+  const slidersActive = selectedOption === "custom";
+
   return (
-    <SafeAreaView className="flex-1 bg-white  h-screen items-center justify-between">
-      <View className="header flex-row px-5 justify-between border-b-[0.5px] py-4 w-full  items-center">
+    <SafeAreaView className="flex-1 bg-white h-screen items-center justify-between">
+      <View className="header flex-row px-5 justify-between border-b-[0.5px] py-4 w-full items-center">
         <View className="flex-row items-center justify-center gap-3">
           <TouchableOpacity>
-            <Image
-              resizeMode="contain"
-              className="w-8 h-4"
-              source={imagePath.back}
-            />
+            <Ionicons name="arrow-back-outline" size={25} color="black" />
           </TouchableOpacity>
           <Text className="text-xl font-semibold">Equity Expectation</Text>
         </View>
         <Text className="text-xl font-semibold text-[#2983DC]">6/6</Text>
       </View>
       <View className="px-6 py-8 w-full flex-1">
-        {/* Fully Negotiable */}
+        {/* Auto Select Options */}
         <TouchableOpacity
           className="flex-row items-center mb-4"
           onPress={() => setSelectedOption("negotiable")}
@@ -65,7 +61,6 @@ const equity_exceptation = () => {
           <Text className="ml-2 text-lg text-gray-700">Fully Negotiable</Text>
         </TouchableOpacity>
 
-        {/* Equal Split */}
         <TouchableOpacity
           className="flex-row items-center mb-4"
           onPress={() => setSelectedOption("equal")}
@@ -82,7 +77,6 @@ const equity_exceptation = () => {
           <Text className="ml-2 text-lg text-gray-700">Equal Split</Text>
         </TouchableOpacity>
 
-        {/* Willing to accept a specific equity range */}
         <TouchableOpacity
           className="flex-row items-center mb-4"
           onPress={() => setSelectedOption("accept")}
@@ -103,7 +97,6 @@ const equity_exceptation = () => {
           </Text>
         </TouchableOpacity>
 
-        {/* Willing to offer a specific equity range */}
         <TouchableOpacity
           className="flex-row items-center mb-4"
           onPress={() => setSelectedOption("offer")}
@@ -122,44 +115,59 @@ const equity_exceptation = () => {
           </Text>
         </TouchableOpacity>
 
-        {/* Minimum Equity */}
-        <View className="my-4">
-          <View className=" justify-center items-start gap-2 mb-2">
-            <Text className="text-base font-medium text-gray-950">
-              Minimum Equity
-            </Text>
-            <Text className="text-base text-gray-700">{minEquity}%</Text>
+        {/* Custom Equity Option */}
+        <TouchableOpacity
+          className="flex-row items-center mb-4"
+          onPress={() => setSelectedOption("custom")}
+        >
+          <View
+            className={`h-5 w-5 rounded-full border-2 ${
+              selectedOption === "custom"
+                ? "border-blue-600"
+                : "border-gray-400"
+            } flex items-center justify-center`}
+          >
+            {selectedOption === "custom" && (
+              <View className="h-2.5 w-2.5 rounded-full bg-blue-600" />
+            )}
           </View>
+          <Text className="ml-2 text-lg text-gray-700">Custom Equity</Text>
+        </TouchableOpacity>
+
+        {/* Custom Equity Sliders */}
+        <View className="my-4">
+          <Text className="text-base font-medium text-gray-950 mb-2">
+            Minimum Equity
+          </Text>
           <Slider
             minimumValue={1}
             maximumValue={100}
             step={1}
             value={minEquity}
             onValueChange={(value) => setMinEquity(value)}
-            minimumTrackTintColor="#007BFF"
+            disabled={!slidersActive}
+            minimumTrackTintColor={slidersActive ? "#007BFF" : "#E2E8F0"}
             maximumTrackTintColor="#E2E8F0"
-            thumbTintColor="#007BFF"
+            thumbTintColor={slidersActive ? "#007BFF" : "#E2E8F0"}
           />
+          <Text className="text-base text-gray-700 mt-2">{minEquity}%</Text>
         </View>
-
-        {/* Maximum Equity */}
-        <View className="my-4 py-4">
-          <View className=" justify-center items-start gap-2 mb-2">
-            <Text className="text-base font-medium text-gray-950">
-              Maximum Equity
-            </Text>
-            <Text className="text-base text-gray-700">{maxEquity}%</Text>
-          </View>
+        <View className="my-4">
+          <Text className="text-base font-medium text-gray-950 mb-2">
+            Maximum Equity
+          </Text>
           <Slider
             minimumValue={1}
             maximumValue={100}
             step={1}
             value={maxEquity}
             onValueChange={(value) => setMaxEquity(value)}
-            minimumTrackTintColor="#007BFF"
+            disabled={!slidersActive}
+            minimumTrackTintColor={slidersActive ? "#007BFF" : "#E2E8F0"}
             maximumTrackTintColor="#E2E8F0"
-            thumbTintColor="#007BFF"
+            thumbTintColor={slidersActive ? "#007BFF" : "#E2E8F0"}
           />
+          <Text className="text-base text-gray-700 mt-2">{maxEquity}%</Text>
         </View>
       </View>
       <View className="footer px-5 w-full">
@@ -171,12 +179,12 @@ const equity_exceptation = () => {
       <ReferalModel
         isModalVisible={isModalVisible}
         handleModalVisibility={handleModalVisibility}
-        routerToNextPage={()=>{
-          router.push('/(main)')
+        routerToNextPage={() => {
+          router.push("/(main)");
         }}
       />
     </SafeAreaView>
   );
 };
 
-export default equity_exceptation;
+export default equity_expectation;

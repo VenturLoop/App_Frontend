@@ -9,6 +9,7 @@ import React, { useState } from "react";
 import CustomeButton from "../../../../components/buttons/CustomeButton";
 import imagePath from "../../../../constants/imagePath";
 import { router } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 
 const commitment = () => {
   const [selected, setSelected] = useState("");
@@ -29,11 +30,7 @@ const commitment = () => {
               router.back();
             }}
           >
-            <Image
-              resizeMode="contain"
-              className="w-8 h-4"
-              source={imagePath.back}
-            />
+            <Ionicons name="arrow-back-outline" size={25} color="black" />
           </TouchableOpacity>
           <Text className="text-xl font-semibold">Your Commitment Level</Text>
         </View>

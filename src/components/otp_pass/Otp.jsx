@@ -27,16 +27,16 @@ const Otp = ({ buttonRoute, resentRoute }) => {
           Enter the OTP sent to your mobile for secure verification!
         </Text>
       </View>
-      <View className="flex justify-start mb-10  h-64 gap-4 items-center">
+      <View className="flex justify-start mb-10 px-10 h-64  items-center">
         <OTPInput
-          style={{ gap: 5 }}
+          style={{ gap: 1 }}
           inputStyle={{
             borderColor: "#2983DC",
             borderRadius: 10,
             backgroundColor: "#EAF3FC",
             opacity: 20,
           }}
-          length={5}
+          length={6}
           onOtpComplete={(txt) => setOTP(txt)}
         />
       </View>

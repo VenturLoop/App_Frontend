@@ -9,6 +9,7 @@ import React, { useState } from "react";
 import CustomeButton from "../../../../components/buttons/CustomeButton";
 import imagePath from "../../../../constants/imagePath";
 import { router } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 
 const prior_experience = () => {
   const [selected, setSelected] = useState("");
@@ -25,12 +26,12 @@ const prior_experience = () => {
     <SafeAreaView className="flex-1 bg-white  h-screen items-center justify-between">
       <View className="header flex-row px-5 justify-between border-b-[0.5px] py-4 w-full  items-center">
         <View className="flex-row items-center justify-center gap-3">
-          <TouchableOpacity>
-            <Image
-              resizeMode="contain"
-              className="w-8 h-4"
-              source={imagePath.back}
-            />
+          <TouchableOpacity
+            onPress={() => {
+              router.back();
+            }}
+          >
+            <Ionicons name="arrow-back-outline" size={25} color="black" />
           </TouchableOpacity>
           <Text className="text-xl font-semibold">
             Any Prior startup experience
