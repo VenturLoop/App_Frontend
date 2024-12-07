@@ -11,9 +11,8 @@ export default {
   forgatePass: require("../assets/images/Unlock.png"),
   splashScreen5: require("../assets/images/spashScreen5.png"),
   back: require("../assets/images/BackIcon.png"),
-
-
-
+  homeAppLOgo: require("../assets/images/homeAppLogo.png"),
+  current: require("../assets/images/current.png"),
 
   // start_auth2: require("@/src/assets/images/Linkedin.png.png"),
   // start_auth3: require("@/src/assets/images/image2.png"),

@@ -1,4 +1,4 @@
-import { View, Text, Modal, TouchableOpacity, Image } from "react-native";
+import { View, Text, Modal, TouchableOpacity, Image, Pressable } from "react-native";
 import React from "react";
 import CustomeButton from "../buttons/CustomeButton";
 import { router } from "expo-router";
@@ -10,14 +10,15 @@ const LoginSignupModel = ({ isModalVisible, handleModalVisibility }) => {
 
   return (
     <Modal
-      animationType="slide"
+      // animationType="slide"
       transparent={true}
       visible={isModalVisible}
       onRequestClose={handleModalVisibility}
     >
       {/* Semi-transparent background */}
-      <View className="flex-1 justify-end bg-black bg-opacity-30">
-        <View className="w-full bg-white rounded-t-3xl   px-8  py-4  items-center">
+      {/* <View className="flex-1 justify-end bg-black bg-opacity-30"> */}
+      <Pressable style={{height:550 , backgroundColor:"#DDD", opacity:.5}} onPress={handleModalVisibility} />
+        <View className="w-full bg-white rounded-t-3xl   flex-1   px-8  py-4  items-center">
           {/* Buttons :Create Account*/}
           <CustomeButton
             onButtonPress={() => router.push("/(signIn)")}
@@ -45,7 +46,7 @@ const LoginSignupModel = ({ isModalVisible, handleModalVisibility }) => {
             </Text>
           </TouchableOpacity>
         </View>
-      </View>
+      {/* </View> */}
     </Modal>
   );
 };
