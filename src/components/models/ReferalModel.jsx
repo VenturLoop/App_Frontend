@@ -39,7 +39,7 @@ const ReferalModel = ({
               onPress={handleModalVisibility}
               className=" w-1/3 border border-gray-300 rounded-xl py-4"
             >
-              <Text className=" text-center font-medium ">Cancel</Text>
+              <Text className=" text-center font-medium ">Don't have</Text>
             </TouchableOpacity>
             {/* Buttons :Create Account*/}
             <TouchableOpacity
