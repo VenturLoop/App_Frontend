@@ -5,7 +5,7 @@ import Otp from "../../../components/otp_pass/Otp";
 const otp = () => {
   return (
     <>
-      <Otp />
+      <Otp buttonRoute="createPass" />
     </>
   );
 };

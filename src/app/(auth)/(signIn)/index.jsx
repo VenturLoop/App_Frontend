@@ -13,7 +13,7 @@ import { Link, router } from "expo-router";
 
 const index = () => {
   return (
-    <SafeAreaView className="py-6 px-8 pt-10 flex h-screen justify-between gap-5 flex-col ">
+    <SafeAreaView className="py-6 px-8 bg-white pt-10 flex h-screen justify-between gap-5 flex-col ">
       <View className="header flex flex-col my-6 items-center justify-center gap-4 ">
         <Image className="w-16" source={imagePath.vector} />
         <Text className="text-black text-center mt-4  font-bold text-3xl">
@@ -25,7 +25,7 @@ const index = () => {
         </Text>
       </View>
       <View className="flex justify-center gap-4 items-center">
-        <TouchableOpacity className="border border-[#2983DC] rounded-xl w-full justify-center py-4 px-6 flex-row items-center">
+        <TouchableOpacity onPress={()=>{router.push("/(profile_data)")}} className="border border-[#2983DC] rounded-xl w-full justify-center py-4 px-6 flex-row items-center">
           {/* LinkedIn Logo */}
           <Image
             className="w-6 h-6 mr-3"
@@ -76,7 +76,7 @@ const index = () => {
             Do you have account?{" "}
             <Link
               className="font-semibold text-lg text-[#2983DC]"
-              href={"/(signIn)"}
+              href={"/login"}
             >
               Sign In
             </Link>

@@ -14,7 +14,7 @@ import CustomeButton from "../../../components/buttons/CustomeButton";
 const add_basic_details = () => {
   const [otp, setOTP] = useState("");
   return (
-    <SafeAreaView className="py-6 px-8 h-screen  flex justify-between gap-5 flex-col ">
+    <SafeAreaView className="py-6 px-8 h-screen bg-white  flex justify-between gap-5 flex-col ">
       <View className="header flex flex-col  items-start justify-start gap-4 ">
         <Text className="text-[#21262E]  mt-4  font-bold text-3xl">
           Add your basic Details
@@ -45,33 +45,32 @@ const add_basic_details = () => {
               // inputMode="calendarEvent"
               dataDetectorTypes="calendarEvent"
               placeholder=""
+              textContentType=""
               className="placeholder:text-sm'"
               // placeholderTextColor="#61677D"
               keyboardType="numeric"
             />
-            <Image source={imagePath.calender}  />
+            <Image source={imagePath.calender} />
           </View>
-        </View>{" "}
+        </View>
         <View className="gap-4 w-full">
           <Text className="font-semibold text-lg">Location</Text>
           <View className="bg-[#2982dc14] w-full flex flex-row items-center justify-between   placeholder:text-[#7C8BA0] px-6   rounded-lg  p-2">
             <TextInput
               // inputMode="calendarEvent"
-              dataDetectorTypes="calendarEvent"
-              placeholder="Search Location"
               // placeholderTextColor="#61677D"
-              keyboardType="numeric"
+              textContentType="location"
             />
             <Image source={imagePath.location} className="" />
           </View>
-        </View>{" "}
+        </View>
       </View>
       <View className="footer flex ">
         <CustomeButton
           title="Continue"
-          // onButtonPress={() => {
-          //   router.navigate("/add_basic_details");
-          // }}
+          onButtonPress={() => {
+            router.navigate("/(profile_data)");
+          }}
         />
       </View>
     </SafeAreaView>

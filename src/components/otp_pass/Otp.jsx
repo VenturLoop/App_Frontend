@@ -14,10 +14,10 @@ import OTPInput from "@codsod/react-native-otp-input";
 import CustomeButton from "../buttons/CustomeButton";
 import imagePath from "../../constants/imagePath";
 
-const Otp = () => {
+const Otp = ({ buttonRoute, resentRoute }) => {
   const [otp, setOTP] = useState("");
   return (
-    <SafeAreaView className="py-6 px-8 h-screen pt-10 flex justify-between gap-5 flex-col ">
+    <SafeAreaView className="py-6 px-8 bg-white h-screen pt-10 flex justify-between gap-5 flex-col ">
       <View className="header flex flex-col my-6 items-center justify-center gap-4 ">
         <Image className="w-16" source={imagePath.otpImage} />
         <Text className="text-black text-center mt-4  font-bold text-3xl">
@@ -44,7 +44,7 @@ const Otp = () => {
         <CustomeButton
           title="Verify"
           onButtonPress={() => {
-            router.navigate("/createPass");
+            router.navigate(buttonRoute);
           }}
         />
         <View className=" ">
@@ -52,7 +52,8 @@ const Otp = () => {
             Didn’t get OTP?{" "}
             <Link
               className="font-semibold text-lg text-[#2983DC]"
-              href={"/(signIn)"}
+              // todo : add resent url
+              href={"/"}
             >
               Resend OTP
             </Link>

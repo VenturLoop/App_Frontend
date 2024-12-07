@@ -5,6 +5,15 @@ export default {
   password: require("../assets/images/password.png"),
   location: require("../assets/images/Location.png"),
   calender: require("../assets/images/Calender.png"),
+  login: require("../assets/images/account security.png"),
+  loading: require("../assets/images/loading.gif"),
+  logoLoading: require("../assets/images/logo.png"),
+  forgatePass: require("../assets/images/Unlock.png"),
+  splashScreen5: require("../assets/images/spashScreen5.png"),
+  back: require("../assets/images/BackIcon.png"),
+
+
+
 
   // start_auth2: require("@/src/assets/images/Linkedin.png.png"),
   // start_auth3: require("@/src/assets/images/image2.png"),

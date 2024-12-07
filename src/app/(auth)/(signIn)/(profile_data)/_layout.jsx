@@ -4,7 +4,7 @@ import { Stack } from "expo-router";
 
 const ProfileDetailLayout = () => {
   return (
-    <Stack>
+    <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="index" />
       <Stack.Screen name="commitment" />
       <Stack.Screen name="equity_exceptation" />

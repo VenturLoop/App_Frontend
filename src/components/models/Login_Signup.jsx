@@ -17,7 +17,7 @@ const LoginSignupModel = ({ isModalVisible, handleModalVisibility }) => {
     >
       {/* Semi-transparent background */}
       <View className="flex-1 justify-end bg-black bg-opacity-30">
-        <View className="w-full bg-white rounded-t-3xl  px-8  py-4  items-center">
+        <View className="w-full bg-white rounded-t-3xl   px-8  py-4  items-center">
           {/* Buttons :Create Account*/}
           <CustomeButton
             onButtonPress={() => router.push("/(signIn)")}
