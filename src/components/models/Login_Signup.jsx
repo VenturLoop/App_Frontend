@@ -1,4 +1,4 @@
-import { View, Text, Modal, TouchableOpacity, Image, Pressable } from "react-native";
+import { View, Text, Modal, TouchableOpacity, Pressable } from "react-native";
 import React from "react";
 import CustomeButton from "../buttons/CustomeButton";
 import { router } from "expo-router";
@@ -16,37 +16,42 @@ const LoginSignupModel = ({ isModalVisible, handleModalVisibility }) => {
       onRequestClose={handleModalVisibility}
     >
       {/* Semi-transparent background */}
-      {/* <View className="flex-1 justify-end bg-black bg-opacity-30"> */}
-      <Pressable style={{height:550 , backgroundColor:"#DDD", opacity:.5}} onPress={handleModalVisibility} />
-        <View className="w-full bg-white rounded-t-3xl   flex-1   px-8  py-4  items-center">
-          {/* Buttons :Create Account*/}
-          <CustomeButton
-            onButtonPress={() => router.push("/(signIn)")}
-            title="Create Account"
-            style="my-5"
-          />
+      <Pressable
+        style={{
+          flex: 1,
+          backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent overlay
+          justifyContent: "flex-end",
+        }}
+        // className="flex-1 bg-black bg-opacity-50 justify-end"
+        onPress={handleModalVisibility}
+      />
 
-          {/* Button : login */}
-          <TouchableOpacity
-            onPress={() => router.push("/login")}
-            className="w-full border border-[#2983DC] rounded-xl py-4 mb-3"
-          >
-            <Text className="text-center  text-blue-500 font-medium  text-xl">
-              Login
-            </Text>
-          </TouchableOpacity>
+      {/* Modal Content */}
+      <View className="bg-white rounded-t-3xl px-6 py-8 items-center">
+        {/* Create Account Button */}
+        <CustomeButton
+          onButtonPress={() => router.push("/(signIn)")}
+          title="Create Account"
+          style="w-full my-2"
+        />
 
-          {/* Button : Cancel */}
-          <TouchableOpacity
-            onPress={handleModalVisibility}
-            className="w-full py-3"
-          >
-            <Text className="text-center text-xl text-gray-500 font-medium ">
-              Cancel
-            </Text>
-          </TouchableOpacity>
-        </View>
-      {/* </View> */}
+        {/* Login Button */}
+        <TouchableOpacity
+          onPress={() => router.push("/login")}
+          className="w-full border border-blue-500 rounded-xl py-3 my-2"
+        >
+          <Text className="text-center text-blue-500 text-lg font-medium">
+            Login
+          </Text>
+        </TouchableOpacity>
+
+        {/* Cancel Button */}
+        <TouchableOpacity onPress={handleModalVisibility} className="mt-4">
+          <Text className="text-center text-gray-500 text-lg font-medium">
+            Cancel
+          </Text>
+        </TouchableOpacity>
+      </View>
     </Modal>
   );
 };

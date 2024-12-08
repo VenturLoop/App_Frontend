@@ -64,8 +64,8 @@ const skillset = () => {
               }`}
             >
               <Text
-                className={`text-md font-medium ${
-                  selectedTags.includes(tag) ? "text-blue-500" : "text-gray-600"
+                className={`text-md  ${
+                  selectedTags.includes(tag) ? "text-blue-500 font-medium" : "text-gray-600"
                 }`}
               >
                 {tag}

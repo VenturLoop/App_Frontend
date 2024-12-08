@@ -12,7 +12,7 @@ import { router } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 const what_your_status = () => {
-  const [selected, setSelected] = useState("co-founder");
+  const [selected, setSelected] = useState("");
 
   const options = [
     { id: "co-founder", label: "Looking for a co-founder" },
@@ -39,7 +39,7 @@ const what_your_status = () => {
             <TouchableOpacity
               key={option.id}
               onPress={() => setSelected(option.id)}
-              className="flex py-2 flex-row items-center gap-3 space-x-2"
+              className="flex py-3 flex-row items-center gap-3 space-x-2"
             >
               <View
                 className={`w-5 h-5 rounded-full border-2 ${

@@ -45,7 +45,7 @@ const prior_experience = () => {
             <TouchableOpacity
               key={option.id}
               onPress={() => setSelected(option.id)}
-              className="flex py-2 flex-row items-center gap-3 space-x-2"
+              className="flex py-3 flex-row items-center gap-3 space-x-2"
             >
               <View
                 className={`w-5 h-5 rounded-full border-2 ${

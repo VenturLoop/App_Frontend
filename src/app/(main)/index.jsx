@@ -13,14 +13,10 @@ import TopNavar from "../../components/buttons/TopNavar";
 
 const index = () => {
   return (
-    <SafeAreaView className="bg-[#0463c207] h-screen flex-1 justify-between  items-center w-full ">
+    <SafeAreaView className="bg-[#F2F2F2] h-screen flex-1 justify-between  items-center w-full ">
       <TopNavar />
-      <FlatList>
-
-      </FlatList>
-      <View>
-
-      </View>
+      <FlatList></FlatList>
+      <View></View>
     </SafeAreaView>
   );
 };

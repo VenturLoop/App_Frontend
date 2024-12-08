@@ -42,7 +42,7 @@ const commitment = () => {
             <TouchableOpacity
               key={option.id}
               onPress={() => setSelected(option.id)}
-              className="flex py-2 flex-row items-center gap-3 space-x-2"
+              className="flex py-3 flex-row items-center gap-3 space-x-2"
             >
               <View
                 className={`w-5 h-5 rounded-full border-2 ${
@@ -55,7 +55,7 @@ const commitment = () => {
                   <View className="w-2.5 h-2.5 rounded-full bg-white" />
                 )}
               </View>
-              <Text className=" text-lg tracking-wider text-black">
+              <Text className=" text-lg tracking-wide text-black">
                 {option.label}
               </Text>
             </TouchableOpacity>

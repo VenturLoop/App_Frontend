@@ -13,7 +13,7 @@ import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
 const your_intrest = () => {
-  const [selectedTags, setSelectedTags] = useState(["AI/ML", "Advertising"]);
+  const [selectedTags, setSelectedTags] = useState([""]);
   const [searchQuery, setSearchQuery] = useState("");
 
   const tags = [
@@ -70,7 +70,7 @@ const your_intrest = () => {
             >
               <Text
                 className={`text-sm ${
-                  selectedTags.includes(tag) ? "text-blue-500" : "text-gray-600"
+                  selectedTags.includes(tag) ? "text-blue-500 font-medium" : "text-gray-600"
                 }`}
               >
                 {tag}
