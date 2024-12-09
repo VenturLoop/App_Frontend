@@ -47,7 +47,7 @@ const commitment = () => {
               <View
                 className={`w-5 h-5 rounded-full border-2 ${
                   selected === option.id
-                    ? "border-blue-500 bg-blue-500"
+                    ? "border-[#2983DC] bg-[#2983DC]"
                     : "border-gray-500"
                 } flex items-center justify-center`}
               >

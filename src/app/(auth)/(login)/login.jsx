@@ -16,19 +16,21 @@ import CustomeButton from "../../../components/buttons/CustomeButton";
 import TextBox from "react-native-password-eye";
 import PageLoading from "../../../components/loading/PageLoading";
 
-const login = () => {
-  const [isLoading, setisLoading] = useState(false);
+const Login = () => {
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = () => {
-    setisLoading(true);
-    setTimeout(() => {
-      router.push("/(main)");
-      setisLoading(false);
-    }, 4000);
+    setIsLoading(true);
+
+    // Simulate a small delay for loading to complete
+    setTimeout(async () => {
+      await router.push("/(main)"); // Navigate after the timeout
+      setIsLoading(false);
+    }, 1000); // Shortened the delay to make the navigation smoother
   };
 
   if (isLoading) {
-    return <PageLoading />;
+    return <PageLoading />; // Show the loading screen while the transition happens
   }
 
   return (
@@ -54,6 +56,8 @@ const login = () => {
               Log in with LinkedIn or mobile number for quick and secure access!
             </Text>
           </View>
+
+          {/* Login Options */}
           <View className="flex justify-center gap-4 items-center">
             <TouchableOpacity
               onPress={() => {
@@ -61,41 +65,47 @@ const login = () => {
               }}
               className="border border-[#2983DC] rounded-xl w-full justify-center py-4 px-6 flex-row items-center"
             >
-              {/* LinkedIn Logo */}
               <Image
                 className="w-6 h-6 mr-3"
                 resizeMode="contain"
                 source={imagePath.lingedInLogo}
               />
-              {/* LinkedIn Text */}
               <Text className="text-[#61677D] font-medium text-lg">
                 LinkedIn
               </Text>
             </TouchableOpacity>
+
+            {/* Divider */}
             <View className="flex-row items-center my-4">
               <View className="flex-1 h-px bg-gray-300" />
               <Text className="mx-2 text-lg font-medium text-gray-400">Or</Text>
               <View className="flex-1 h-px bg-gray-300" />
             </View>
 
+            {/* Phone Number Input */}
             <TextInput
               placeholder="Phone Number"
               className="bg-[#2982dc23] w-full px-6 py-5 placeholder:opacity-70 rounded-lg text-gray-600"
               keyboardType="numeric"
             />
+
+            {/* Password Input */}
             <TextBox
               className="bg-[#2982dc14]  w-full placeholder:font-medium px-6    rounded-lg text-gray-500 p-2"
               onChangeText={(text) => console.log("onChangeText: ", text)}
               secureTextEntry={true}
               placeholder="Password"
             />
+
+            {/* Forgot Password Link */}
             <Link
               className="font-medium text-start w-full px-2 text-[#2983DC]"
               href={"/forgatePass"}
             >
-              Forgate Password?
+              Forgot Password?
             </Link>
           </View>
+
           {/* Footer Section */}
           <View className="footer  mb-0 bottom-0">
             <CustomeButton
@@ -105,23 +115,23 @@ const login = () => {
                 handleLogin();
               }}
             />
+
             <View className="mt-4">
               <Text className="text-center">
-                Do you have an account?{" "}
+                Don't have an account?{" "}
                 <Link
                   className="font-semibold text-lg text-[#2983DC]"
-                  href={"/login"}
+                  href={"/(signIn)"}
                 >
-                  Sign In
+                  Sign Up
                 </Link>
               </Text>
             </View>
           </View>
-          {/* </View> */}
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
 
-export default login;
+export default Login;

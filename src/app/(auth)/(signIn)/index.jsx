@@ -17,6 +17,14 @@ import Checkbox from "expo-checkbox";
 
 const Index = () => {
   const [isChecked, setChecked] = useState(false);
+
+  // Function to handle navigation with a slight delay for smooth transition
+  const handleNavigation = (route) => {
+    setTimeout(() => {
+      router.push(route);
+    }, 100); // Add a small delay of 100ms
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <KeyboardAvoidingView
@@ -45,9 +53,7 @@ const Index = () => {
           {/* Form Section */}
           <View className="flex flex-col gap-4">
             <TouchableOpacity
-              onPress={() => {
-                router.push("/(profile_data)");
-              }}
+              onPress={() => handleNavigation("/(profile_data)")}
               className="border border-[#2983DC] rounded-xl w-full justify-center py-4 px-6 flex-row items-center"
             >
               <Image
@@ -75,9 +81,14 @@ const Index = () => {
               className="bg-[#2982dc14] w-full placeholder:font-medium px-6 py-5 rounded-lg text-gray-500"
               keyboardType="numeric"
             />
-            <View className="flex flex-row  gap-3 mt-4 justify-center">
-              <Checkbox className="bg-[#F5F9FE] " color="bg-#F5F9FE" value={isChecked} onValueChange={setChecked} />
-              <Text className="">
+            <View className="flex flex-row gap-3 mt-4 justify-center">
+              <Checkbox
+                className="bg-[#F5F9FE]"
+                color="bg-#F5F9FE"
+                value={isChecked}
+                onValueChange={setChecked}
+              />
+              <Text>
                 I'm agree to the{" "}
                 <Link className="font-semibold text-[#2983DC]" href={"/"}>
                   Terms of Service
@@ -95,9 +106,7 @@ const Index = () => {
             <CustomeButton
               title="Continue"
               style="my-3"
-              onButtonPress={() => {
-                router.navigate("/otp");
-              }}
+              onButtonPress={() => handleNavigation("/otp")}
             />
             <View className="mt-4">
               <Text className="text-center">

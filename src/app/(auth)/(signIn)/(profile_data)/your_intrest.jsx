@@ -64,13 +64,13 @@ const your_intrest = () => {
               onPress={() => toggleTag(tag)}
               className={`px-4 py-2 my-1 rounded-full border ${
                 selectedTags.includes(tag)
-                  ? "bg-blue-100 border-blue-500"
+                  ? "bg-blue-100 border-[#2983DC]"
                   : "bg-white border-gray-300"
               }`}
             >
               <Text
                 className={`text-sm ${
-                  selectedTags.includes(tag) ? "text-blue-500 font-medium" : "text-gray-600"
+                  selectedTags.includes(tag) ? "text-[#2983DC] font-medium" : "text-gray-600"
                 }`}
               >
                 {tag}

@@ -4,13 +4,18 @@ import CustomeButton from "../buttons/CustomeButton";
 import { router } from "expo-router";
 
 const LoginSignupModel = ({ isModalVisible, handleModalVisibility }) => {
-  const create_account = () => {
-    router.navigate("/create_account.jsx");
+  const handleNavigation = (route) => {
+    if (isModalVisible) {
+      handleModalVisibility(); // Close modal after navigation
+      setTimeout(() => {
+        router.push(route);
+      }, 100); // Wait for modal close animation before routing
+    }
   };
 
   return (
     <Modal
-      // animationType="slide"
+      animationType="fade"
       transparent={true}
       visible={isModalVisible}
       onRequestClose={handleModalVisibility}
@@ -22,31 +27,32 @@ const LoginSignupModel = ({ isModalVisible, handleModalVisibility }) => {
           backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent overlay
           justifyContent: "flex-end",
         }}
-        // className="flex-1 bg-black bg-opacity-50 justify-end"
         onPress={handleModalVisibility}
       />
 
       {/* Modal Content */}
-      <View className="bg-white rounded-t-3xl px-6 py-8 items-center">
+      <View className=" bg-white  rounded-t-3xl px-8 py-6 items-center shadow-lg">
         {/* Create Account Button */}
         <CustomeButton
-          onButtonPress={() => router.push("/(signIn)")}
+          onButtonPress={() => handleNavigation("/(signIn)")}
           title="Create Account"
-          style="w-full my-2"
+          style="my-2"
+          className="w-full bg-[#2983DC] rounded-xl py-4 my-2"
+          textClassName="text-white text-lg font-semibold"
         />
 
         {/* Login Button */}
         <TouchableOpacity
-          onPress={() => router.push("/login")}
-          className="w-full border border-blue-500 rounded-xl py-3 my-2"
+          onPress={() => handleNavigation("/login")}
+          className="w-full border border-[#2983DC] rounded-xl py-4 my-2"
         >
-          <Text className="text-center text-blue-500 text-lg font-medium">
+          <Text className="text-center text-[#2983DC] text-lg font-semibold">
             Login
           </Text>
         </TouchableOpacity>
 
         {/* Cancel Button */}
-        <TouchableOpacity onPress={handleModalVisibility} className="mt-4">
+        <TouchableOpacity onPress={handleModalVisibility} className="mt-2">
           <Text className="text-center text-gray-500 text-lg font-medium">
             Cancel
           </Text>

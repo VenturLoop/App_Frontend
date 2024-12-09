@@ -1,11 +1,10 @@
 import { router } from "expo-router";
 import { useRef, useState } from "react";
-import { Text, View, TouchableOpacity, Image, Modal } from "react-native";
+import { Text, View, TouchableOpacity, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Swiper from "react-native-swiper";
 import CustomeButton from "../../components/buttons/CustomeButton";
 import { splashScreensWelcome } from "../../constants/splashScreen";
-import { verticalScale, scale } from "react-native-size-matters";
 import LoginSignupModel from "../../components/models/Login_Signup";
 
 const Onboarding = () => {
@@ -15,53 +14,46 @@ const Onboarding = () => {
 
   const isLastSlide = activeIndex === splashScreensWelcome.length - 1;
 
-  const handleModalVisibility = () => {
-    setModalVisible((prevState) => !prevState);
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
   };
 
-  const handleNextButtonPress = () => {
+  const handleNext = () => {
     if (isLastSlide) {
-      handleModalVisibility();
+      toggleModal();
     } else {
       swiperRef.current?.scrollBy(1);
     }
   };
 
   return (
-    <SafeAreaView className="flex-1 px-8 w-full items-center bg-white">
-      {/* Skip Button (Uncomment if needed) */}
-      {/* <TouchableOpacity
-        className="w-full justify-end items-end p-5"
-        onPress={() => router.replace("/(auth)/sign-up")}
-      >
-        <Text className="text-black text-lg font-bold">Skip</Text>
-      </TouchableOpacity> */}
-
+    <SafeAreaView
+      className={`flex-1 h-screen ${isModalVisible ? " rounded-t-3xl  " : ""} bg-white `}
+    >
       {/* Swiper Component */}
       <Swiper
         ref={swiperRef}
         loop={false}
         dot={<View className="w-6 h-2 bg-[#CCE6FF] rounded-full mx-1" />}
-        activeDot={<View className="w-12 h-2 bg-[#2983DC] rounded-full mx-1" />}
-        className=" "
+        activeDot={<View className="w-16 h-2 bg-[#2983DC] rounded-full mx-1" />}
+        className="flex-1"
         onIndexChanged={setActiveIndex}
-        // style={{ width: "100%" }} // Ensure Swiper takes full width
       >
         {splashScreensWelcome.map((item) => (
           <View
             key={item.id}
-            className="flex-1 fixed w-auto mb-5 justify-center items-center "
+            className="flex-1 justify-center items-center p-6"
           >
             <Image
               source={item.image}
-              resizeMode="cover"
-              className=" object-contain"
+              resizeMode="contain"
+              className="w-72 h-1/2"
             />
-            <View className="mt-10 gap-10">
-              <Text className="text-3xl font-bold text-center text-[#454545]  mb-3">
+            <View className="mt-8 text-center gap-6 items-center space-y-4">
+              <Text className="text-3xl text-center font-semibold text-[#454545]">
                 {item.title}
               </Text>
-              <Text className="text-base text-center text-gray-500 mx-5">
+              <Text className="text-base text-center text-gray-600 px-4">
                 {item.description}
               </Text>
             </View>
@@ -69,14 +61,22 @@ const Onboarding = () => {
         ))}
       </Swiper>
 
-      {/* Next or Get Started Button */}
-      <CustomeButton
-        onButtonPress={handleNextButtonPress}
-        title={isLastSlide ? "Get Started" : "Next"}
-      />
+      {/* Action Button */}
+      <View className="px-8 items-center justify-center ">
+        <CustomeButton
+          onButtonPress={handleNext}
+          title={isLastSlide ? "Get Started" : "Next"}
+          className={`py-4 rounded-lg ${
+            isLastSlide ? "bg-[#2983DC]" : "bg-gray-300"
+          }`}
+          textClassName="text-white text-lg font-bold"
+        />
+      </View>
+
+      {/* Login/Signup Modal */}
       <LoginSignupModel
         isModalVisible={isModalVisible}
-        handleModalVisibility={handleModalVisibility}
+        handleModalVisibility={toggleModal}
       />
     </SafeAreaView>
   );

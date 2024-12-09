@@ -4,7 +4,28 @@ import { Stack } from "expo-router";
 
 const ProfileDetailLayout = () => {
   return (
-    <Stack screenOptions={{ headerShown: false }}>
+    <Stack
+      screenOptions={{
+        headerShown: false,
+        animation: "slide_from_right", // Default animation for forward navigation
+        gestureDirection: "horizontal", // Ensures back gesture slides to the left
+        transitionSpec: {
+          open: {
+            animation: "timing",
+            config: {
+              duration: 100, // Adjust duration for smooth forward navigation
+            },
+          },
+          close: {
+            animation: "timing",
+            config: {
+              duration: 100, // Adjust duration for smooth back navigation
+            },
+          },
+        },
+        animationTypeForReplace: "push", // Ensure smooth transitions for screen replacements
+      }}
+    >
       <Stack.Screen name="index" />
       <Stack.Screen name="commitment" />
       <Stack.Screen name="equity_exceptation" />

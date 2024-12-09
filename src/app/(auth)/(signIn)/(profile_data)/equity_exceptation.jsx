@@ -82,12 +82,12 @@ const EquityExpectation = () => {
             <View
               className={`h-5 w-5 rounded-full border-2 ${
                 selectedOption === option
-                  ? "border-blue-600"
+                  ? "border-[#2983DC]"
                   : "border-gray-400"
               } flex items-center justify-center`}
             >
               {selectedOption === option && (
-                <View className="h-2.5 w-2.5 rounded-full bg-blue-600" />
+                <View className="h-2.5 w-2.5 rounded-full bg-[#2983DC]" />
               )}
             </View>
             <Text className="ml-2 py-1 text-lg text-gray-700 capitalize">
