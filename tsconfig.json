@@ -17,5 +17,5 @@
     "src/app/(auth)/_layout.jsx",
     "src/constants/SplashScreens.jsx",
     "nativewind-env.d.ts"
-  ]
+, "src/components/ModelLayoul/ProfileLayout.jsx"  ]
 }
