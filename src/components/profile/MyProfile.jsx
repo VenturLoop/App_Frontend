@@ -15,7 +15,7 @@ const MyProfile = () => {
   const handleNavigation = (route) => {
     setTimeout(() => {
       router.navigate(route);
-    }, 100); // Wait for modal close animation before routing
+    }, 10); // Wait for modal close animation before routing
   };
 
   return (
@@ -71,7 +71,7 @@ const MyProfile = () => {
           {/* Edit Profile */}
           <TouchableOpacity
             onPress={() => {
-              router.push("/(profile)/edit_profile");
+              handleNavigation("/(profile)/edit_profile");
             }}
             className=" flex   flex-row border px-3  py-6  bg-gray-100  border-[#2983DC] shadow-sm rounded-2xl items-center gap-4"
           >
@@ -99,7 +99,7 @@ const MyProfile = () => {
           {/* Edit preferances */}
           <TouchableOpacity
             onPress={() => {
-              router.push("/(profile)/edit_preferance");
+              handleNavigation("/(profile)/edit_preferance");
             }}
             className=" flex   flex-row border px-3 justify-between  py-4  bg-gray-100  border-[#2983DC] shadow-sm rounded-2xl items-center  "
           >
@@ -129,7 +129,7 @@ const MyProfile = () => {
           {/* Referal rewarads */}
           <TouchableOpacity
             onPress={() => {
-              router.push("/(profile)/referal_rewards");
+              handleNavigation("/(profile)/referal_rewards");
             }}
             className=" flex   flex-row border px-3  py-6  bg-gray-100  border-[#2983DC] shadow-sm rounded-2xl items-center gap-4"
           >

@@ -17,6 +17,19 @@ import Checkbox from "expo-checkbox";
 
 const Index = () => {
   const [isChecked, setChecked] = useState(false);
+  const [formData, setformData] = useState({
+    name: "",
+    tag: "",
+    bio: "",
+    dob: "",
+    location: "",
+    lookingFor: [],
+    skillset: [],
+    commitmentLevel: "",
+    interests: [],
+    priorStartupExperience: [],
+    equityExpectation: "",
+  });
 
   // Function to handle navigation with a slight delay for smooth transition
   const handleNavigation = (route) => {

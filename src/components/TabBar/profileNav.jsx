@@ -11,7 +11,7 @@ const ProfileNav = ({
   const [activeTab, setActiveTab] = useState("myProfile"); // To track active tab
 
   return (
-    <View className="bg-white px-4  py-5 border-b-[0.5px] border-gray-300  w-full">
+    <View className="bg-white  border-b-[0.5px] border-gray-300  w-full">
       <View className="flex-row bg-[#F0F6FB]  rounded-full  justify-between items-center">
         {/* My Profile Tab */}
         <TouchableOpacity

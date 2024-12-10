@@ -5,7 +5,7 @@ import { FontAwesome } from "@expo/vector-icons";
 
 const TopNavar = () => {
   return (
-    <View className="flex-row bg-white px-4 py-10 flex w-full justify-between border-b-[0.5px] pb-3 border-gray-300 items-center">
+    <View className="flex-row bg-white px-5 py-2 flex w-full justify-between border-b-[0.5px] pb-3 border-gray-300 items-center">
       <TouchableOpacity>
         <Image
           resizeMode="contain"

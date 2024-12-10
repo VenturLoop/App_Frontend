@@ -14,7 +14,7 @@ export default {
   homeAppLOgo: require("../assets/images/homeAppLogo.png"),
   current: require("../assets/images/current.png"),
   userImage: require("../assets/images/userImage.jpg"),
-
+  referalImage: require("../assets/images/referalImage.png"),
 
   // start_auth2: require("@/src/assets/images/Linkedin.png.png"),
   // start_auth3: require("@/src/assets/images/image2.png"),

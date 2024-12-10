@@ -6,10 +6,16 @@ import { router } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import CustomeButton from "../buttons/CustomeButton";
 
-const EditLayout = ({ title, secondTitle, children, continueRoute }) => {
+const EditLayout = ({
+  title,
+  secondTitle,
+  children,
+  buttonRoute,
+  buttonTitle,
+}) => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaView className="flex-1 ">
+      <SafeAreaView className="flex-1 bg-white ">
         {/* Header */}
         <View className="header flex-row px-5  justify-between border-b border-gray-300 py-4 w-full items-center">
           <View className="flex-row items-center gap-3">
@@ -18,21 +24,23 @@ const EditLayout = ({ title, secondTitle, children, continueRoute }) => {
             </TouchableOpacity>
             <Text className="text-xl font-semibold">{title}</Text>
           </View>
-          <Text className="text-xl font-semibold text-[#2983DC]">
-            {secondTitle}
-          </Text>
+          <TouchableOpacity>
+            <Text className="text-xl font-semibold text-[#2983DC]">
+              {secondTitle}
+            </Text>
+          </TouchableOpacity>
         </View>
 
         {/* Body */}
         <View className="body w-full  py-3 flex-1 px-3 ">{children}</View>
 
-        {continueRoute && (
+        {buttonRoute && (
           <View className="footer px-5 w-full">
             <CustomeButton
               onButtonPress={() => {
-                router.navigate(continueRoute);
+                router.navigate(buttonRoute);
               }}
-              title="Continue"
+              title={buttonTitle}
             />
           </View>
         )}
