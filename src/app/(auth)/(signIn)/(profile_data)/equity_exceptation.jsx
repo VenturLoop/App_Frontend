@@ -12,6 +12,7 @@ import { router } from "expo-router";
 import Slider from "@react-native-community/slider";
 import { Ionicons } from "@expo/vector-icons";
 import ReferalModel from "../../../../components/models/ReferalModel";
+import ReferalPriceModel from "../../../../components/models/ReferalPriceModel";
 
 // Reusable Slider Component
 const EquitySlider = ({ label, value, onValueChange, disabled }) => {
@@ -130,10 +131,10 @@ const EquityExpectation = () => {
       </View>
 
       {/* Modal Section */}
-      <ReferalModel
+      <ReferalPriceModel
         isModalVisible={isModalVisible}
         handleModalVisibility={handleModalVisibility}
-        routerToNextPage={() => router.push("/(main)/(tabs)")}
+        nextPageRoute="/(main)/(tabs)"
       />
     </SafeAreaView>
   );
