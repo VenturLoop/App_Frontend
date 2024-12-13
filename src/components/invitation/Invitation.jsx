@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, FlatList, Image, TouchableOpacity } from "react-native";
 import imagePath from "../../constants/imagePath";
 import { router } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 
 const messages = [
   {
@@ -35,7 +36,7 @@ const Invitation = () => {
   return (
     <>
       {messages.length > 0 ? (
-        <View className="bg-gray-100 pt-4  ">
+        <View className="bg-gray-100 flex justify-between h-full pt-4  ">
           <FlatList
             data={messages}
             keyExtractor={(item) => item.id.toString()}
@@ -65,7 +66,7 @@ const Invitation = () => {
                     <Text className="text-gray-400 text-sm">{item.time}</Text>
                   </View>
                   <View className="w-full flex-row justify-between   items-centern">
-                    <View className="flex flex-row items-center px-4 w-2/3 justify-between ">
+                    <View className="flex flex-row items-center px-4 w-1/2  justify-between ">
                       <View>
                         {/* Birthday logo */}
                         <Text className="text-lg font-medium">
@@ -83,9 +84,14 @@ const Invitation = () => {
                       onPress={() => {
                         router.push("/(message)/chat");
                       }}
-                      className="bg-[#2983DC] px-3 py-1.5 rounded-lg"
+                      className="bg-[#2983DC] flex-row gap-1 items-center justify-center px-3 py-1.5 rounded-lg"
                     >
                       {/* Logo */}
+                      <Ionicons
+                        name="chatbox-ellipses-outline"
+                        color="white"
+                        size={17}
+                      />
                       <Text className="text-white">Chat</Text>
                     </TouchableOpacity>
                   </View>
@@ -93,7 +99,7 @@ const Invitation = () => {
               </>
             )}
           />
-          <View className="bg-[#2983DC1C]  flex-row items-center flex gap-4 rounded-xl px-3 py-3">
+          <View className="bg-[#2983DC1C] mb-2 flex-row items-center flex gap-4 rounded-xl px-3 py-3">
             {/* Upgrade button */}
             <View className=" bg-[#2983DC] px-3 py-1.5 rounded-xl">
               <Text className="text-lg tracking-widest text-white font-semibold">

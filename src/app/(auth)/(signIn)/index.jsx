@@ -24,6 +24,12 @@ const Index = () => {
   });
   const [errorMessage, setErrorMessage] = useState("");
 
+  const handleNavigation = (route) => {
+    setTimeout(() => {
+      router.push(route);
+    }, 100); // Add a small delay of 100ms
+  };
+
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     setErrorMessage(""); // Clear error message when user starts typing
@@ -85,14 +91,9 @@ const Index = () => {
 
   const handleContinue = () => {
     if (validateForm()) {
-      createUser();
+      // createUser();
+      handleNavigation("/otp");
     }
-  };
-
-  const handleNavigation = (route) => {
-    setTimeout(() => {
-      router.push(route);
-    }, 100); // Add a small delay of 100ms
   };
 
   return (

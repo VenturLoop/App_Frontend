@@ -17,7 +17,7 @@ const Chat = () => {
           <Text className="text-xl font-semibold">Chat</Text>
         </View>
         <TouchableOpacity>
-          <Text className="text-xl font-semibold ">Three dot</Text>
+          <Ionicons name="ellipsis-vertical" color="black" size={25} />
         </TouchableOpacity>
       </View>
 

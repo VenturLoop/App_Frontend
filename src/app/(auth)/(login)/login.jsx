@@ -24,7 +24,7 @@ const Login = () => {
 
     // Simulate a small delay for loading to complete
     setTimeout(async () => {
-      await router.push("/(main)"); // Navigate after the timeout
+      await router.push("/(main)/(tabs)"); // Navigate after the timeout
       setIsLoading(false);
     }, 1000); // Shortened the delay to make the navigation smoother
   };
@@ -40,7 +40,7 @@ const Login = () => {
         className="flex-1"
       >
         <ScrollView
-        showsVerticalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
           contentContainerStyle={{
             flexGrow: 1,
             justifyContent: "space-between",
@@ -85,7 +85,7 @@ const Login = () => {
 
             {/* Phone Number Input */}
             <TextInput
-              placeholder="Phone Number"
+              placeholder="Email Address"
               className="bg-[#2982dc23] w-full px-6 py-5 placeholder:opacity-70 rounded-lg text-gray-600"
               keyboardType="numeric"
             />

@@ -10,8 +10,8 @@ import CustomeButton from "../../../../components/buttons/CustomeButton";
 import imagePath from "../../../../constants/imagePath";
 import { router } from "expo-router";
 import Slider from "@react-native-community/slider";
-import ReferalModel from "../../../../components/models/ReferalModel";
 import { Ionicons } from "@expo/vector-icons";
+import ReferalModel from "../../../../components/models/ReferalModel";
 
 // Reusable Slider Component
 const EquitySlider = ({ label, value, onValueChange, disabled }) => {
@@ -133,7 +133,7 @@ const EquityExpectation = () => {
       <ReferalModel
         isModalVisible={isModalVisible}
         handleModalVisibility={handleModalVisibility}
-        routerToNextPage={() => router.push("/(main)")}
+        routerToNextPage={() => router.push("/(main)/(tabs)")}
       />
     </SafeAreaView>
   );

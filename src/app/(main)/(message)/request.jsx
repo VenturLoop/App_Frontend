@@ -17,35 +17,35 @@ const Request = () => {
           <Text className="text-xl font-semibold">Requist</Text>
         </View>
         <TouchableOpacity>
-          <Text className="text-xl font-semibold ">Three dot</Text>
+          <Ionicons name="ellipsis-vertical" color="black" size={25} />
         </TouchableOpacity>
       </View>
 
       {/* Body */}
       <View className="body w-full  py-3 flex-1 px-3 "></View>
 
-     <View className="px-4">
-     <View className="bg-[#2983DC1C]  flex items-center justify-center  gap-4  rounded-xl px-3 py-4">
-        <Text className="font-semibold ">
-          <Text className="text-lg font-bold">Smit Patel</Text> sent you a
-          message Invite
-        </Text>
-        <View className="flex-row items-center gap-5">
-          {/* Upgrade button */}
-          <TouchableOpacity className=" bg-[#2983DC] px-3 py-1.5 rounded-xl">
-            <Text className="text-lg tracking-widest text-white font-semibold">
-              Approve
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Text className="text-lg tracking-wider text-[#2983DC] font-medium">
-              Decline
-            </Text>
-          </TouchableOpacity>
+      <View className="px-4">
+        <View className="bg-[#2983DC1C]  flex items-center justify-center  gap-4  rounded-xl px-3 py-4">
+          <Text className="font-semibold ">
+            <Text className="text-lg font-bold">Smit Patel</Text> sent you a
+            message Invite
+          </Text>
+          <View className="flex-row items-center gap-5">
+            {/* Upgrade button */}
+            <TouchableOpacity className=" bg-[#2983DC] px-3 py-1.5 rounded-xl">
+              <Text className="text-lg tracking-widest text-white font-semibold">
+                Approve
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Text className="text-lg tracking-wider text-[#2983DC] font-medium">
+                Decline
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
 
-      {/* {buttonRoute && (
+        {/* {buttonRoute && (
           <View className="footer px-5 w-full">
             <CustomeButton
               onButtonPress={() => {
@@ -56,15 +56,15 @@ const Request = () => {
           </View>
         )} */}
 
-      <View className="footer my-4   ">
-        <View className=" flex-row border border-gray-400 rounded-full w-full justify-between py-1.5 px-6  items-center ">
-          <TextInput className="" placeholder="Your Message" />
-          <TouchableOpacity className="">
-            <Text className="text-[#2983DC] font-semibold text-xl">Send</Text>
-          </TouchableOpacity>
+        <View className="footer my-4   ">
+          <View className=" flex-row border border-gray-400 rounded-full w-full justify-between py-1.5 px-6  items-center ">
+            <TextInput className="" placeholder="Your Message" />
+            <TouchableOpacity className="">
+              <Text className="text-[#2983DC] font-semibold text-xl">Send</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
-     </View>
     </SafeAreaView>
   );
 };

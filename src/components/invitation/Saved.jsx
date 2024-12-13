@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, FlatList, Image, TouchableOpacity } from "react-native";
 import imagePath from "../../constants/imagePath";
 import { Ionicons } from "@expo/vector-icons";
+import DeleteModel from "../../components/models/DeleteModel";
 
 const messages = [
   {
@@ -16,6 +17,8 @@ const messages = [
 // const messages = [];
 
 const Saved = () => {
+  const [isdeleteModel, setisDeleteModel] = useState(false);
+
   return (
     <>
       {messages.length > 0 ? (
@@ -63,21 +66,31 @@ const Saved = () => {
                         </Text>
                       </View>
                     </View>
-                    <View>
+                    <TouchableOpacity
+                      onPress={() => {
+                        setisDeleteModel(true);
+                      }}
+                    >
                       {/* DELETE logo */}
-                      {/* <Ionicons
+                      <Ionicons
                         resizeMode="contain"
                         // className="p-1 border  border-white rounded-lg"
-                        name="dustbin-outline"
-                        size={12}
+                        name="trash-outline"
+                        size={20}
                         color="red"
-                      /> */}
-                      <Text className="text-red-600 ">Delete</Text>
-                    </View>
+                      />
+                      {/* <Text className="text-red-600 ">Delete</Text> */}
+                    </TouchableOpacity>
                   </View>
                 </View>
               </>
             )}
+          />
+          <DeleteModel
+            isModalVisible={isdeleteModel}
+            handleModalVisibility={() => {
+              setisDeleteModel(!isdeleteModel);
+            }}
           />
         </View>
       ) : (
