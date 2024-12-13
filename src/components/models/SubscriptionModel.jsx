@@ -65,7 +65,6 @@ const SubscriptionModel = ({ isModalVisible, handleModalVisibility }) => {
           </Text>
 
           {/* Referral Input */}
-
           {/* Button Group */}
           <View className="flex-row justify-between gap-3 w-full mt-6 space-x-4">
             {/* "Don't Have" Button */}
