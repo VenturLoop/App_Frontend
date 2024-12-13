@@ -5,9 +5,11 @@ import {
   TouchableOpacity,
   TextInput,
   Pressable,
+  Image,
 } from "react-native";
 import React, { useState } from "react";
 import PageLoading from "../loading/PageLoading"; // Ensure the PageLoading component is imported
+import imagePath from "../../constants/imagePath";
 
 const DeleteModel = ({
   isModalVisible,
@@ -46,19 +48,14 @@ const DeleteModel = ({
           <PageLoading noLogo={true} smallLoading={true} />
         </View>
       ) : (
-        <View className="bg-white rounded-t-2xl gap-5 px-6 py-8 items-center">
+        <View className="bg-white rounded-t-2xl gap-6 px-6 py-8 items-center">
           {/* Title */}
+          <Image source={imagePath.delete} className="w-20 h-20" />
           <Text className="text-2xl font-bold text-gray-800 text-center mb-4">
-            Do you have a referral code?
+            Are you sure you want to delete?
           </Text>
 
           {/* Referral Input */}
-          <TextInput
-            placeholder="Referral Code"
-            value={referal} // Set the value of the input field to referal state
-            onChangeText={(text) => setReferal(text)} // Update the referal state on change
-            className="bg-[#2982dc11] w-full tracking-widest px-6 py-5 text-lg text-gray-600  rounded-2xl"
-          />
 
           {/* Button Group */}
           <View className="flex-row justify-between gap-3 w-full mt-6 space-x-4">
@@ -67,21 +64,21 @@ const DeleteModel = ({
               onPress={routerToNextPage}
               className="flex-1 border w-1/3 border-gray-100 rounded-lg py-3"
             >
-              <Text className="text-center text-lg text-gray-700 font-medium">
-                Don't have
+              <Text className="text-center text-lg text-[#2983DC] font-medium">
+                Cancel
               </Text>
             </TouchableOpacity>
 
             {/* Continue Button */}
             <TouchableOpacity
-              onPress={handleContinue} // Call handleContinue function
-              className={`flex-1 w-2/3 rounded-lg py-3 ${
-                referal === "" ? "bg-blue-300  " : "bg-[#2983DC]"
-              }`} // Disable button if no referral code
-              disabled={referal === ""} // Disable the button if referral is empty
+              // onPress={handleContinue} // Call handleContinue function
+              className={`flex-1 w-2/3 rounded-lg py-3 
+                bg-[#2983DC]
+              `} // Disable button if no referral code
+              // Disable the button if referral is empty
             >
               <Text className="text-center text-lg text-white font-medium">
-                Continue
+                Delete
               </Text>
             </TouchableOpacity>
           </View>

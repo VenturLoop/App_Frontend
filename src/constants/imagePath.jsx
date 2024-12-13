@@ -18,6 +18,10 @@ export default {
   referalImage: require("../assets/images/referalImage.png"),
   Eduimage: require("../assets/images/EducationImage.png"),
   NoMessage: require("../assets/images/noMessages.png"),
+  delete: require("../assets/images/delete.png"),
+  premiumImage: require("../assets/images/premium.png"),
+
+
 
 
 

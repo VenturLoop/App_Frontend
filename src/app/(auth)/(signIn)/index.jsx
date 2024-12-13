@@ -8,6 +8,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import imagePath from "../../../constants/imagePath";
@@ -17,21 +18,77 @@ import Checkbox from "expo-checkbox";
 
 const Index = () => {
   const [isChecked, setChecked] = useState(false);
-  const [formData, setformData] = useState({
+  const [formData, setFormData] = useState({
     name: "",
-    tag: "",
-    bio: "",
-    dob: "",
-    location: "",
-    lookingFor: [],
-    skillset: [],
-    commitmentLevel: "",
-    interests: [],
-    priorStartupExperience: [],
-    equityExpectation: "",
+    email: "",
   });
+  const [errorMessage, setErrorMessage] = useState("");
 
-  // Function to handle navigation with a slight delay for smooth transition
+  const handleInputChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    setErrorMessage(""); // Clear error message when user starts typing
+    console.log(field, value);
+  };
+
+  const validateForm = () => {
+    const { name, email } = formData;
+
+    if (!name || !email) {
+      setErrorMessage("Please fill in all fields.");
+      return false;
+    }
+
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      setErrorMessage("Please enter a valid email address.");
+      return false;
+    }
+
+    if (!isChecked) {
+      setErrorMessage(
+        "You must agree to the Terms of Service and Privacy Policy."
+      );
+      return false;
+    }
+
+    return true;
+  };
+
+  console.log(formData);
+
+  const createUser = async () => {
+    try {
+      // Mock API call
+      const response = await fetch(
+        "https://ventureloop-server.onrender.com/auth/signup",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      const result = await response.json();
+      console.log(result);
+
+      if (response.ok) {
+        Alert.alert("Success", "User created successfully!");
+        handleNavigation("/otp");
+      } else {
+        Alert.alert("Error", result.message || "Failed to create user.");
+      }
+    } catch (error) {
+      Alert.alert("Error", "Something went wrong. Please try again.");
+    }
+  };
+
+  const handleContinue = () => {
+    if (validateForm()) {
+      createUser();
+    }
+  };
+
   const handleNavigation = (route) => {
     setTimeout(() => {
       router.push(route);
@@ -45,7 +102,7 @@ const Index = () => {
         className="flex-1"
       >
         <ScrollView
-        showsVerticalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
           contentContainerStyle={{
             flexGrow: 1,
             justifyContent: "space-between",
@@ -88,22 +145,28 @@ const Index = () => {
             </View>
             <TextInput
               placeholder="Name"
+              value={formData.name}
+              onChangeText={(value) => handleInputChange("name", value)}
               className="bg-[#2982dc14] w-full placeholder:font-medium px-6 py-5 rounded-lg text-gray-500"
             />
             <TextInput
-              placeholder="Phone Number"
+              placeholder="Email Address"
+              value={formData.email}
+              onChangeText={(value) => handleInputChange("email", value)}
               className="bg-[#2982dc14] w-full placeholder:font-medium px-6 py-5 rounded-lg text-gray-500"
-              keyboardType="numeric"
+              keyboardType="email-address"
             />
-            <View className="flex flex-row gap-3 mt-4 justify-center">
+            {errorMessage ? (
+              <Text className="text-red-500 text-sm">{errorMessage}</Text>
+            ) : null}
+            <View className="flex flex-row gap-3 px-2 mt-4 justify-center">
               <Checkbox
-                className="bg-[#F5F9FE]"
-                color="bg-#F5F9FE"
                 value={isChecked}
                 onValueChange={setChecked}
+                color={isChecked ? "#2983DC" : undefined}
               />
               <Text>
-                I'm agree to the{" "}
+                I agree to the{" "}
                 <Link className="font-semibold text-[#2983DC]" href={"/"}>
                   Terms of Service
                 </Link>{" "}
@@ -120,7 +183,7 @@ const Index = () => {
             <CustomeButton
               title="Continue"
               style="my-3"
-              onButtonPress={() => handleNavigation("/otp")}
+              onButtonPress={handleContinue}
             />
             <View className="mt-4">
               <Text className="text-center">

@@ -9,7 +9,7 @@ export default function RootLayout() {
   const [isLogin, setisLogin] = useState(true);
   useEffect(() => {
     setTimeout(() => {
-      SplashScreen.hideAsync();
+      SplashScreen.hideAsync(); 
     }, 2000);
   }, []);
 
