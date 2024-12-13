@@ -103,7 +103,7 @@ const Login = () => {
               className="font-medium text-start w-full px-2 text-[#2983DC]"
               href={"/forgatePass"}
             >
-              Forgot Password?
+              Forget Password?
             </Link>
           </View>
 
