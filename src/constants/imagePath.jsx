@@ -13,8 +13,13 @@ export default {
   back: require("../assets/images/BackIcon.png"),
   homeAppLOgo: require("../assets/images/homeAppLogo.png"),
   current: require("../assets/images/current.png"),
-  userImage: require("../assets/images/userImage.jpg"),
+  userImage: require("../assets/images/defaultUser.jpg"),
+  userImage2: require("../assets/images/userImage.jpg"),
   referalImage: require("../assets/images/referalImage.png"),
+  Eduimage: require("../assets/images/EducationImage.png"),
+  NoMessage: require("../assets/images/noMessages.png"),
+
+
 
   // start_auth2: require("@/src/assets/images/Linkedin.png.png"),
   // start_auth3: require("@/src/assets/images/image2.png"),

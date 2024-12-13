@@ -58,7 +58,7 @@ const ProfileModel = ({ isModalVisible, handleModalVisibility }) => {
         >
           {/* Setting Button */}
           <TouchableOpacity
-            //   onPress={() => handleNavigation("/settings")}
+            onPress={() => handleNavigation("/setting")}
             className="w-full border border-gray-300 rounded-xl py-4 my-2"
           >
             <Text className="text-center text-gray-800 text-lg font-semibold">

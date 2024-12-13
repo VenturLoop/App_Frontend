@@ -14,6 +14,9 @@ const edit_preferance = () => {
     }, 10); // Wait for modal close animation before routing
   };
 
+  
+
+
   return (
     <>
       <EditLayout
@@ -27,7 +30,7 @@ const edit_preferance = () => {
           // contentContainerStyle={{ paddingBottom: 20, paddingHorizontal: 16 }}
         >
           {/* Basic preferance */}
-          <View className=" gap-5  flex-1  mt-1  ">
+          <View className=" gap-5  flex-1  mt-2  ">
             {/* Header */}
             <View className="flex flex-col gap-3 mx-2 px-2">
               <Text className="text-lg font-semibold ">Basic Preference</Text>
@@ -74,7 +77,7 @@ const edit_preferance = () => {
                     </Text>
                   </TouchableOpacity>
                 </View>
-                <View className="flex  flex-row gap-3">
+                {/* <View className="flex  flex-row gap-3">
                   <TouchableOpacity
                     onPress={() => {
                       setuserRole("start-up");
@@ -111,7 +114,7 @@ const edit_preferance = () => {
                       Investor
                     </Text>
                   </TouchableOpacity>
-                </View>
+                </View> */}
               </View>
             </View>
             {/* Preferances */}
@@ -181,7 +184,7 @@ const edit_preferance = () => {
           </View>
 
           {/* Premium preferance */}
-          <View className="mt-5 mx-2 ">
+          <View className=" mx-2 ">
             <Text className="text-lg py-5 px-2 font-semibold ">
               Premium Preference
             </Text>

@@ -10,6 +10,8 @@ const EditLayout = ({
   title,
   secondTitle,
   children,
+  saveButtonTitle,
+  saveButtonFunction,
   buttonRoute,
   buttonTitle,
 }) => {
@@ -41,6 +43,14 @@ const EditLayout = ({
                 router.navigate(buttonRoute);
               }}
               title={buttonTitle}
+            />
+          </View>
+        )}
+        {saveButtonTitle && (
+          <View className="footer px-5 w-full">
+            <CustomeButton
+              onButtonPress={saveButtonFunction}
+              title={saveButtonTitle}
             />
           </View>
         )}

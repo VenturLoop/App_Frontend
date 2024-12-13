@@ -5,13 +5,32 @@ import {
   ScrollView,
   TextInput,
   Image,
+  Platform,
 } from "react-native";
 import React, { useState } from "react";
 import EditLayout from "../../../components/ModelLayoul/EditLayout";
 import { Ionicons } from "@expo/vector-icons";
+import imagePath from "../../../constants/imagePath";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const EditProfile = () => {
+  const [birthdate, setBirthdate] = useState("");
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
   // Profile fields with initial values
+  const [formData, setformData] = useState({
+    name: "",
+    tag: "",
+    bio: "",
+    dob: "",
+    location: "",
+    lookingFor: [],
+    skillset: [],
+    commitmentLevel: "",
+    interests: [],
+    priorStartupExperience: [],
+    equityExpectation: "",
+  });
 
   // Handle text input changes
   const handleInputChange = (id, newValue) => {
@@ -22,6 +41,15 @@ const EditProfile = () => {
     );
   };
 
+  const handleDateSelect = (event, date) => {
+    if (date) {
+      setSelectedDate(date);
+      const formattedDate = date.toLocaleDateString("en-GB"); // Formats as dd/mm/yyyy
+      setBirthdate(formattedDate);
+    }
+    setShowDatePicker(false);
+  };
+
   return (
     <EditLayout
       // continueRoute="/(tabs)/profile"
@@ -30,239 +58,295 @@ const EditProfile = () => {
     >
       {/* Form Section */}
       <ScrollView
+        showsVerticalScrollIndicator={false}
         className="bg-gray-100  gap-4 flex-1"
         // contentContainerStyle={{ paddingBottom: 20, paddingHorizontal: 16 }}
       >
-        <View className="flex-1 items-center w-full ">
+        <View className="flex-1 px-4 gap-8 bg-white items-center w-full ">
           {/* Header Section */}
-          <View className="bg-[#FFE1E1]  rounded-2xl py-4 w-full ">
-            <View className=" flex-1 ">
-              <Ionicons name="warning-outline" size={18} color="#E31A31" />
-              <Text>
+          <View className="bg-[#FFE1E1] px-4  rounded-2xl py-4 w-full ">
+            <View className=" flex flex-row gap-2 items-center  ">
+              <Ionicons name="warning" size={26} color="#E31A31" />
+              <Text className=" font-semibold">
                 A complete profile is required to send or accept connection
                 invite
               </Text>
             </View>
-            <View>
-              <Text>Profile Photo is required</Text>
-              <Text>Mindset is required</Text>
-              <Text>Basic details need to be filled</Text>
+            <View className="flex flex-col gap-1.5 mt-2 px-3  p-4 rounded-md">
+              <View className="flex flex-row items-start">
+                <Text className="text-gray-600 mr-3">•</Text>
+                <Text className="text-gray-600">Profile Photo is required</Text>
+              </View>
+              <View className="flex flex-row items-start">
+                <Text className="text-gray-600 mr-3">•</Text>
+                <Text className="text-gray-600">Mindset is required</Text>
+              </View>
+              <View className="flex flex-row items-start">
+                <Text className="text-gray-600 mr-3">•</Text>
+                <Text className="text-gray-600">
+                  Basic details need to be filled
+                </Text>
+              </View>
             </View>
           </View>
 
           {/* Status bar */}
-          <View>
-            <Text>My Status</Text>
-            <TextInput
-              placeholder="Looking for Co-founder "
-              // className="bg-[#2982dc14] w-full placeholder:text-[#7C8BA0] px-6 py-5 rounded-lg p-2"
-              keyboardType="email-address"
-            />
+          <View className="w-full gap-3 ">
+            <Text className="text-gray-400 font-semibold">My Status</Text>
+            <TouchableOpacity className="border-y-[0.5px] pr-3  font-semibold border-gray-300 py-4 flex flex-row justify-between items-center">
+              <Text className="text-gray-500 font-semibold">
+                Looking for Co-founder
+              </Text>
+              <Ionicons
+                name="chevron-forward-outline"
+                size={20}
+                color="#757575"
+              />
+            </TouchableOpacity>
           </View>
 
           {/* Basic Detail */}
-          <View>
+          <View className="w-full gap-3">
+            <Text className="text-gray-400 font-semibold">Basic Details</Text>
+
             {/* first section */}
-            <View>
+            <View className="gap-5 border-y-[0.5px] border-gray-300 py-4 ">
               {/* Profile image */}
-              <View>
-                <Text>Profile photo</Text>
-                {/* <Image/> */}
-              </View>
-              <View>
-                <Text>Edit Photo</Text>
+              <Text className="text-gray-500 font-semibold">Profile photo</Text>
+              <View className=" flex flex-row gap-7 justify-start items-center ">
+                <Image
+                  source={imagePath.userImage}
+                  className="w-24 h-24 rounded-xl"
+                />
+                <TouchableOpacity className="border-[0.5px] p-3 border-[#2983DC] rounded-xl">
+                  <Text className="font-medium text-gray-800">Edit Photo</Text>
+                </TouchableOpacity>
               </View>
             </View>
 
             {/* Second Section */}
-            <View>
+            <View className="gap-7 mt-2">
               {/* Name  */}
-              <View>
-                <Text>Name</Text>
+              <View className="gap-2">
+                <Text className="text-gray-500 font-semibold">Name</Text>
                 <TextInput
-                  placeholder="Looking for Co-founder "
-                  // className="bg-[#2982dc14] w-full placeholder:text-[#7C8BA0] px-6 py-5 rounded-lg p-2"
+                  placeholder=""
+                  className="bg-[#2982dc14] w-full text-gray-500 font-semibold px-6  py-4 rounded-xl "
                   keyboardType="email-address"
+                  // Add value
                 />
               </View>
               {/* Date of Birth */}
               <View>
-                <Text>Date of birth</Text>
-                <TextInput
-                  placeholder="Looking for Co-founder "
-                  // className="bg-[#2982dc14] w-full placeholder:text-[#7C8BA0] px-6 py-5 rounded-lg p-2"
-                  keyboardType="email-address"
-                />
+                <View className="gap-4 w-full">
+                  <Text className="text-gray-500 font-semibold">
+                    Date of birth
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => setShowDatePicker(true)}
+                    className="bg-[#2982dc14] w-full flex flex-row items-center justify-between placeholder:text-sm placeholder:text-[#7C8BA0] px-6 rounded-lg py-4"
+                  >
+                    <Text
+                      className={`text-md font-medium ${
+                        birthdate ? "text-gray-500" : "text-gray-400"
+                      }`}
+                    >
+                      {birthdate ? birthdate : "DD/MM/YYYY"}
+                    </Text>
+                    <Image source={imagePath.calender} />
+                  </TouchableOpacity>
+                  {showDatePicker && (
+                    <DateTimePicker
+                      value={selectedDate}
+                      mode="date"
+                      display={Platform.OS === "ios" ? "spinner" : "default"}
+                      onChange={handleDateSelect}
+                    />
+                  )}
+                </View>
               </View>
               {/* Mindset */}
-              <View>
-                <Text>Mindset</Text>
+              <View className=" gap-4 ">
+                <Text className="text-gray-500 font-semibold">Mindset</Text>
                 <TextInput
                   placeholder="Looking for Co-founder "
-                  // className="bg-[#2982dc14] w-full placeholder:text-[#7C8BA0] px-6 py-5 rounded-lg p-2"
-                  keyboardType="email-address"
+                  editable
+                  multiline
+                  numberOfLines={4}
+                  maxLength={40}
+                  // value={value}
+                  // onChangeText={text => onChangeText(text)}
+                  className="bg-[#2982dc14] w-full flex flex-row items-center justify-between placeholder:text-[#7C8BA0] px-6 rounded-lg py-4 "
                 />
               </View>
               {/* Warning text */}
-              <Text>
+              <Text className="text-red-600 font-normal">
                 Mindset section is mandatory for individuals looking for
                 co-founder for startup
               </Text>
 
               {/* Location */}
-              <View>
-                <Text>Mindset</Text>
+              <View className="gap-3">
+                <Text className="text-gray-500 font-semibold">Location</Text>
                 <TextInput
-                  placeholder="Looking for Co-founder "
-                  // className="bg-[#2982dc14] w-full placeholder:text-[#7C8BA0] px-6 py-5 rounded-lg p-2"
+                  placeholder="Change location "
+                  className="bg-[#2982dc14] w-full placeholder:text-[#7C8BA0] px-6 py-4 rounded-lg p-2"
                   keyboardType="email-address"
                 />
               </View>
             </View>
 
             {/* Third section */}
-            <View>
-              <Text>My Interest</Text>
-              <View>
+            <View className="gap-3 mt-4 ">
+              <Text className="text-gray-500 font-semibold ">My Interest</Text>
+              <View className="gap-3 ">
                 {/* Choose sector */}
-                <View>
-                  <View>
-                    <Text>Choose sector/industries</Text>
-                    <Text>AR/VR, Advertising</Text>
+                <TouchableOpacity className="  border-y-[0.5px] py-3 justify-between items-center pr-2 flex flex-row border-gray-300">
+                  <View className="gap-1">
+                    <Text className="text-gray-500 font-semibold">
+                      Choose sector/industries
+                    </Text>
+                    <Text className="text-gray-400  text-sm ">
+                      AR/VR, Advertising
+                    </Text>
                   </View>
                   <Ionicons
                     name="chevron-forward-outline"
                     size={20}
-                    color="#2983DC"
+                    color="#757575"
                   />
-                </View>
+                </TouchableOpacity>
                 {/* My skillset */}
-                <View>
-                  <View>
-                    <Text>My Skillset</Text>
-                    <Text>Web developer, Marketing</Text>
+                <TouchableOpacity className="border-b-[0.5px] pb-3  justify-between items-center pr-2 flex flex-row border-gray-300">
+                  <View className="gap-1">
+                    <Text className="text-gray-500 font-semibold">
+                      My Skillset
+                    </Text>
+                    <Text className="text-gray-400  text-sm ">
+                      Web developer, Marketing
+                    </Text>
                   </View>
                   <Ionicons
                     name="chevron-forward-outline"
                     size={20}
-                    color="#2983DC"
+                    color="#757575"
                   />
-                </View>
+                </TouchableOpacity>
                 {/* Prior startup */}
-                <View>
-                  <View>
-                    <Text>Prior Startup experience</Text>
-                    <Text>Ready to go full time with the right co founder</Text>
+                <TouchableOpacity className="border-b-[0.5px] pb-3  justify-between items-center pr-2 flex flex-row border-gray-300">
+                  <View className="gap-1">
+                    <Text className="text-gray-500 font-semibold">
+                      Prior Startup experience
+                    </Text>
+                    <Text className="text-gray-400  text-sm ">
+                      Ready to go full time with the right co founder
+                    </Text>
                   </View>
                   <Ionicons
                     name="chevron-forward-outline"
                     size={20}
-                    color="#2983DC"
+                    color="#757575"
                   />
-                </View>
+                </TouchableOpacity>
                 {/* Commentment level */}
-                <View>
-                  <View>
-                    <Text>Commitment Level</Text>
-                    <Text>No prior startup experience</Text>
+                <TouchableOpacity className="border-b-[0.5px] pr-2  justify-between items-center pr-2 flex flex-row border-gray-300">
+                  <View className="gap-1">
+                    <Text className="text-gray-500 font-semibold">
+                      Commitment Level
+                    </Text>
+                    <Text className="text-gray-400  text-sm ">
+                      No prior startup experience
+                    </Text>
                   </View>
                   <Ionicons
                     name="chevron-forward-outline"
                     size={20}
-                    color="#2983DC"
+                    color="#757575"
                   />
-                </View>
+                </TouchableOpacity>
                 {/* compensation expe */}
-                <View>
-                  <View>
-                    <Text>Compensation Expectation</Text>
-                    <Text>Equity</Text>
+                <TouchableOpacity className="border-b-[0.5px] pr-2  justify-between items-center pr-2 flex flex-row border-gray-300">
+                  <View className="gap-1">
+                    <Text className="text-gray-500 font-semibold">
+                      Compensation Expectation
+                    </Text>
+                    <Text className="text-gray-400  text-sm ">Equaty</Text>
                   </View>
                   <Ionicons
                     name="chevron-forward-outline"
                     size={20}
-                    color="#2983DC"
+                    color="#757575"
                   />
-                </View>
+                </TouchableOpacity>
               </View>
             </View>
 
             {/* Fourth section */}
-            <View>
-              <View>
-                <Text>My Education</Text>
-                <TouchableOpacity>
-                  <Text>Add</Text>
+            <View className="gap-3 mt-5">
+              <View className=" flex flex-row justify-between pr-2 items-center ">
+                <Text className="text-gray-600  font-semibold">
+                  My Education
+                </Text>
+                <TouchableOpacity className="flex flex-row font-semibold items-center justify-center">
+                  <Text className="text-[#2983DC] font-medium">Add</Text>
                   <Ionicons name="add-outline" size={20} color="#2983DC" />
                 </TouchableOpacity>
               </View>
               {/* Education bar */}
-              <View>
-                {/* <Image/> */}
-                <View>
-                  <Text>Rajiv Gandhi Institute of Knowledge Technologies</Text>
-                  <Text>Bachelores in Technology - BTech</Text>
-                  <View>
-                    <Text>Oct 2016-Dec 2020</Text>
-                    <Text>4 yrs 3 Months</Text>
+              <View className="flex flex-row border-y-[0.5px] py-4 border-gray-300">
+                <Image className="w-16 h-16" source={imagePath.Eduimage} />
+                <View className="px-4">
+                  <Text className="text-gray-800 font-semibold">
+                    Rajiv Gandhi Institute of Knowledge Technologies
+                  </Text>
+                  <Text className="text-sm text-gray-500 font-medium">
+                    Bachelores in Technology - BTech
+                  </Text>
+                  <View className="flex flex-row gap-3">
+                    <Text className="text-sm text-gray-500 font-medium">
+                      Oct 2016-Dec 2020
+                    </Text>
+                    <Text className="text-sm text-gray-500 font-medium">
+                      4 yrs 3 Months
+                    </Text>
                   </View>
                 </View>
               </View>
             </View>
 
             {/* Fifth section */}
-            <View>
-              <View>
-                <Text>My Experience</Text>
-                <TouchableOpacity>
-                  <Text>Add</Text>
+            <View className="gap-3 mt-5">
+              <View className=" flex flex-row justify-between pr-2 items-center ">
+                <Text className="text-gray-600  font-semibold">
+                  My Experience
+                </Text>
+                <TouchableOpacity className="flex flex-row font-semibold items-center justify-center">
+                  <Text className="text-[#2983DC] font-medium">Add</Text>
                   <Ionicons name="add-outline" size={20} color="#2983DC" />
                 </TouchableOpacity>
               </View>
               {/* Education bar */}
-              <View>
-                {/* <Image/>
-                <View>
-                  <Text>Rajiv Gandhi Institute of Knowledge Technologies</Text>
-                  <Text>Bachelores in Technology - BTech</Text>
-                  <View>
-                    <Text>Oct 2016-Dec 2020</Text>
-                    <Text>4 yrs 3 Months</Text>
-                  </View>
-                </View> */}
-                <Text>No Experience listed</Text>
+              <View className="flex flex-row border-y-[0.5px] py-4 border-gray-300">
+                <Text className="text-gray-800 font-normal text-sm">
+                  No Experience listed
+                </Text>
               </View>
             </View>
 
             {/* sixth section */}
-            <View>
-              <View>
-                <Text>My Projects</Text>
-                <TouchableOpacity>
-                  <Text>Add</Text>
+            <View className="gap-3 mt-5">
+              <View className=" flex flex-row justify-between pr-2 items-center ">
+                <Text className="text-gray-600  font-semibold">My Project</Text>
+                <TouchableOpacity className="flex flex-row font-semibold items-center justify-center">
+                  <Text className="text-[#2983DC] font-medium">Add</Text>
                   <Ionicons name="add-outline" size={20} color="#2983DC" />
                 </TouchableOpacity>
               </View>
-              {/* Projects */}
-              <View>
-                {/* Project 1 */}
-                <View>
-                  <Text>Weather App</Text>
-                  <Ionicons
-                    name="chevron-forward-outline"
-                    size={20}
-                    color="#2983DC"
-                  />
-                </View>
-                {/* Project 2 */}
-                <View>
-                  <Text>Calculator</Text>
-                  <Ionicons
-                    name="chevron-forward-outline"
-                    size={20}
-                    color="#2983DC"
-                  />
-                </View>
+              {/* Education bar */}
+              <View className="flex flex-row border-y-[0.5px] py-4 border-gray-300">
+                <Text className="text-gray-800 font-normal text-sm">
+                  No Project
+                </Text>
               </View>
             </View>
           </View>

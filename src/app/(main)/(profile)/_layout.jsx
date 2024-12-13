@@ -8,7 +8,7 @@ const _layout = () => {
       <Stack.Screen name="edit_profile" options={{ headerShown: false }} />
       <Stack.Screen name="edit_preferance" options={{ headerShown: false }} />
       <Stack.Screen name="referal_rewards" options={{ headerShown: false }} />
-
+      <Stack.Screen name="setting" options={{ headerShown: false }} />
     </Stack>
   );
 };
