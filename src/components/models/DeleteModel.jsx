@@ -79,9 +79,9 @@ const SubscriptionModel = ({ isModalVisible, handleModalVisibility }) => {
 
             {/* Continue Button */}
             <TouchableOpacity
-              onPress={() => {
-                handleNavigation("/subscription_page");
-              }} // Call handleContinue function
+              // onPress={() => {
+              //   handleNavigation("/subscription_page");
+              // }} // Call handleContinue function
               className={`flex-1 w-2/3 rounded-lg py-3 
                          bg-[#2983DC]
                        `} // Disable button if no referral code

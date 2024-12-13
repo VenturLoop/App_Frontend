@@ -11,12 +11,12 @@ const PageLoading = ({ noLogo = false, smallLoading = false }) => {
         <ActivityIndicator size="large" color="#2983DC" />
       ) : (
         <View className="h-1/2 flex-1 justify-center items-center">
-          <LottieView
+          {/* <LottieView
             source={require("../../assets/animation/loading.json")} // Reference the Lottie JSON file
             autoPlay
             loop
             style={{ width: 192, height: 192 }} // Adjust size as needed
-          />
+          /> */}
         </View>
       )}
       {noLogo === true ? null : (
