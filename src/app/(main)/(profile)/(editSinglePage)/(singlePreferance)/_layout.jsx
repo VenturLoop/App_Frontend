@@ -23,7 +23,7 @@ const SinglePreferancePageLayout = () => {
           },
         },
         animationTypeForReplace: "pop", // Quick replace animation
-      }}  
+      }}
     >
       <Stack.Screen name="editIntrest" />
       {/* <Stack.Screen name="editStatus" /> */}

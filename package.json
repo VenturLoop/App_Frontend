@@ -49,6 +49,7 @@
     "react-native": "0.76.5",
     "react-native-country-picker-modal": "^2.0.0",
     "react-native-date-picker": "^5.0.7",
+    "react-native-deck-swiper": "^2.0.17",
     "react-native-gesture-handler": "~2.20.2",
     "react-native-get-location": "^5.0.0",
     "react-native-maps": "1.18.0",

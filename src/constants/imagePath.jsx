@@ -20,6 +20,8 @@ export default {
   NoMessage: require("../assets/images/noMessages.png"),
   delete: require("../assets/images/delete.png"),
   premiumImage: require("../assets/images/premium.png"),
+  cake: require("../assets/images/cake.png"),
+
 
 
 

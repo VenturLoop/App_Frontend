@@ -19,7 +19,7 @@ const TabBar = ({ state, descriptors, navigation }) => {
   };
 
   return (
-    <View className="flex-row bg-white rounded-xl shadow-lg mx-4 mb-3 mt-2   py-3">
+    <View className="flex-row bg-white rounded-xl shadow-lg mx-4 mb-3    py-3">
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
         const isFocused = state.index === index;

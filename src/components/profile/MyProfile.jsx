@@ -42,7 +42,7 @@ const MyProfile = () => {
             {/* Three dot view */}
             <TouchableOpacity onPress={handleNext}>
               <Ionicons
-                name="ellipsis-horizontal-outline"
+                name="ellipsis-horizontal"
                 size={28}
                 color="black"
               />
