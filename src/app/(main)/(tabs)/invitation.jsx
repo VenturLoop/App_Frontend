@@ -26,8 +26,10 @@ const invitation = () => {
             }`}
           >
             <Text
-              className={`text-lg font-medium text-center ${
-                activeTab === "invitation" ? "text-white" : "text-black"
+              className={`text-lg  text-center ${
+                activeTab === "invitation"
+                  ? "text-white font-semibold "
+                  : "text-black"
               }`}
             >
               Invitation
@@ -43,7 +45,7 @@ const invitation = () => {
           >
             <Text
               className={`text-lg text-center ${
-                activeTab === "send" ? "text-white" : "text-black"
+                activeTab === "send" ? "text-white font-semibold" : "text-black"
               }`}
             >
               I've Send
@@ -59,7 +61,9 @@ const invitation = () => {
           >
             <Text
               className={`text-lg text-center ${
-                activeTab === "saved" ? "text-white" : "text-black"
+                activeTab === "saved"
+                  ? "text-white font-semibold"
+                  : "text-black"
               }`}
             >
               I've Saved
@@ -67,7 +71,7 @@ const invitation = () => {
           </TouchableOpacity>
         </View>
       </View>
-      <View className="w-full flex-1 px-4 pt-4 ">
+      <View className="w-full flex-1 px-4  ">
         {activeTab === "send" ? (
           <Send />
         ) : activeTab === "saved" ? (

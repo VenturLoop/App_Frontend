@@ -18,6 +18,7 @@ const EditProfile = () => {
   const [birthdate, setBirthdate] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [isMindset, setisMindset] = useState("");
   // Profile fields with initial values
   const [formData, setformData] = useState({
     name: "",
@@ -40,6 +41,12 @@ const EditProfile = () => {
         field.id === id ? { ...field, value: newValue } : field
       )
     );
+  };
+
+  const handleNavigation = (route) => {
+    setTimeout(() => {
+      router.navigate(route);
+    }, 10); // Wait for modal close animation before routing
   };
 
   const handleDateSelect = (event, date) => {
@@ -180,16 +187,18 @@ const EditProfile = () => {
                   multiline
                   numberOfLines={4}
                   maxLength={40}
-                  // value={value}
-                  // onChangeText={text => onChangeText(text)}
+                  value={isMindset}
+                  onChangeText={(text) => setisMindset(text)}
                   className="bg-[#2982dc14] w-full flex flex-row items-center justify-between placeholder:text-[#7C8BA0] px-6 rounded-lg py-4 "
                 />
               </View>
               {/* Warning text */}
-              <Text className="text-red-600 font-normal">
-                Mindset section is mandatory for individuals looking for
-                co-founder for startup
-              </Text>
+              {isMindset === "" && (
+                <Text className="text-red-600 font-normal">
+                  Mindset section is mandatory for individuals looking for
+                  co-founder for startup
+                </Text>
+              )}
 
               {/* Location */}
               <View className="gap-3">
@@ -207,7 +216,12 @@ const EditProfile = () => {
               <Text className="text-gray-500 font-semibold ">My Interest</Text>
               <View className="gap-3 ">
                 {/* Choose sector */}
-                <TouchableOpacity className="  border-y-[0.5px] py-3 justify-between items-center pr-2 flex flex-row border-gray-300">
+                <TouchableOpacity
+                  onPress={() => {
+                    handleNavigation("/user_intrest");
+                  }}
+                  className="  border-y-[0.5px] py-3 justify-between items-center pr-2 flex flex-row border-gray-300"
+                >
                   <View className="gap-1">
                     <Text className="text-gray-500 font-semibold">
                       Choose sector/industries
@@ -223,7 +237,12 @@ const EditProfile = () => {
                   />
                 </TouchableOpacity>
                 {/* My skillset */}
-                <TouchableOpacity className="border-b-[0.5px] pb-3  justify-between items-center pr-2 flex flex-row border-gray-300">
+                <TouchableOpacity
+                  onPress={() => {
+                    handleNavigation("/user_skillset");
+                  }}
+                  className="border-b-[0.5px] pb-3  justify-between items-center pr-2 flex flex-row border-gray-300"
+                >
                   <View className="gap-1">
                     <Text className="text-gray-500 font-semibold">
                       My Skillset
@@ -239,7 +258,12 @@ const EditProfile = () => {
                   />
                 </TouchableOpacity>
                 {/* Prior startup */}
-                <TouchableOpacity className="border-b-[0.5px] pb-3  justify-between items-center pr-2 flex flex-row border-gray-300">
+                <TouchableOpacity
+                  onPress={() => {
+                    handleNavigation("/user_expe");
+                  }}
+                  className="border-b-[0.5px] pb-3  justify-between items-center pr-2 flex flex-row border-gray-300"
+                >
                   <View className="gap-1">
                     <Text className="text-gray-500 font-semibold">
                       Prior Startup experience
@@ -255,7 +279,12 @@ const EditProfile = () => {
                   />
                 </TouchableOpacity>
                 {/* Commentment level */}
-                <TouchableOpacity className="border-b-[0.5px] pr-2  justify-between items-center pr-2 flex flex-row border-gray-300">
+                <TouchableOpacity
+                  onPress={() => {
+                    handleNavigation("/user_commitment");
+                  }}
+                  className="border-b-[0.5px] pb-2  justify-between items-center pr-2 flex flex-row border-gray-300"
+                >
                   <View className="gap-1">
                     <Text className="text-gray-500 font-semibold">
                       Commitment Level
@@ -271,7 +300,12 @@ const EditProfile = () => {
                   />
                 </TouchableOpacity>
                 {/* compensation expe */}
-                <TouchableOpacity className="border-b-[0.5px] pr-2  justify-between items-center pr-2 flex flex-row border-gray-300">
+                <TouchableOpacity
+                  onPress={() => {
+                    handleNavigation("/user_expectation");
+                  }}
+                  className="border-b-[0.5px] pb-2  justify-between items-center pr-2 flex flex-row border-gray-300"
+                >
                   <View className="gap-1">
                     <Text className="text-gray-500 font-semibold">
                       Compensation Expectation
@@ -293,7 +327,12 @@ const EditProfile = () => {
                 <Text className="text-gray-600  font-semibold">
                   My Education
                 </Text>
-                <TouchableOpacity className="flex flex-row font-semibold items-center justify-center">
+                <TouchableOpacity
+                  onPress={() => {
+                    handleNavigation("/education");
+                  }}
+                  className="flex flex-row font-semibold items-center justify-center"
+                >
                   <Text className="text-[#2983DC] font-medium">Add</Text>
                   <Ionicons name="add-outline" size={20} color="#2983DC" />
                 </TouchableOpacity>
@@ -326,7 +365,12 @@ const EditProfile = () => {
                 <Text className="text-gray-600  font-semibold">
                   My Experience
                 </Text>
-                <TouchableOpacity className="flex flex-row font-semibold items-center justify-center">
+                <TouchableOpacity
+                  onPress={() => {
+                    handleNavigation("/my_expe");
+                  }}
+                  className="flex flex-row font-semibold items-center justify-center"
+                >
                   <Text className="text-[#2983DC] font-medium">Add</Text>
                   <Ionicons name="add-outline" size={20} color="#2983DC" />
                 </TouchableOpacity>
@@ -343,7 +387,12 @@ const EditProfile = () => {
             <View className="gap-3 mt-5">
               <View className=" flex flex-row justify-between pr-2 items-center ">
                 <Text className="text-gray-600  font-semibold">My Project</Text>
-                <TouchableOpacity className="flex flex-row font-semibold items-center justify-center">
+                <TouchableOpacity
+                  onPress={() => {
+                    handleNavigation("/myproject");
+                  }}
+                  className="flex flex-row font-semibold items-center justify-center"
+                >
                   <Text className="text-[#2983DC] font-medium">Add</Text>
                   <Ionicons name="add-outline" size={20} color="#2983DC" />
                 </TouchableOpacity>

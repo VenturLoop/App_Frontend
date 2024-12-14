@@ -4,18 +4,17 @@ import EditLayout from "../../../components/ModelLayoul/EditLayout";
 import { Ionicons } from "@expo/vector-icons";
 import CustomeButton from "../../../components/buttons/CustomeButton";
 import { router } from "expo-router";
+import SubscriptionModel from "../../../components/models/SubscriptionModel";
 
 const edit_preferance = () => {
   const [userRole, setuserRole] = useState("co-founder");
+  const [isPremiumModel, setisPremiumModel] = useState(false);
 
   const handleNavigation = (route) => {
     setTimeout(() => {
       router.navigate(route);
     }, 10); // Wait for modal close animation before routing
   };
-
-  
-
 
   return (
     <>
@@ -139,7 +138,11 @@ const edit_preferance = () => {
                 />
               </TouchableOpacity>
               {/* Interests */}
-              <TouchableOpacity className=" border-b-[0.5px] border-gray-300 mx-2 px-2 flex flex-row justify-between items-center pb-2">
+              <TouchableOpacity
+             onPress={() => {
+              handleNavigation("/editIntrest");
+            }}
+              className=" border-b-[0.5px] border-gray-300 mx-2 px-2 flex flex-row justify-between items-center pb-2">
                 <View className="gap-1">
                   <Text className="font-semibold">Interests</Text>
                   <Text className="text-sm text-gray-500">
@@ -153,7 +156,11 @@ const edit_preferance = () => {
                 />
               </TouchableOpacity>
               {/* Distance */}
-              <TouchableOpacity className=" border-b-[0.5px] border-gray-300 mx-2 px-2 flex flex-row justify-between items-center pb-2">
+              <TouchableOpacity
+              onPress={() => {
+                handleNavigation("/distance");
+              }}
+              className=" border-b-[0.5px] border-gray-300 mx-2 px-2 flex flex-row justify-between items-center pb-2">
                 <View className="gap-1">
                   <Text className="font-semibold">Distance</Text>
                   <Text className="text-sm font-normal text-gray-500">
@@ -167,7 +174,12 @@ const edit_preferance = () => {
                 />
               </TouchableOpacity>
               {/* Commitment Level */}
-              <TouchableOpacity className=" border-b-[0.5px] border-gray-300 mx-2 px-2 flex flex-row justify-between items-center pb-2">
+              <TouchableOpacity 
+               onPress={() => {
+                handleNavigation("/commitment_level");
+              }}
+              
+              className=" border-b-[0.5px] border-gray-300 mx-2 px-2 flex flex-row justify-between items-center pb-2">
                 <View className="gap-1">
                   <Text className="font-semibold">Commitment Level</Text>
                   <Text className="text-sm font-normal text-gray-500">
@@ -190,7 +202,12 @@ const edit_preferance = () => {
             </Text>
 
             {/* Age Range */}
-            <TouchableOpacity className="border-y-[0.5px] border-gray-300 py-3  px-2 flex flex-row justify-between items-center ">
+            <TouchableOpacity
+              onPress={() => {
+                setisPremiumModel(true);
+              }}
+              className="border-y-[0.5px] border-gray-300 py-3  px-2 flex flex-row justify-between items-center "
+            >
               <View className="gap-1">
                 <Text className="font-semibold">Age Range</Text>
                 <Text className="text-sm font-normal text-gray-500">
@@ -201,7 +218,12 @@ const edit_preferance = () => {
             </TouchableOpacity>
 
             {/* P S Experience  */}
-            <TouchableOpacity className="border-b-[0.5px] border-gray-300 py-3  px-2 flex flex-row justify-between items-center ">
+            <TouchableOpacity
+              onPress={() => {
+                setisPremiumModel(true);
+              }}
+              className="border-b-[0.5px] border-gray-300 py-3  px-2 flex flex-row justify-between items-center "
+            >
               <View className="gap-1">
                 <Text className="font-semibold">Prior startup Experience</Text>
                 <Text className="text-sm font-normal text-gray-500">
@@ -212,7 +234,12 @@ const edit_preferance = () => {
             </TouchableOpacity>
 
             {/* Equity exchenge */}
-            <TouchableOpacity className="border-b-[0.5px] border-gray-300 py-3  px-2 flex flex-row justify-between items-center ">
+            <TouchableOpacity
+              onPress={() => {
+                setisPremiumModel(true);
+              }}
+              className="border-b-[0.5px] border-gray-300 py-3  px-2 flex flex-row justify-between items-center "
+            >
               <View className="gap-1">
                 <Text className="font-semibold">Equity expectation</Text>
                 <Text className="text-sm font-normal text-gray-500">
@@ -248,6 +275,12 @@ const edit_preferance = () => {
           </TouchableOpacity>
         </View>
       </EditLayout>
+      <SubscriptionModel
+        isModalVisible={isPremiumModel}
+        handleModalVisibility={() => {
+          setisPremiumModel(!isPremiumModel);
+        }}
+      />
     </>
   );
 };

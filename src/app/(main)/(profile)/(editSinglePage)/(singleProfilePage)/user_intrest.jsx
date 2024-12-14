@@ -13,7 +13,7 @@ import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import CustomeButton from "../../../../../components/buttons/CustomeButton";
 
-const editIntrest = () => {
+const user_intrest = () => {
   const [selectedTags, setSelectedTags] = useState([""]);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -48,7 +48,7 @@ const editIntrest = () => {
           >
             <Ionicons name="arrow-back-outline" size={25} color="black" />
           </TouchableOpacity>
-          <Text className="text-xl font-semibold">Interests</Text>
+          <Text className="text-xl font-semibold"> Interests</Text>
         </View>
         {/* <Text className="text-xl font-semibold text-[#2983DC]">3/6</Text> */}
       </View>
@@ -98,4 +98,4 @@ const editIntrest = () => {
   );
 };
 
-export default editIntrest;
+export default user_intrest;

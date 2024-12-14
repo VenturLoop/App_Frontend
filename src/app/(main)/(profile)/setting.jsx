@@ -12,13 +12,11 @@ import { ScrollView } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import imagePath from "../../../constants/imagePath";
 import { router } from "expo-router";
-import SubscriptionModel from "../../../components/models/SubscriptionModel";
 import DeleteModel from "../../../components/models/DeleteModel";
 
 const setting = () => {
   const [isEnabled, setIsEnabled] = useState(false);
   const [deleteModel, setDeleteModel] = useState(false);
-  const [isPremiumModel, setisPremiumModel] = useState(false);
   const [isNotiEnabled, setIsNotiEnabled] = useState(true);
 
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
@@ -102,9 +100,7 @@ const setting = () => {
                 <View className="gap-3 ">
                   {/* Choose sector */}
                   <TouchableOpacity
-                    onPress={() => {
-                      setisPremiumModel(true);
-                    }}
+                    onPress={() => handleNavigation("/subscription_page")}
                     className="  border-y-[0.5px] py-3 justify-between items-center pr-2 flex flex-row border-gray-300"
                   >
                     <View className="gap-1">
@@ -271,12 +267,6 @@ const setting = () => {
         isModalVisible={deleteModel}
         handleModalVisibility={() => {
           setDeleteModel(!deleteModel);
-        }}
-      />
-      <SubscriptionModel
-        isModalVisible={isPremiumModel}
-        handleModalVisibility={() => {
-          setisPremiumModel(!isPremiumModel);
         }}
       />
     </>

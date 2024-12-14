@@ -4,7 +4,6 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Image,
-  TextInput,
 } from "react-native";
 import React, { useState } from "react";
 // import CustomeButton from "../../../../components/buttons/CustomeButton";
@@ -13,21 +12,22 @@ import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import CustomeButton from "../../../../../components/buttons/CustomeButton";
 
-const editIntrest = () => {
+const skillset = () => {
   const [selectedTags, setSelectedTags] = useState([""]);
-  const [searchQuery, setSearchQuery] = useState("");
 
   const tags = [
-    "AI/ML",
-    "AR/VR",
-    "Advertising",
-    "Agritech",
-    "Analysis",
-    "AudioTech",
-    "Auto Tech",
-    "CleanTech",
-    "Cloud Infrastructure",
-    "F & B",
+    "Web Developer",
+    "App Developer",
+    "Product",
+    "Team Management",
+    "Marketing",
+    "Sales",
+    "Finance",
+    "Social Media",
+    "Distribution",
+    "Legal",
+    "UI/UX Design",
+    "Product Design",
   ];
 
   const toggleTag = (tag) => {
@@ -39,7 +39,7 @@ const editIntrest = () => {
   };
   return (
     <SafeAreaView className="flex-1 bg-white  h-screen items-center justify-between">
-      <View className="header flex-row px-5 justify-between border-b-[0.5px] border-gray-500 py-4 w-full  items-center">
+      <View className="header flex-row px-5 justify-between border-gray-500 border-b-[0.5px] py-4 w-full  items-center">
         <View className="flex-row items-center justify-center gap-3">
           <TouchableOpacity
             onPress={() => {
@@ -48,21 +48,12 @@ const editIntrest = () => {
           >
             <Ionicons name="arrow-back-outline" size={25} color="black" />
           </TouchableOpacity>
-          <Text className="text-xl font-semibold">Interests</Text>
+          <Text className="text-xl font-semibold">Skill set</Text>
         </View>
-        {/* <Text className="text-xl font-semibold text-[#2983DC]">3/6</Text> */}
+        {/* <Text className="text-xl font-semibold text-[#2983DC]">2/6</Text> */}
       </View>
-      <View className="body w-full flex-1 px-6 p-4">
-        {/* Search Bar */}
-        <TextInput
-          placeholder="Search interests"
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          className="w-full bg-gray-100 border text-lg font-medium  border-gray-300 rounded-full px-4 py-3 my-4 text-gray-700"
-        />
-
-        {/* Tag List */}
-        <View className="flex flex-row mt-4 flex-wrap gap-2">
+      <View className="body w-full flex-1 py-3">
+        <View className="flex flex-row flex-wrap gap-2 p-4">
           {tags.map((tag) => (
             <TouchableOpacity
               key={tag}
@@ -74,7 +65,7 @@ const editIntrest = () => {
               }`}
             >
               <Text
-                className={`text-sm ${
+                className={`text-md  ${
                   selectedTags.includes(tag)
                     ? "text-[#2983DC] font-medium"
                     : "text-gray-600"
@@ -89,7 +80,7 @@ const editIntrest = () => {
       <View className="footer px-5 w-full">
         <CustomeButton
           onButtonPress={() => {
-            // router.navigate("/commitment");
+            // router.navigate("/");
           }}
           title="Save"
         />
@@ -98,4 +89,4 @@ const editIntrest = () => {
   );
 };
 
-export default editIntrest;
+export default skillset;

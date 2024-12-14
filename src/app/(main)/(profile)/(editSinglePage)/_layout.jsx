@@ -25,9 +25,10 @@ const EditSinglePageLayout = () => {
         animationTypeForReplace: "pop", // Quick replace animation
       }}
     >
-      <Stack.Screen name="editSkillset" />
+      {/* <Stack.Screen name="editSkillset" /> */}
       <Stack.Screen name="editStatus" />
       <Stack.Screen name="(singlePreferance)" />
+      <Stack.Screen name="(singleProfilePage)" />
     </Stack>
   );
 };

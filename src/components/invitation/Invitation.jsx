@@ -2,22 +2,27 @@ import React, { useState } from "react";
 import { View, Text, FlatList, Image, TouchableOpacity } from "react-native";
 import imagePath from "../../constants/imagePath";
 import { router } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
+import {
+  FontAwesome,
+  FontAwesome5,
+  FontAwesome6,
+  Ionicons,
+} from "@expo/vector-icons";
 import SubscriptionModel from "../models/SubscriptionModel";
 
 const messages = [
   {
     id: 1,
     name: "Souptik Das",
-    time: "1 hour ago",
-    lookingFor: "Co-founder",
+    time: "1 Hour ago",
+    lookingFor: "Looking for Co-founder",
     location: "Kolkata",
     dob: "23/12/2015",
   },
   {
     id: 2,
     name: "Suraj Sai",
-    time: "1 hour ago",
+    time: "1 Hour ago",
     lookingFor: "Co-founder",
     location: "Kolkata",
     dob: "23/12/2015",
@@ -25,7 +30,15 @@ const messages = [
   {
     id: 3,
     name: "Atharva Tete",
-    time: "1 hour ago",
+    time: "1 Hour ago",
+    lookingFor: "Co-founder",
+    location: "Kolkata",
+    dob: "23/12/2015",
+  },
+  {
+    id: 4,
+    name: "Atharva Tete",
+    time: "1 Hour ago",
     lookingFor: "Co-founder",
     location: "Kolkata",
     dob: "23/12/2015",
@@ -35,80 +48,122 @@ const messages = [
 
 const Invitation = () => {
   const [isPremiumModel, setisPremiumModel] = useState(false);
+  const [isPremium, setIsPremium] = useState(false); // Premium subscription state
 
   return (
     <>
       {messages.length > 0 ? (
-        <View className="bg-gray-100 flex justify-between h-full pt-4  ">
+        <View className="bg-gray-100 flex px-2 py-4 justify-between h-full ">
           <FlatList
             data={messages}
+            showsVerticalScrollIndicator={false}
             keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
-              <>
-                <View
-                  className={`flex  flex-col gap-3 bg-white p-4 mb-8 rounded-lg shadow`}
-                >
-                  <View className={`"flex flex-row  justify-between w-full `}>
-                    <View className="flex flex-row  gap-4">
-                      <Image
-                        className="w-16  h-16 rounded-2xl "
-                        resizeMode="contain"
-                        source={imagePath.userImage2}
-                      />
-                      <View className="gap-1">
-                        <Text className="text-xl font-semibold">
-                          Souptik Das
+            renderItem={({ item, index }) => (
+              <View
+                className={`flex flex-col gap-5 px-4 py-3 mb-8 rounded-lg shadow ${
+                  index > 0 && !isPremium ? "bg-gray-200 blur-3xl" : "bg-white"
+                }`}
+              >
+                {/* Header */}
+                <View className="flex flex-row justify-between w-full">
+                  <View className="flex flex-row gap-4">
+                    <Image
+                      className="w-16 h-16 rounded-2xl"
+                      resizeMode="contain"
+                      source={imagePath.userImage2}
+                    />
+                    <View className="gap-1 flex items-start justify-center">
+                      <Text
+                        className={`text-xl font-semibold ${
+                          index > 0 && !isPremium
+                            ? "text-gray-400"
+                            : "text-black"
+                        }`}
+                      >
+                        {item.name}
+                      </Text>
+                      <View
+                        className={`py-1 px-2 rounded-full ${
+                          index > 0 && !isPremium
+                            ? "bg-gray-300"
+                            : "bg-[#2983DC]"
+                        }`}
+                      >
+                        <Text
+                          className={`text-center text-xs font-semibold ${
+                            index > 0 && !isPremium
+                              ? "text-gray-500"
+                              : "text-white"
+                          }`}
+                        >
+                          {item.lookingFor}
                         </Text>
-                        <View className="bg-[#2983DC] py-1 rounded-full px-3">
-                          <Text className="text-xs font-semibold text-white">
-                            Looking for Co-founder
-                          </Text>
-                        </View>
                       </View>
                     </View>
-                    <Text className="text-gray-400 text-sm">{item.time}</Text>
                   </View>
-                  <View className="w-full flex-row justify-between   items-centern">
-                    <View className="flex flex-row items-center px-4 w-1/2  justify-between ">
-                      <View>
-                        {/* Birthday logo */}
-                        <Text className="text-lg font-medium">
-                          {item.dob.split("/")[0]}
-                        </Text>
-                      </View>
-                      <View>
-                        {/* Location logo */}
-                        <Text className="text-lg font-medium">
-                          {item.location}
-                        </Text>
-                      </View>
-                    </View>
-                    <TouchableOpacity
-                      onPress={() => {
-                        router.push("/(message)/chat");
-                      }}
-                      className="bg-[#2983DC] flex-row gap-1 items-center justify-center px-3 py-1.5 rounded-lg"
-                    >
-                      {/* Logo */}
-                      <Ionicons
-                        name="chatbox-ellipses-outline"
-                        color="white"
-                        size={17}
-                      />
-                      <Text className="text-white">Chat</Text>
-                    </TouchableOpacity>
-                  </View>
+                  <Text className="text-gray-400 text-sm font-medium">
+                    {item.time}
+                  </Text>
                 </View>
-              </>
+
+                {/* Footer */}
+                <View className="w-full  flex-row justify-between items-center">
+                  <View className="flex-row  gap-2">
+                    <FontAwesome6 name="cake-candles" size={14} color="black" />
+
+                    <Text
+                      className={` font-medium ${
+                        index > 0 && !isPremium ? "text-gray-400" : "text-black"
+                      }`}
+                    >
+                      {item.dob.split("/")[0]}
+                    </Text>
+                  </View>
+                  <View className="flex-row gap-2 justify-center items-center">
+                    <FontAwesome6 size={14} name="location-dot" />
+                    <Text
+                      className={`  ${
+                        index > 0 && !isPremium ? "text-gray-400" : "text-black"
+                      }`}
+                    >
+                      {item.location}
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (index === 0 || isPremium) {
+                        router.push("/(message)/chat");
+                      } else {
+                        setisPremiumModel(true); // Prompt to upgrade
+                      }
+                    }}
+                    className={`flex-row gap-1 items-center justify-center px-3 py-1.5 rounded-2xl ${
+                      index > 0 && !isPremium ? "bg-gray-300" : "bg-[#2983DC]"
+                    }`}
+                  >
+                    <Ionicons
+                      name="chatbox-ellipses"
+                      color={index > 0 && !isPremium ? "gray" : "white"}
+                      size={17}
+                    />
+                    <Text
+                      className={`${
+                        index > 0 && !isPremium ? "text-gray-500" : "text-white"
+                      }`}
+                    >
+                      Chat
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
             )}
           />
-          <View className="bg-[#2983DC1C] mb-2 flex-row items-center flex gap-4 rounded-xl px-3 py-3">
-            {/* Upgrade button */}
+          <View className="bg-[#2983DC1C]   flex-row items-center gap-4 rounded-xl px-3 py-3">
             <TouchableOpacity
               onPress={() => {
                 setisPremiumModel(true);
               }}
-              className=" bg-[#2983DC] px-3 py-1.5 rounded-xl"
+              className="bg-[#2983DC] px-3 py-1.5 rounded-xl"
             >
               <Text className="text-lg tracking-widest text-white font-semibold">
                 Upgrade
@@ -122,7 +177,7 @@ const Invitation = () => {
       ) : (
         <View className="flex-1 items-center justify-center">
           <Image source={imagePath.NoMessage} />
-          <Text className="font-semibold">No invitation received yet !</Text>
+          <Text className="font-semibold">No invitation received yet!</Text>
         </View>
       )}
       <SubscriptionModel

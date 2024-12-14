@@ -25,8 +25,8 @@ const message = () => {
             }`}
           >
             <Text
-              className={`text-lg font-medium text-center ${
-                activeTab === "message" ? "text-white" : "text-black"
+              className={`text-lg  text-center ${
+                activeTab === "message" ? "text-white font-semibold" : "text-black"
               }`}
             >
               Messages
@@ -42,7 +42,7 @@ const message = () => {
           >
             <Text
               className={`text-lg text-center ${
-                activeTab === "request" ? "text-white" : "text-black"
+                activeTab === "request" ? "text-white font-semibold" : "text-black"
               }`}
             >
               Requests

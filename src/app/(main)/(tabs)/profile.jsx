@@ -50,7 +50,7 @@ const profile = () => {
           </TouchableOpacity>
         </View>
       </View>
-      <View className="flex-1 items-center py-4 px-6">
+      <View className="flex-1 items-center py-2 px-6">
         {activeTab === "previewProfile" ? <PreviewProfile /> : <MyProfile />}
       </View>
       <View></View>

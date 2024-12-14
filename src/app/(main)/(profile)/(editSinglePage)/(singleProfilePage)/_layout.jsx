@@ -2,7 +2,7 @@ import { View, Text } from "react-native";
 import React from "react";
 import { Stack } from "expo-router";
 
-const SinglePreferancePageLayout = () => {
+const SingleProfilePagePageLayout = () => {
   return (
     <Stack
       screenOptions={{
@@ -25,12 +25,13 @@ const SinglePreferancePageLayout = () => {
         animationTypeForReplace: "pop", // Quick replace animation
       }}
     >
-      <Stack.Screen name="editIntrest" />
-      <Stack.Screen name="distance" />
-      <Stack.Screen name="commitment_level" />
-      <Stack.Screen name="skillset" />
+      <Stack.Screen name="user_commitment" />
+      <Stack.Screen name="user_expe" />
+      <Stack.Screen name="user_expectation" />
+      <Stack.Screen name="user_intrest" />
+      <Stack.Screen name="user_skillset" />
     </Stack>
   );
 };
 
-export default SinglePreferancePageLayout;
+export default SingleProfilePagePageLayout;

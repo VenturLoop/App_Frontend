@@ -19,7 +19,12 @@ const TopNavar = () => {
         />
       </TouchableOpacity>
       <View className="flex flex-row items-center gap-10">
-        <TouchableOpacity>
+        <TouchableOpacity
+        className="p-2"
+          onPress={() => {
+            router.push("/edit_preferance");
+          }}
+        >
           <FontAwesome size={24} color="#2983DC" name="sliders" />
         </TouchableOpacity>
         <TouchableOpacity

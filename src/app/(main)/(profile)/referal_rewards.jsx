@@ -17,7 +17,11 @@ const referal_rewards = () => {
       <>
         <EditLayout title="Referal Reward" secondTitle="">
           <View className=" ">
-            <Image source={imagePath.referalImage} />
+            <Image
+              source={imagePath.referalImage}
+              className="w-full "
+              resizeMode="contain"
+            />
             <Text className="font-semibold text-xl tracking-wider text-start px-2 py-3 ">
               Invite friend and get complementary 10 direct connect
             </Text>
