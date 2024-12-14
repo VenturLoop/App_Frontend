@@ -2,7 +2,7 @@ import { View, Text } from "react-native";
 import React from "react";
 import { Stack } from "expo-router";
 
-const EditSinglePageLayout = () => {
+const SinglePreferancePageLayout = () => {
   return (
     <Stack
       screenOptions={{
@@ -27,9 +27,9 @@ const EditSinglePageLayout = () => {
     >
       <Stack.Screen name="editSkillset" />
       <Stack.Screen name="editStatus" />
-      <Stack.Screen name="(singlePreferance)" />
+      {/* <Stack.Screen name="(singlePreferance)" /> */}
     </Stack>
   );
 };
 
-export default EditSinglePageLayout;
+export default SinglePreferancePageLayout;
