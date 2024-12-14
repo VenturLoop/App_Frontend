@@ -1,6 +1,5 @@
 import React from "react";
 import { SafeAreaView, View, Image, ActivityIndicator } from "react-native";
-import LottieView from "lottie-react-native"; // Import Lottie
 import imagePath from "../../constants/imagePath"; // Assuming this holds the path
 
 const PageLoading = ({ noLogo = false, smallLoading = false }) => {
@@ -11,12 +10,7 @@ const PageLoading = ({ noLogo = false, smallLoading = false }) => {
         <ActivityIndicator size="large" color="#2983DC" />
       ) : (
         <View className="h-1/2 flex-1 justify-center items-center">
-          {/* <LottieView
-            source={require("../../assets/animation/loading.json")} // Reference the Lottie JSON file
-            autoPlay
-            loop
-            style={{ width: 192, height: 192 }} // Adjust size as needed
-          /> */}
+          <ActivityIndicator size="large" color="#2983DC" />
         </View>
       )}
       {noLogo === true ? null : (
