@@ -6,7 +6,7 @@ import * as SplashScreen from "expo-splash-screen";
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const [isLogin, setisLogin] = useState(false);
+  const [isLogin, setisLogin] = useState(true);
   useEffect(() => {
     setTimeout(() => {
       SplashScreen.hideAsync();

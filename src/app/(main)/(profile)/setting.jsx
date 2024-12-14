@@ -12,8 +12,8 @@ import { ScrollView } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import imagePath from "../../../constants/imagePath";
 import { router } from "expo-router";
-import DeleteModel from "../../../components/models/DeleteModel";
 import SubscriptionModel from "../../../components/models/SubscriptionModel";
+import DeleteModel from "../../../components/models/DeleteModel";
 
 const setting = () => {
   const [isEnabled, setIsEnabled] = useState(false);

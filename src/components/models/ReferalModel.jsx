@@ -69,7 +69,7 @@ const ReferalModel = ({
         onPress={handleModalVisibility}
       >
         {isLoading ? (
-          <View className="bg-white rounded-t-2xl h-40 justify-center px-6 py-8 items-center">
+          <View className="bg-white rounded-t-3xl h-40 justify-center px-6 py-8 items-center">
             <PageLoading noLogo={true} smallLoading={true} />
           </View>
         ) : (

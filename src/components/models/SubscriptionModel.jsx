@@ -56,7 +56,7 @@ const SubscriptionModel = ({ isModalVisible, handleModalVisibility }) => {
         {/* Modal Content */}
         <Animated.View
           style={{ transform: [{ translateY }] }}
-          className="bg-white rounded-t-2xl gap-6 px-6 py-8 items-center"
+          className="bg-white rounded-t-3xl gap-6 px-6 py-8 items-center"
         >
           {/* Title */}
           <Image source={imagePath.premiumImage} className="w-20 h-20" />

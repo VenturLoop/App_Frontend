@@ -1,53 +1,71 @@
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
   Modal,
   TouchableOpacity,
-  TextInput,
   Pressable,
+  Animated,
+  Image,
+  TextInput,
 } from "react-native";
-import React, { useState } from "react";
-import PageLoading from "../loading/PageLoading"; // Ensure the PageLoading component is imported
+import { router } from "expo-router";
+import imagePath from "../../constants/imagePath";
 import { Ionicons } from "@expo/vector-icons";
 
 const InviteReferalModel = ({
   isModalVisible,
   handleModalVisibility,
-  routerToNextPage,
+  nextPageRoute,
 }) => {
-  const [isLoading, setIsLoading] = useState(false); // State to manage loading
+  // const [isLoadi, setisLoadi] = useState(second)
   const [referal, setReferal] = useState(""); // Store referral code input
+  const translateY = React.useRef(new Animated.Value(300)).current; // Initial offset (off-screen)
 
-  // Function to handle the "Continue" button press
-  const handleContinue = () => {
-    setIsLoading(true); // Show loading screen
-    // setTimeout(() => {
-    //   setIsLoading(false); // Hide loading screen after 4000ms
-    //   routerToNextPage(); // Navigate to the next page
-    // }, 4000);
+  useEffect(() => {
+    if (isModalVisible) {
+      // Slide-up animation
+      Animated.timing(translateY, {
+        toValue: 0, // Bring modal to visible position
+        duration: 100, // Animation duration
+        useNativeDriver: true, // Use native driver for better performance
+      }).start();
+    } else {
+      // Slide-down animation
+      Animated.timing(translateY, {
+        toValue: 300, // Move modal off-screen
+        duration: 100,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [isModalVisible]);
+
+  const handleNavigation = (route) => {
+    if (isModalVisible) {
+      handleModalVisibility(); // Close modal after navigation
+      setTimeout(() => {
+        router.push(route);
+      }, 100); // Wait for modal close animation before routing
+    }
   };
 
   return (
     <Modal
-      animationType="fade" // Smooth fade-in and fade-out animation
+      animationType="none" // Disable default animations to apply custom ones
       transparent={true}
       visible={isModalVisible}
       onRequestClose={handleModalVisibility}
     >
-      {/* Semi-transparent Background */}
+      {/* Semi-transparent background */}
       <Pressable
-        style={{
-          backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent overlay
-        }}
-        className="flex-1  justify-end"
+        className="flex-1 bg-black/50 justify-end"
         onPress={handleModalVisibility}
-      />
-      {isLoading ? (
-        <View className="bg-white rounded-t-2xl h-40 justify-center px-6 py-8 items-center">
-          <PageLoading noLogo={true} smallLoading={true} />
-        </View>
-      ) : (
-        <View className="bg-white rounded-t-2xl gap-5 px-6 py-8 items-center">
+      >
+        {/* Modal Content */}
+        <Animated.View
+          style={{ transform: [{ translateY }] }}
+          className="bg-white rounded-t-3xl gap-6 px-6 py-8 items-center"
+        >
           {/* Title */}
           <Text className="text-2xl font-bold text-gray-800 text-center mb-4">
             Copy referral code
@@ -78,7 +96,7 @@ const InviteReferalModel = ({
 
             {/* Continue Button */}
             <TouchableOpacity
-              onPress={handleContinue} // Call handleContinue function
+              // onPress={handleContinue} // Call handleContinue function
               className={`flex-1 w-2/3 rounded-lg py-3  bg-[#2983DC]
               `} // Disable button if no referral code
             >
@@ -87,8 +105,8 @@ const InviteReferalModel = ({
               </Text>
             </TouchableOpacity>
           </View>
-        </View>
-      )}
+        </Animated.View>
+      </Pressable>
     </Modal>
   );
 };

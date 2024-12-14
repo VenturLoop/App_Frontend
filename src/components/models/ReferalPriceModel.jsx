@@ -63,7 +63,7 @@ const ReferalPriceModel = ({
         {/* Modal Content */}
         <Animated.View
           style={{ transform: [{ translateY }] }}
-          className="bg-white rounded-t-2xl gap-6 px-6 py-8 items-center"
+          className="bg-white rounded-t-3xl gap-6 px-6 py-8 items-center"
         >
           {/* Title */}
           <Text className="text-2xl font-bold text-gray-800 text-center my-4">

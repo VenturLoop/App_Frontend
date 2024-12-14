@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, FlatList, Image, TouchableOpacity } from "react-native";
 import imagePath from "../../constants/imagePath";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import SubscriptionModel from "../models/SubscriptionModel";
 
 const messages = [
   {
@@ -33,6 +34,8 @@ const messages = [
 // const messages = [];
 
 const Invitation = () => {
+  const [isPremiumModel, setisPremiumModel] = useState(false);
+
   return (
     <>
       {messages.length > 0 ? (
@@ -101,11 +104,16 @@ const Invitation = () => {
           />
           <View className="bg-[#2983DC1C] mb-2 flex-row items-center flex gap-4 rounded-xl px-3 py-3">
             {/* Upgrade button */}
-            <View className=" bg-[#2983DC] px-3 py-1.5 rounded-xl">
+            <TouchableOpacity
+              onPress={() => {
+                setisPremiumModel(true);
+              }}
+              className=" bg-[#2983DC] px-3 py-1.5 rounded-xl"
+            >
               <Text className="text-lg tracking-widest text-white font-semibold">
                 Upgrade
               </Text>
-            </View>
+            </TouchableOpacity>
             <Text className="text-lg tracking-wider font-medium">
               to view all your matches
             </Text>
@@ -117,6 +125,12 @@ const Invitation = () => {
           <Text className="font-semibold">No invitation received yet !</Text>
         </View>
       )}
+      <SubscriptionModel
+        isModalVisible={isPremiumModel}
+        handleModalVisibility={() => {
+          setisPremiumModel(!isPremiumModel);
+        }}
+      />
     </>
   );
 };

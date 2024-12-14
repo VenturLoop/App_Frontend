@@ -7,23 +7,22 @@ const ProfileDetailLayout = () => {
     <Stack
       screenOptions={{
         headerShown: false,
-        animation: "none", // Default to no animation
-        // gestureDirection: "horizontal", // Ensures back gesture slides horizontally
+        animation: "fade", // Use a simple fade animation for transitions
         transitionSpec: {
           open: {
             animation: "timing",
             config: {
-              duration: 300, // Forward navigation duration (sliding to the right)
+              duration: 50, // Fast animation for opening
             },
           },
           close: {
             animation: "timing",
             config: {
-              duration: 300, // No animation for back navigation
+              duration: 50, // Fast animation for closing
             },
           },
         },
-        animationTypeForReplace: "push", // For screen replacements
+        animationTypeForReplace: "pop", // Quick replace animation
       }}
     >
       <Stack.Screen name="index" />

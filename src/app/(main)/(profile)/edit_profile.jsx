@@ -12,6 +12,7 @@ import EditLayout from "../../../components/ModelLayoul/EditLayout";
 import { Ionicons } from "@expo/vector-icons";
 import imagePath from "../../../constants/imagePath";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { router } from "expo-router";
 
 const EditProfile = () => {
   const [birthdate, setBirthdate] = useState("");
@@ -93,7 +94,12 @@ const EditProfile = () => {
           {/* Status bar */}
           <View className="w-full gap-3 ">
             <Text className="text-gray-400 font-semibold">My Status</Text>
-            <TouchableOpacity className="border-y-[0.5px] pr-3  font-semibold border-gray-300 py-4 flex flex-row justify-between items-center">
+            <TouchableOpacity
+              onPress={() => {
+                router.push("/editStatus");
+              }}
+              className="border-y-[0.5px] pr-3  font-semibold border-gray-300 py-4 flex flex-row justify-between items-center"
+            >
               <Text className="text-gray-500 font-semibold">
                 Looking for Co-founder
               </Text>
@@ -110,7 +116,7 @@ const EditProfile = () => {
             <Text className="text-gray-400 font-semibold">Basic Details</Text>
 
             {/* first section */}
-            <View className="gap-5 border-y-[0.5px] border-gray-300 py-4 ">
+            <View className="gap-5 border-t-[0.5px] border-gray-300 py-4 ">
               {/* Profile image */}
               <Text className="text-gray-500 font-semibold">Profile photo</Text>
               <View className=" flex flex-row gap-7 justify-start items-center ">

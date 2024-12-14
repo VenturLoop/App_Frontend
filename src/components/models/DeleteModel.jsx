@@ -11,7 +11,7 @@ import {
 import { router } from "expo-router";
 import imagePath from "../../constants/imagePath";
 
-const SubscriptionModel = ({ isModalVisible, handleModalVisibility }) => {
+const DeleteModel = ({ isModalVisible, handleModalVisibility }) => {
   const translateY = React.useRef(new Animated.Value(300)).current; // Initial offset (off-screen)
 
   useEffect(() => {
@@ -56,7 +56,7 @@ const SubscriptionModel = ({ isModalVisible, handleModalVisibility }) => {
         {/* Modal Content */}
         <Animated.View
           style={{ transform: [{ translateY }] }}
-          className="bg-white rounded-t-2xl gap-6 px-6 py-8 items-center"
+          className="bg-white rounded-t-3xl gap-6 px-6 py-8 items-center"
         >
           {/* Title */}
           <Image source={imagePath.delete} className="w-20 h-20" />
@@ -98,4 +98,4 @@ const SubscriptionModel = ({ isModalVisible, handleModalVisibility }) => {
   );
 };
 
-export default SubscriptionModel;
+export default DeleteModel;
