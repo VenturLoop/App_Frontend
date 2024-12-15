@@ -1,10 +1,17 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  SafeAreaView,
+  TouchableOpacity,
+  Image,
+} from "react-native";
 import React, { useState } from "react";
-import EditLayout from "../../../../../components/ModelLayoul/EditLayout";
-import CustomeButton from "../../../../../components/buttons/CustomeButton";
+import { router } from "expo-router";
 import Slider from "@react-native-community/slider";
 import { Ionicons } from "@expo/vector-icons";
+import CustomeButton from "../../../../../components/buttons/CustomeButton";
 
+// Reusable Slider Component
 const EquitySlider = ({ label, value, onValueChange, disabled }) => {
   return (
     <View className="my-4">
@@ -26,32 +33,40 @@ const EquitySlider = ({ label, value, onValueChange, disabled }) => {
         maximumTrackTintColor="#E2E8F0"
         thumbTintColor={disabled ? "#E2E8F0" : "#007BFF"}
       />
-      <Text className="text-base text-gray-700 mt-2">{value} KM</Text>
+      <Text className="text-base text-gray-700 mt-2">{value}%</Text>
     </View>
   );
 };
 
-const distance = () => {
+const p_equity_expectation = () => {
   const [selectedOption, setSelectedOption] = useState("");
   const [minEquity, setMinEquity] = useState(0);
   const [maxEquity, setMaxEquity] = useState(0);
-  const [isModalVisible, setModalVisible] = useState(false);
-
-  const handleModalVisibility = () => {
-    setModalVisible((prevState) => !prevState);
-  };
 
   const handleNextButtonPress = () => {
-    setModalVisible(true);
+    // setModalVisible(true);
   };
 
-  const isCustomOption = selectedOption === "custome";
+  const isCustomOption =
+    selectedOption === "offer" || selectedOption === "accept";
+
   return (
-    <EditLayout title="Distance">
+    <SafeAreaView className="flex-1 bg-white">
+      {/* Header Section */}
+      <View className="header flex-row px-5 justify-between border-b-[0.5px] py-4 items-center">
+        <View className="flex-row items-center gap-3">
+          <TouchableOpacity onPress={() => router.back()}>
+            <Ionicons name="arrow-back-outline" size={25} color="black" />
+          </TouchableOpacity>
+          <Text className="text-xl font-semibold">Equity Expectation</Text>
+        </View>
+        {/* <Text className="text-xl font-semibold text-[#2983DC]">6/6</Text> */}
+      </View>
+
       {/* Body Section */}
-      <View className="px-4 py- w-full flex-1">
+      <View className="px-6 py-8 w-full flex-1">
         {/* Option Selection */}
-        {["negotiable", "equal", "accept", "custome"].map((option) => (
+        {["negotiable", "equal", "accept", "offer"].map((option) => (
           <TouchableOpacity
             key={option}
             className="flex-row items-center mb-4"
@@ -70,12 +85,12 @@ const distance = () => {
             </View>
             <Text className="ml-2 py-1 text-lg text-gray-700 capitalize">
               {option === "negotiable"
-                ? "In my country (India)"
+                ? "Fully Negotiable"
                 : option === "equal"
-                ? "In my region (South Asia)"
+                ? "Equal Split"
                 : option === "accept"
-                ? "No Preferance"
-                : "Custom Distance"}
+                ? "Willing to accept a specific equity range"
+                : "Willing to offer a specific equity range"}
             </Text>
           </TouchableOpacity>
         ))}
@@ -84,25 +99,27 @@ const distance = () => {
         {isCustomOption && (
           <>
             <EquitySlider
-              // label="Minimum Equity"
+              label="Minimum Equity"
               value={minEquity}
               onValueChange={setMinEquity}
               disabled={!isCustomOption}
             />
-           
+            <EquitySlider
+              label="Maximum Equity"
+              value={maxEquity}
+              onValueChange={setMaxEquity}
+              disabled={!isCustomOption}
+            />
           </>
         )}
       </View>
 
       {/* Footer Section */}
       <View className="footer px-5 w-full">
-        <CustomeButton
-          // onButtonPress={handleNextButtonPress}
-          title="Save"
-        />
+        <CustomeButton onButtonPress={handleNextButtonPress} title="Save" />
       </View>
-    </EditLayout>
+    </SafeAreaView>
   );
 };
 
-export default distance;
+export default p_equity_expectation;

@@ -26,12 +26,12 @@ const EquitySlider = ({ label, value, onValueChange, disabled }) => {
         maximumTrackTintColor="#E2E8F0"
         thumbTintColor={disabled ? "#E2E8F0" : "#007BFF"}
       />
-      <Text className="text-base text-gray-700 mt-2">{value} KM</Text>
+      <Text className="text-base text-gray-700 mt-2">{value}</Text>
     </View>
   );
 };
 
-const distance = () => {
+const age_range = () => {
   const [selectedOption, setSelectedOption] = useState("");
   const [minEquity, setMinEquity] = useState(0);
   const [maxEquity, setMaxEquity] = useState(0);
@@ -51,7 +51,7 @@ const distance = () => {
       {/* Body Section */}
       <View className="px-4 py- w-full flex-1">
         {/* Option Selection */}
-        {["negotiable", "equal", "accept", "custome"].map((option) => (
+        {["negotiable", "custome"].map((option) => (
           <TouchableOpacity
             key={option}
             className="flex-row items-center mb-4"
@@ -70,12 +70,8 @@ const distance = () => {
             </View>
             <Text className="ml-2 py-1 text-lg text-gray-700 capitalize">
               {option === "negotiable"
-                ? "In my country (India)"
-                : option === "equal"
-                ? "In my region (South Asia)"
-                : option === "accept"
                 ? "No Preferance"
-                : "Custom Distance"}
+                : "Within  a custome age"}
             </Text>
           </TouchableOpacity>
         ))}
@@ -89,7 +85,6 @@ const distance = () => {
               onValueChange={setMinEquity}
               disabled={!isCustomOption}
             />
-           
           </>
         )}
       </View>
@@ -105,4 +100,4 @@ const distance = () => {
   );
 };
 
-export default distance;
+export default age_range;

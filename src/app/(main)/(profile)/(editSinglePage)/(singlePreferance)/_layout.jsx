@@ -29,6 +29,9 @@ const SinglePreferancePageLayout = () => {
       <Stack.Screen name="distance" />
       <Stack.Screen name="commitment_level" />
       <Stack.Screen name="skillset" />
+      <Stack.Screen name="age_range" />
+      <Stack.Screen name="p_equity_expectation" />
+      <Stack.Screen name="p_experience" />
     </Stack>
   );
 };
