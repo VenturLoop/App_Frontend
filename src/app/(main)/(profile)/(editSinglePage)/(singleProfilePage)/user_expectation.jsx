@@ -11,33 +11,6 @@ import Slider from "@react-native-community/slider";
 import { Ionicons } from "@expo/vector-icons";
 import CustomeButton from "../../../../../components/buttons/CustomeButton";
 
-// Reusable Slider Component
-const EquitySlider = ({ label, value, onValueChange, disabled }) => {
-  return (
-    <View className="my-4">
-      <Text
-        className={`text-base font-medium mb-2 ${
-          disabled ? "opacity-50" : "text-gray-950"
-        }`}
-      >
-        {label}
-      </Text>
-      <Slider
-        minimumValue={1}
-        maximumValue={100}
-        step={1}
-        value={value}
-        onValueChange={onValueChange}
-        disabled={disabled}
-        minimumTrackTintColor={disabled ? "#E2E8F0" : "#007BFF"}
-        maximumTrackTintColor="#E2E8F0"
-        thumbTintColor={disabled ? "#E2E8F0" : "#007BFF"}
-      />
-      <Text className="text-base text-gray-700 mt-2">{value}%</Text>
-    </View>
-  );
-};
-
 const user_expectation = () => {
   const [selectedOption, setSelectedOption] = useState("");
   const [minEquity, setMinEquity] = useState(0);
@@ -101,7 +74,9 @@ const user_expectation = () => {
             <EquitySlider
               label="Minimum Equity"
               value={minEquity}
-              onValueChange={setMinEquity}
+              onValueChange={(e) => {
+                setMinEquity(e);
+              }}
               disabled={!isCustomOption}
             />
             <EquitySlider
@@ -119,6 +94,33 @@ const user_expectation = () => {
         <CustomeButton onButtonPress={handleNextButtonPress} title="Save" />
       </View>
     </SafeAreaView>
+  );
+};
+
+// Reusable Slider Component
+const EquitySlider = ({ label, value, onValueChange, disabled }) => {
+  return (
+    <View className="my-4">
+      <Text
+        className={`text-base font-medium mb-2 ${
+          disabled ? "opacity-50" : "text-gray-950"
+        }`}
+      >
+        {label}
+      </Text>
+      <Slider
+        minimumValue={1}
+        maximumValue={100}
+        step={1}
+        value={value}
+        onValueChange={onValueChange}
+        disabled={disabled}
+        minimumTrackTintColor={disabled ? "#E2E8F0" : "#007BFF"}
+        maximumTrackTintColor="#E2E8F0"
+        thumbTintColor={disabled ? "#E2E8F0" : "#007BFF"}
+      />
+      <Text className="text-base text-gray-700 mt-2">{value}%</Text>
+    </View>
   );
 };
 

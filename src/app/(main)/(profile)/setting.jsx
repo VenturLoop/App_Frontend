@@ -105,7 +105,7 @@ const setting = () => {
                   >
                     <View className="gap-1">
                       <Text className="text-gray-500 font-semibold">
-                        Subscription to Founder Hub
+                        Subscription to VenturLoop
                       </Text>
                       <Text className="text-gray-400  text-sm ">
                         You are not subscribed yet

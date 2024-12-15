@@ -121,7 +121,7 @@ const message_invite = ({ route }) => {
             </Text>
           </TouchableOpacity>
           <Text className="text-lg tracking-wider font-medium">
-            to view all your matches
+            to get 10 direct connect/day
           </Text>
         </View>
       </SafeAreaView>
