@@ -136,7 +136,7 @@ const setting = () => {
                         Refer a friend
                       </Text>
                       <Text className="text-gray-400  text-sm ">
-                        Invite friend to join Founder Hub
+                        Invite friend to join VenturLoop
                       </Text>
                     </View>
                     <Ionicons
@@ -216,7 +216,7 @@ const setting = () => {
                   <TouchableOpacity className="border-b-[0.5px] pb-3  justify-between items-center pr-2 flex flex-row border-gray-300">
                     <View className="gap-1">
                       <Text className="text-gray-500 font-semibold">
-                        Community Policy
+                        Community Guidelines
                       </Text>
                       <Text className="text-gray-400  text-sm ">
                         https://puuf.in/community-policy

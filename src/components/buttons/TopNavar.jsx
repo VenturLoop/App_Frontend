@@ -6,7 +6,7 @@ import { router } from "expo-router";
 
 const TopNavar = () => {
   return (
-    <View className="flex-row bg-white px-5 py-2 flex w-full justify-between border-b-[0.5px] pb-3 border-gray-300 items-center">
+    <View className="flex-row bg-white  px-6 py-4 flex w-full justify-between border-b-[0.5px] pb-3 border-gray-300 items-center">
       <TouchableOpacity
         onPress={() => {
           router.push("/(tabs)");
@@ -18,7 +18,7 @@ const TopNavar = () => {
           source={imagePath.homeAppLOgo}
         />
       </TouchableOpacity>
-      <View className="flex flex-row items-center gap-10">
+      <View className="flex flex-row items-center gap-5">
         <TouchableOpacity
         className="p-2"
           onPress={() => {

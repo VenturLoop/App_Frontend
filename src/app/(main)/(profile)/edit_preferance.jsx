@@ -25,16 +25,16 @@ const edit_preferance = () => {
       >
         {/* Form Section */}
         <View
-          className="bg-white0  gap-4 flex-1"
+          className="bg-white gap-2 flex-1"
           // contentContainerStyle={{ paddingBottom: 20, paddingHorizontal: 16 }}
         >
           {/* Basic preferance */}
-          <View className=" gap-5  flex-1  mt-2  ">
+          <View className=" gap-5  mt-2  ">
             {/* Header */}
-            <View className="flex flex-col gap-3 mx-2 px-2">
-              <Text className="text-lg font-semibold ">Basic Preference</Text>
+            <View className="flex flex-col gap-5 mx-2 px-2">
+              <Text className="text-xl font-semibold ">Basic Preference</Text>
               <View className="flex flex-col gap-2">
-                <View className="flex flex-row gap-3">
+                <View className="flex mt-1 flex-row gap-3">
                   <TouchableOpacity
                     onPress={() => {
                       setuserRole("co-founder");
@@ -139,10 +139,11 @@ const edit_preferance = () => {
               </TouchableOpacity>
               {/* Interests */}
               <TouchableOpacity
-             onPress={() => {
-              handleNavigation("/editIntrest");
-            }}
-              className=" border-b-[0.5px] border-gray-300 mx-2 px-2 flex flex-row justify-between items-center pb-2">
+                onPress={() => {
+                  handleNavigation("/editIntrest");
+                }}
+                className=" border-b-[0.5px] border-gray-300 mx-2 px-2 flex flex-row justify-between items-center pb-2"
+              >
                 <View className="gap-1">
                   <Text className="font-semibold">Interests</Text>
                   <Text className="text-sm text-gray-500">
@@ -157,10 +158,11 @@ const edit_preferance = () => {
               </TouchableOpacity>
               {/* Distance */}
               <TouchableOpacity
-              onPress={() => {
-                handleNavigation("/distance");
-              }}
-              className=" border-b-[0.5px] border-gray-300 mx-2 px-2 flex flex-row justify-between items-center pb-2">
+                onPress={() => {
+                  handleNavigation("/distance");
+                }}
+                className=" border-b-[0.5px] border-gray-300 mx-2 px-2 flex flex-row justify-between items-center pb-2"
+              >
                 <View className="gap-1">
                   <Text className="font-semibold">Distance</Text>
                   <Text className="text-sm font-normal text-gray-500">
@@ -174,12 +176,12 @@ const edit_preferance = () => {
                 />
               </TouchableOpacity>
               {/* Commitment Level */}
-              <TouchableOpacity 
-               onPress={() => {
-                handleNavigation("/commitment_level");
-              }}
-              
-              className=" border-b-[0.5px] border-gray-300 mx-2 px-2 flex flex-row justify-between items-center pb-2">
+              <TouchableOpacity
+                onPress={() => {
+                  handleNavigation("/commitment_level");
+                }}
+                className=" border-b-[0.5px] border-gray-300 mx-2 px-2 flex flex-row justify-between items-center pb-2"
+              >
                 <View className="gap-1">
                   <Text className="font-semibold">Commitment Level</Text>
                   <Text className="text-sm font-normal text-gray-500">
@@ -196,8 +198,8 @@ const edit_preferance = () => {
           </View>
 
           {/* Premium preferance */}
-          <View className=" mx-2 ">
-            <Text className="text-lg py-5 px-2 font-semibold ">
+          <View className=" mx-2 mt-2 ">
+            <Text className="text-xl py-5 px-2 font-semibold ">
               Premium Preference
             </Text>
 

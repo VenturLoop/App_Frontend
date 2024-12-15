@@ -9,6 +9,7 @@ import {
   Ionicons,
 } from "@expo/vector-icons";
 import SubscriptionModel from "../models/SubscriptionModel";
+import { BlurView } from "expo-blur";
 
 const messages = [
   {
@@ -60,19 +61,19 @@ const Invitation = () => {
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item, index }) => (
               <View
-                className={`flex flex-col gap-5 px-4 py-3 mb-8 rounded-lg shadow ${
+                className={`flex flex-col gap-3  mb-8 rounded-lg shadow ${
                   index > 0 && !isPremium ? "bg-gray-200 blur-3xl" : "bg-white"
                 }`}
               >
                 {/* Header */}
-                <View className="flex flex-row justify-between w-full">
-                  <View className="flex flex-row gap-4">
+                <View className="flex flex-row border-b border-gray-200 px-4 py-3 items-center justify-between w-full">
+                  <View className="flex items-start flex-row gap-4">
                     <Image
-                      className="w-16 h-16 rounded-2xl"
-                      resizeMode="contain"
+                      className="w-12 h-12 rounded-xl"
+                      resizeMode="cover"
                       source={imagePath.userImage2}
                     />
-                    <View className="gap-1 flex items-start justify-center">
+                    <View className="gap-0.5 flex items-start justify-center">
                       <Text
                         className={`text-xl font-semibold ${
                           index > 0 && !isPremium
@@ -82,78 +83,91 @@ const Invitation = () => {
                       >
                         {item.name}
                       </Text>
-                      <View
-                        className={`py-1 px-2 rounded-full ${
-                          index > 0 && !isPremium
-                            ? "bg-gray-300"
-                            : "bg-[#2983DC]"
-                        }`}
-                      >
+                      <View className="flex-row gap-1.5 justify-center items-center">
+                        <FontAwesome6
+                          size={12}
+                          color="gray"
+                          name="location-dot"
+                        />
                         <Text
-                          className={`text-center text-xs font-semibold ${
+                          className={` text-sm font-medium  ${
                             index > 0 && !isPremium
-                              ? "text-gray-500"
-                              : "text-white"
+                              ? "text-gray-400 "
+                              : "text-gray-500"
                           }`}
                         >
-                          {item.lookingFor}
+                          {item.location}
                         </Text>
                       </View>
                     </View>
                   </View>
-                  <Text className="text-gray-400 text-sm font-medium">
-                    {item.time}
-                  </Text>
+                  <View>
+                    <TouchableOpacity
+                      onPress={() => {
+                        if (index === 0 || isPremium) {
+                          router.push("/(message)/chat");
+                        } else {
+                          setisPremiumModel(true); // Prompt to upgrade
+                        }
+                      }}
+                      className={`flex-row gap-1 items-center justify-center px-3 py-1 rounded-xl ${
+                        index > 0 && !isPremium ? "bg-gray-300" : "bg-[#2983DC]"
+                      }`}
+                    >
+                      <Ionicons
+                        name="chatbox-ellipses-outline"
+                        color={index > 0 && !isPremium ? "gray" : "white"}
+                        size={17}
+                      />
+                      <Text
+                        className={`${
+                          index > 0 && !isPremium
+                            ? "text-gray-500"
+                            : "text-white"
+                        }
+                        text-lg
+                        `}
+                      >
+                        Chat
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
 
                 {/* Footer */}
-                <View className="w-full  flex-row justify-between items-center">
-                  <View className="flex-row  gap-2">
-                    <FontAwesome6 name="cake-candles" size={14} color="black" />
+                <View className=" w-full gap-2 pb-3 overflow-hidden">
+                  {/* Top Section: Age and Location */}
 
-                    <Text
-                      className={` font-medium ${
-                        index > 0 && !isPremium ? "text-gray-400" : "text-black"
-                      }`}
-                    >
-                      {item.dob.split("/")[0]}
+                  {/* Ready to go full time */}
+                  <View className="flex-row items-center  px-5 gap-4">
+                    <Ionicons name="walk-outline" size={20} color="#6B7280" />
+                    <Text className="text-gray-700 text-sm  leading-snug">
+                      Ready to go full time with the right co-founder
                     </Text>
                   </View>
-                  <View className="flex-row gap-2 justify-center items-center">
-                    <FontAwesome6 size={14} name="location-dot" />
-                    <Text
-                      className={`  ${
-                        index > 0 && !isPremium ? "text-gray-400" : "text-black"
-                      }`}
-                    >
-                      {item.location}
-                    </Text>
-                  </View>
-                  <TouchableOpacity
-                    onPress={() => {
-                      if (index === 0 || isPremium) {
-                        router.push("/(message)/chat");
-                      } else {
-                        setisPremiumModel(true); // Prompt to upgrade
-                      }
-                    }}
-                    className={`flex-row gap-1 items-center justify-center px-3 py-1.5 rounded-2xl ${
-                      index > 0 && !isPremium ? "bg-gray-300" : "bg-[#2983DC]"
-                    }`}
-                  >
+
+                  {/* Worked in a startup */}
+                  <View className="flex-row items-center  border-gray-200  px-5 gap-4">
                     <Ionicons
-                      name="chatbox-ellipses"
-                      color={index > 0 && !isPremium ? "gray" : "white"}
-                      size={17}
+                      name="briefcase-outline"
+                      size={20}
+                      color="#6B7280"
                     />
-                    <Text
-                      className={`${
-                        index > 0 && !isPremium ? "text-gray-500" : "text-white"
-                      }`}
-                    >
-                      Chat
+                    <Text className="text-gray-700 text-sm  leading-snug">
+                      Worked in a startup
                     </Text>
-                  </TouchableOpacity>
+                  </View>
+                  {/* Fully Negotiable */}
+                  <View className="flex-row items-center px-5 gap-4">
+                    <Ionicons
+                      name="accessibility-outline"
+                      size={20}
+                      color="#6B7280"
+                    />
+                    <Text className="text-gray-700 text-sm  leading-snug">
+                      Fully Negotiable
+                    </Text>
+                  </View>
                 </View>
               </View>
             )}
@@ -177,7 +191,9 @@ const Invitation = () => {
       ) : (
         <View className="flex-1 items-center justify-center">
           <Image source={imagePath.NoMessage} />
-          <Text className="font-semibold">No invitation received yet!</Text>
+          <Text className="font-semibold text-lg text-gray-500 ">
+            No invitation received yet!
+          </Text>
         </View>
       )}
       <SubscriptionModel

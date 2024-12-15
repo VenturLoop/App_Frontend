@@ -115,8 +115,8 @@ const MyProfile = () => {
               </View>
               <View className="gap-1 w-72  ">
                 <Text className="font-semibold text-lg">Edit Preference</Text>
-                <Text className="text-gray-600   font-normal">
-                  Who do you want to see as potensial candidates
+                <Text className="text-gray-500   font-normal">
+                  Who do you want to see as potensial matches
                 </Text>
               </View>
             </View>
@@ -143,8 +143,8 @@ const MyProfile = () => {
             </View>
             <View className="gap-1">
               <Text className="font-semibold text-lg">Referral Rewards</Text>
-              <Text className="text-gray-600 text-md font-normal">
-                Invite your friends to Tinder for startup
+              <Text className="text-gray-500 text-md font-normal">
+                Invite your friends to VenturLoop
               </Text>
             </View>
             <Ionicons

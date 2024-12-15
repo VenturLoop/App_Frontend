@@ -15,7 +15,7 @@ const invitation = () => {
   const [activeTab, setActiveTab] = useState("invitation"); // To track active tab
 
   return (
-    <SafeAreaView className="bg-[#F2F2F2] h-screen  flex-1 justify-between  items-center w-full ">
+    <SafeAreaView className="bg-[#F0F6FB] h-screen  flex-1 justify-between  items-center w-full ">
       <View className="bg-white px-4 pt-4 pb-4 border-b-[0.5px] border-gray-300  w-full">
         <View className="flex-row bg-[#F0F6FB]  rounded-full  justify-between items-center">
           {/* Invitation Tab */}

@@ -310,7 +310,7 @@ const EditProfile = () => {
                     <Text className="text-gray-500 font-semibold">
                       Compensation Expectation
                     </Text>
-                    <Text className="text-gray-400  text-sm ">Equaty</Text>
+                    <Text className="text-gray-400  text-sm ">Equity</Text>
                   </View>
                   <Ionicons
                     name="chevron-forward-outline"
