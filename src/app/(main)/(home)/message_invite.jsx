@@ -1,5 +1,3 @@
-// Add when user 
-
 import {
   View,
   Text,
@@ -46,7 +44,6 @@ const MessageInvite = ({ route }) => {
 
     if (messagesLeft > 0) {
       setMessagesLeft((prev) => prev - 1); // Decrease remaining messages
-
       setInputMessage(""); // Clear input field
     } else {
       setSingleSubFeature(true);
@@ -71,6 +68,7 @@ const MessageInvite = ({ route }) => {
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           className="flex-1"
+          on
         >
           <View className="flex-row items-center justify-between px-5 py-4 border-b border-gray-300">
             <View className="flex-row gap-4 items-center">
@@ -120,20 +118,18 @@ const MessageInvite = ({ route }) => {
 
               {/* Message Input and Send Button */}
               <View className="w-full mt-6">
-                <View className="flex-row border border-gray-300 rounded-full py-2 px-6 items-center">
+                <View
+                  className={`flex-row border border-gray-300 rounded-full py-2 px-6 items-center`}
+                >
                   <TextInput
                     placeholder="Your Message"
                     value={inputMessage}
                     onChangeText={handleInputChange}
-                    // editable={messagesLeft > 0} // Disable input if no messages left
-                    multiline // Allow for multiple lines of text
-                    numberOfLines={4} // Specify how many lines the input should span
-                    className={`flex-1 text-lg py-2 px-3 text-black`}
+                    className="flex-1 text-lg py-2 px-3 text-black bg-white rounded-md"
+                    // autoFocus={true} // Keep focus on the input field
                   />
                   <TouchableOpacity onPress={handleSendMessage}>
-                    <Text
-                      className={`text-xl font-semibold ml-4 text-[#2983DC]`}
-                    >
+                    <Text className="text-xl font-semibold ml-4 text-[#2983DC]">
                       Send
                     </Text>
                   </TouchableOpacity>

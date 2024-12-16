@@ -6,10 +6,12 @@ import {
   TouchableOpacity,
   Pressable,
   Animated,
+  Share,
+  Alert,
 } from "react-native";
 import { router } from "expo-router";
 
-const ProfileModel = ({ isModalVisible, handleModalVisibility }) => {
+const ProfileModel = ({ isModalVisible, handleModalVisibility, profile }) => {
   const translateY = React.useRef(new Animated.Value(300)).current; // Initial offset (off-screen)
 
   useEffect(() => {
@@ -17,14 +19,14 @@ const ProfileModel = ({ isModalVisible, handleModalVisibility }) => {
       // Slide-up animation
       Animated.timing(translateY, {
         toValue: 0, // Bring modal to visible position
-        duration: 100, // Animation duration
+        duration: 300, // Slightly longer duration for smoothness
         useNativeDriver: true, // Use native driver for better performance
       }).start();
     } else {
       // Slide-down animation
       Animated.timing(translateY, {
         toValue: 300, // Move modal off-screen
-        duration: 100,
+        duration: 300,
         useNativeDriver: true,
       }).start();
     }
@@ -32,10 +34,20 @@ const ProfileModel = ({ isModalVisible, handleModalVisibility }) => {
 
   const handleNavigation = (route) => {
     if (isModalVisible) {
-      handleModalVisibility(); // Close modal after navigation
+      // handleModalVisibility(); // Close modal after navigation
       setTimeout(() => {
         router.push(route);
-      }, 100); // Wait for modal close animation before routing
+      }, 300); // Wait for modal close animation before routing
+    }
+  };
+
+  const handleShareProfile = async () => {
+    try {
+      await Share.share({
+        message: `Check out my profile: ${profile?.name || "Souptik Das"} - ${profile?.status || ""}`,
+      });
+    } catch (error) {
+      Alert.alert("Error", "Something went wrong while sharing the profile.");
     }
   };
 
@@ -59,17 +71,17 @@ const ProfileModel = ({ isModalVisible, handleModalVisibility }) => {
           {/* Setting Button */}
           <TouchableOpacity
             onPress={() => handleNavigation("/setting")}
-            className="w-full border border-gray-300 rounded-xl py-4 my-2"
+            className="w-full border border-gray-300 rounded-xl py-4 my-2 "
           >
             <Text className="text-center text-gray-800 text-lg font-semibold">
-              Setting
+              Settings
             </Text>
           </TouchableOpacity>
 
           {/* Share Profile Button */}
           <TouchableOpacity
-            //   onPress={() => handleNavigation("/share")}
-            className="w-full border border-gray-300 rounded-xl py-4 my-2"
+            onPress={handleShareProfile}
+            className="w-full border border-gray-300 rounded-xl py-4 my-2 "
           >
             <Text className="text-center text-gray-800 text-lg font-semibold">
               Share Profile
@@ -78,7 +90,7 @@ const ProfileModel = ({ isModalVisible, handleModalVisibility }) => {
 
           {/* Cancel Button */}
           <TouchableOpacity onPress={handleModalVisibility} className="mt-2">
-            <Text className="text-center text-gray-500 text-lg font-medium">
+            <Text className="text-center text-gray-400 text-lg font-medium">
               Cancel
             </Text>
           </TouchableOpacity>

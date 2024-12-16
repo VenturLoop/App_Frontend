@@ -83,13 +83,15 @@ const ProfilePage = () => {
   const [isPremiumModel, setisPremiumModel] = useState(false);
   const [isIncompleteProfileModel, setisIncompleteProfileModel] =
     useState(false);
-  const [attempts4th, setAttempts4th] = useState(5); // Initial attempts for the 4th button
+  const [attempts4th, setAttempts4th] = useState(10); // Initial attempts for the 4th button
   const [attempts5th, setAttempts5th] = useState(3); // Initial attempts for the 5th button
   // const router = useRouter();
 
   const handle4thButtonPress = () => {
     if (attempts4th > 0) {
       setAttempts4th(attempts4th - 1); // Decrease attempt count on press
+    } else {
+      setisPremiumModel(true);
     }
   };
 
@@ -97,6 +99,8 @@ const ProfilePage = () => {
     if (attempts5th > 0) {
       router.navigate("/message_invite");
       setAttempts5th(attempts5th - 1); // Decrease attempt count on press
+    } else {
+      setisPremiumModel(true);
     }
   };
 
@@ -514,7 +518,13 @@ const ProfilePage = () => {
       <SubscriptionModel
         isModalVisible={isPremiumModel}
         handleModalVisibility={() => {
-          setisPremiumModel(!isPremiumModel);
+          setisPremiumModel(false);
+        }}
+      />
+      <SubscriptionModel
+        isModalVisible={isPremiumModel}
+        handleModalVisibility={() => {
+          setisPremiumModel(false);
         }}
       />
       <UserInviteModel
