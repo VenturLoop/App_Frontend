@@ -44,6 +44,7 @@ const MessageInvite = ({ route }) => {
 
     if (messagesLeft > 0) {
       setMessagesLeft((prev) => prev - 1); // Decrease remaining messages
+      router.back();
       setInputMessage(""); // Clear input field
     } else {
       setSingleSubFeature(true);

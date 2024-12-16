@@ -137,7 +137,8 @@ const Request = () => {
               >
                 <Image
                   source={imagePath.userImage2}
-                  className="w-12 h-12 p-1  rounded-full shadow-sm mr-4"y
+                  className="w-12 h-12 p-1  rounded-full shadow-sm mr-4"
+                  y
                 />
                 <View className="flex-1">
                   <Text className="text-lg font-bold">{item.name}</Text>

@@ -6,8 +6,9 @@ import {
   TouchableOpacity,
   ScrollView,
   Animated,
+  Easing,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import TopNavar from "../../../components/buttons/TopNavar";
 import { Ionicons, FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 import imagePath from "../../../constants/imagePath";
@@ -15,6 +16,7 @@ import UserModel from "../../../components/models/UserModel";
 import SubscriptionModel from "../../../components/models/SubscriptionModel";
 import UserInviteModel from "../../../components/models/UserInviteModel";
 import { router } from "expo-router";
+import SingleSubFeature from "../../../components/models/SingleSubFeature";
 
 // Sample Data for multiple users
 const users = [
@@ -39,6 +41,7 @@ const users = [
     ],
     projects: ["AI Chatbot", "Task Manager", "E-Commerce Platform"],
   },
+
   {
     name: "Souptik Das",
     status: "Looking for Co-founder",
@@ -61,19 +64,172 @@ const users = [
     projects: ["Weather App", "Calculator", "To Do List"],
   },
   {
-    name: "Suraj Patel",
-    status: "Seeking Partnership",
-    location: "Delhi",
-    mindset: "I want to innovate in the retail space",
+    name: "Guarav Gaur",
+    status: "Looking for Co-founder",
+    location: "Kolkata",
+    mindset: "I want to build something in the transportation industry",
     experience: [
       {
-        title: "CEO",
-        company: "RetailHub",
-        duration: "5 yrs",
-        description: "Leading the future of retail technology.",
+        title: "Co-Founder",
+        company: "Amachie",
+        duration: "4 yrs 2 months",
+        description: "Maternal Care Platform",
+      },
+      {
+        title: "Corporate Lead",
+        company: "Dibex",
+        duration: "2 yrs 3 months",
+        description: "Digital first business service provider.",
       },
     ],
-    projects: ["Retail Management System", "Inventory Tracker"],
+    projects: ["Weather App", "Calculator", "To Do List"],
+  },
+  {
+    name: "Raj Rathod",
+    status: "Looking for Co-founder",
+    location: "Kolkata",
+    mindset: "I want to build something in the transportation industry",
+    experience: [
+      {
+        title: "Co-Founder",
+        company: "Amachie",
+        duration: "4 yrs 2 months",
+        description: "Maternal Care Platform",
+      },
+      {
+        title: "Corporate Lead",
+        company: "Dibex",
+        duration: "2 yrs 3 months",
+        description: "Digital first business service provider.",
+      },
+    ],
+    projects: ["Weather App", "Calculator", "To Do List"],
+  },
+  {
+    name: "Kumar Sanu",
+    status: "Looking for Co-founder",
+    location: "Kolkata",
+    mindset: "I want to build something in the transportation industry",
+    experience: [
+      {
+        title: "Co-Founder",
+        company: "Amachie",
+        duration: "4 yrs 2 months",
+        description: "Maternal Care Platform",
+      },
+      {
+        title: "Corporate Lead",
+        company: "Dibex",
+        duration: "2 yrs 3 months",
+        description: "Digital first business service provider.",
+      },
+    ],
+    projects: ["Weather App", "Calculator", "To Do List"],
+  },
+  {
+    name: "Tilak Varma",
+    status: "Looking for Co-founder",
+    location: "Kolkata",
+    mindset: "I want to build something in the transportation industry",
+    experience: [
+      {
+        title: "Co-Founder",
+        company: "Amachie",
+        duration: "4 yrs 2 months",
+        description: "Maternal Care Platform",
+      },
+      {
+        title: "Corporate Lead",
+        company: "Dibex",
+        duration: "2 yrs 3 months",
+        description: "Digital first business service provider.",
+      },
+    ],
+    projects: ["Weather App", "Calculator", "To Do List"],
+  },
+  {
+    name: "Nitish Mishra",
+    status: "Looking for Co-founder",
+    location: "Kolkata",
+    mindset: "I want to build something in the transportation industry",
+    experience: [
+      {
+        title: "Co-Founder",
+        company: "Amachie",
+        duration: "4 yrs 2 months",
+        description: "Maternal Care Platform",
+      },
+      {
+        title: "Corporate Lead",
+        company: "Dibex",
+        duration: "2 yrs 3 months",
+        description: "Digital first business service provider.",
+      },
+    ],
+    projects: ["Weather App", "Calculator", "To Do List"],
+  },
+  {
+    name: "Sanjay Sharma",
+    status: "Looking for Co-founder",
+    location: "Kolkata",
+    mindset: "I want to build something in the transportation industry",
+    experience: [
+      {
+        title: "Co-Founder",
+        company: "Amachie",
+        duration: "4 yrs 2 months",
+        description: "Maternal Care Platform",
+      },
+      {
+        title: "Corporate Lead",
+        company: "Dibex",
+        duration: "2 yrs 3 months",
+        description: "Digital first business service provider.",
+      },
+    ],
+    projects: ["Weather App", "Calculator", "To Do List"],
+  },
+  {
+    name: "Sonali Pritam",
+    status: "Looking for Co-founder",
+    location: "Kolkata",
+    mindset: "I want to build something in the transportation industry",
+    experience: [
+      {
+        title: "Co-Founder",
+        company: "Amachie",
+        duration: "4 yrs 2 months",
+        description: "Maternal Care Platform",
+      },
+      {
+        title: "Corporate Lead",
+        company: "Dibex",
+        duration: "2 yrs 3 months",
+        description: "Digital first business service provider.",
+      },
+    ],
+    projects: ["Weather App", "Calculator", "To Do List"],
+  },
+  {
+    name: "Gauri Raut",
+    status: "Looking for Co-founder",
+    location: "Kolkata",
+    mindset: "I want to build something in the transportation industry",
+    experience: [
+      {
+        title: "Co-Founder",
+        company: "Amachie",
+        duration: "4 yrs 2 months",
+        description: "Maternal Care Platform",
+      },
+      {
+        title: "Corporate Lead",
+        company: "Dibex",
+        duration: "2 yrs 3 months",
+        description: "Digital first business service provider.",
+      },
+    ],
+    projects: ["Weather App", "Calculator", "To Do List"],
   },
 ];
 
@@ -81,8 +237,13 @@ const ProfilePage = () => {
   const [currentUserIndex, setCurrentUserIndex] = useState(0);
   const [isHomeModel, setisHomeModel] = useState(false);
   const [isPremiumModel, setisPremiumModel] = useState(false);
+  const [isForthPremiumModel, setisForthPremiumModel] = useState(false);
+  const [bookmarkedUsers, setBookmarkedUsers] = useState([]);
+  const [isFifthPremiumModel, setisFifthPremiumModel] = useState(false);
+
   const [isIncompleteProfileModel, setisIncompleteProfileModel] =
     useState(false);
+  const [attempts3th, setAttempts3th] = useState(0); // Initial attempts for the 4th button
   const [attempts4th, setAttempts4th] = useState(10); // Initial attempts for the 4th button
   const [attempts5th, setAttempts5th] = useState(3); // Initial attempts for the 5th button
   // const router = useRouter();
@@ -90,20 +251,23 @@ const ProfilePage = () => {
   const handle4thButtonPress = () => {
     if (attempts4th > 0) {
       setAttempts4th(attempts4th - 1); // Decrease attempt count on press
+      handleNextUser();
     } else {
-      setisPremiumModel(true);
+      setisForthPremiumModel(true);
     }
   };
 
-  const handle5thButtonPress = () => {
+  const handle5thButtonPress = async () => {
     if (attempts5th > 0) {
-      router.navigate("/message_invite");
+      await router.push("/message_invite");
       setAttempts5th(attempts5th - 1); // Decrease attempt count on press
+      handleNextUser();
     } else {
-      setisPremiumModel(true);
+      setisFifthPremiumModel(true);
     }
   };
 
+  const scrollViewRef = useRef(null); // Reference to ScrollView
   const [translateX] = useState(new Animated.Value(0)); // Animation value
 
   const currentUser = users[currentUserIndex];
@@ -111,40 +275,68 @@ const ProfilePage = () => {
   const handleNextUser = () => {
     const nextIndex = (currentUserIndex + 1) % users.length;
 
-    // Trigger the swipe animation
+    setCurrentUserIndex(nextIndex);
+    // Animate the current user off-screen to the left with easing
     Animated.timing(translateX, {
-      toValue: -400, // Move off screen to the left
-      duration: 300, // Smooth transition
+      toValue: -400, // Move off-screen to the left
+      duration: 500, // Smooth and consistent duration
+      easing: Easing.out(Easing.quad), // Smooth easing function
       useNativeDriver: true,
     }).start(() => {
-      setCurrentUserIndex(nextIndex); // Update the user index
-      translateX.setValue(400); // Reset position off-screen to the right
+      // Update the user index immediately after the first animation
 
-      // Animate the new user into view
+      // Reset position off-screen to the right
+      translateX.setValue(200);
+
+      // Scroll to the top of the new user's content
+      scrollViewRef.current?.scrollTo({ y: 0, animated: false }); // No delay for immediate reset
+
+      // Animate the new user into view from the right with easing
       Animated.timing(translateX, {
-        toValue: 0, // Bring to original position
-        duration: 300, // Smooth transition
+        toValue: 0, // Bring to the center
+        duration: 300, // Matching duration for balance
+        easing: Easing.out(Easing.quad), // Smooth easing function
         useNativeDriver: true,
       }).start();
     });
   };
 
-  const handlePreviousUser = () => {
-    const prevIndex = (currentUserIndex - 1 + users.length) % users.length; // Wrap-around logic for the index
+  const handleBookmarkButtonPress = () => {
+    // if (attempts3th > 0) {
+    //   setAttempts4th(attempts4th - 1); // Decrease attempt count on press
+    //   handleNextUser();
+    // } else {
+    //   setisForthPremiumModel(true);
+    // }
 
-    // Trigger the swipe animation
+    setAttempts3th(attempts3th + 1); // Decrease attempt count on press
+    handleNextUser();
+  };
+
+  const handlePreviousUser = () => {
+    const prevIndex = (currentUserIndex - 1 + users.length) % users.length; // Ensure it wraps around correctly
+    setCurrentUserIndex(prevIndex);
+
+    // Animate the current user off-screen to the right with easing
     Animated.timing(translateX, {
-      toValue: 400, // Move off screen to the right
-      duration: 300, // Smooth transition
+      toValue: 400, // Move off-screen to the right
+      duration: 500, // Smooth and consistent duration
+      easing: Easing.out(Easing.quad), // Smooth easing function
       useNativeDriver: true,
     }).start(() => {
-      setCurrentUserIndex(prevIndex); // Update the user index
-      translateX.setValue(-400); // Reset position off-screen to the left
+      // Update the user index immediately after the first animation
 
-      // Animate the new user into view
+      // Reset position off-screen to the left
+      translateX.setValue(-400);
+
+      // Scroll to the top of the new user's content
+      scrollViewRef.current?.scrollTo({ y: 0, animated: false }); // No delay for immediate reset
+
+      // Animate the new user into view from the left with easing
       Animated.timing(translateX, {
-        toValue: 0, // Bring to original position
-        duration: 300, // Smooth transition
+        toValue: 0, // Bring to the center
+        duration: 300, // Matching duration for balance
+        easing: Easing.out(Easing.quad), // Smooth easing function
         useNativeDriver: true,
       }).start();
     });
@@ -152,18 +344,17 @@ const ProfilePage = () => {
 
   return (
     <>
-      <SafeAreaView className=" h-screen flex-1 bg-[#F0F6FB] items-center w-full">
+      <SafeAreaView className="h-screen flex-1 bg-[#F0F6FB] items-center w-full">
         <TopNavar />
-        <View className="   h-screen flex-1 w-full">
-          {/* Profile Section */}
+        <View className="h-screen flex-1 w-full">
           <Animated.View
             style={{ transform: [{ translateX }] }} // Apply swipe animation
-            className="px-4 items-center  border-b-[0.5px] border-gray-300"
+            className="px-4 items-center border-b-[0.5px] border-gray-300"
           >
             <ScrollView
+              ref={scrollViewRef} // Attach ref to ScrollView
               showsVerticalScrollIndicator={false}
               contentContainerStyle={{
-                // width: full,
                 paddingBottom: 80,
                 gap: 20,
                 paddingHorizontal: 10,
@@ -455,8 +646,10 @@ const ProfilePage = () => {
         <View className="absolute bottom-0 pb-2 w-full items-center justify-between flex-row px-6 z-10 space-x-4">
           {/* Premium Model Button */}
           <TouchableOpacity
-            onPress={() => setisPremiumModel(true)}
-            className="p-3 bg-white rounded-full border border-gray-300 shadow-md flex items-center justify-center"
+            disabled={currentUserIndex === 0}
+            // onPress={() => setisPremiumModel(true)}
+            onPress={handlePreviousUser}
+            className="p-3 bg-white rounded-full disabled:opacity-50 border border-gray-300 shadow-md flex items-center justify-center"
           >
             <Ionicons name="refresh" size={27} color="#EEDE00" />
           </TouchableOpacity>
@@ -470,8 +663,18 @@ const ProfilePage = () => {
           </TouchableOpacity>
 
           {/* Bookmark Button */}
-          <TouchableOpacity className="p-3 bg-white rounded-full border border-gray-300 shadow-md flex items-center justify-center">
+          <TouchableOpacity
+            onPress={handleBookmarkButtonPress}
+            className="p-3 bg-white rounded-full border border-gray-300 shadow-md flex items-center justify-center"
+          >
             <Ionicons name="bookmark-outline" size={27} color="#FD890C" />
+            {attempts3th > 0 && (
+              <View className="absolute top-[-5px] right-[-5px] bg-[#2983DC] w-8 h-8 rounded-full items-center justify-center border-2 border-white shadow-xl">
+                <Text className="text-white font-semibold text-sm">
+                  {attempts3th}
+                </Text>
+              </View>
+            )}
           </TouchableOpacity>
 
           {/* 4th Button with attempts counter */}
@@ -482,7 +685,7 @@ const ProfilePage = () => {
             <Ionicons size={28} name="person-add-outline" color="#27C2BF" />
 
             {/* Attempts counter */}
-            {attempts4th > 0 && (
+            {attempts4th >= 0 && (
               <View className="absolute top-[-5px] right-[-5px] bg-[#2983DC] w-8 h-8 rounded-full items-center justify-center border-2 border-white shadow-xl">
                 <Text className="text-white font-semibold text-sm">
                   {attempts4th}
@@ -499,7 +702,7 @@ const ProfilePage = () => {
             <Ionicons size={23} name="paper-plane-outline" color="#2983DC" />
 
             {/* Attempts counter */}
-            {attempts5th > 0 && (
+            {attempts5th >= 0 && (
               <View className="absolute top-[-5px] right-[-5px] bg-[#2983DC] w-8 h-8 rounded-full items-center justify-center border-2 border-white shadow-xl">
                 <Text className="text-white font-semibold text-sm">
                   {attempts5th}
@@ -521,11 +724,15 @@ const ProfilePage = () => {
           setisPremiumModel(false);
         }}
       />
-      <SubscriptionModel
-        isModalVisible={isPremiumModel}
-        handleModalVisibility={() => {
-          setisPremiumModel(false);
-        }}
+      <SingleSubFeature
+        titleModel="Upgrade Pro to get unlimited connect request daily."
+        isModalVisible={isForthPremiumModel}
+        handleModalVisibility={() => setisForthPremiumModel(false)}
+      />
+      <SingleSubFeature
+        titleModel="Upgrade Pro to 10 direct connect/day "
+        isModalVisible={isFifthPremiumModel}
+        handleModalVisibility={() => setisFifthPremiumModel(false)}
       />
       <UserInviteModel
         isModalVisible={isIncompleteProfileModel}

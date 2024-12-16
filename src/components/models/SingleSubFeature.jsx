@@ -60,17 +60,17 @@ const SingleSubFeature = ({
         {/* Modal Content */}
         <Animated.View
           style={{ transform: [{ translateY }] }}
-          className="bg-white rounded-t-3xl gap-6 px-6 py-8 items-center"
+          className="bg-white rounded-t-3xl gap-6 px-2  py-8 items-center"
         >
           {/* Title */}
           <Image source={imagePath.premiumImage} className="w-20 h-20" />
-          <Text className="text-2xl font-bold text-gray-800 text-center mb-4">
+          <Text className="text-2xl font-bold  text-gray-800 text-center mb-4">
             {titleModel}
           </Text>
 
           {/* Referral Input */}
           {/* Button Group */}
-          <View className="flex-row justify-between gap-3 w-full mt-6 space-x-4">
+          <View className="flex-row   justify-between gap-3 w-full mt-6 space-x-4">
             {/* "Don't Have" Button */}
             <TouchableOpacity
               onPress={handleModalVisibility}
