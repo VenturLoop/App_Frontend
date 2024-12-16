@@ -4,6 +4,7 @@ import EditLayout from "../../../../../components/ModelLayoul/EditLayout";
 import CustomeButton from "../../../../../components/buttons/CustomeButton";
 import Slider from "@react-native-community/slider";
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 
 const EquitySlider = ({ label, value, onValueChange, disabled }) => {
   return (
@@ -92,7 +93,9 @@ const age_range = () => {
       {/* Footer Section */}
       <View className="footer px-5 w-full">
         <CustomeButton
-          // onButtonPress={handleNextButtonPress}
+          onButtonPress={() => {
+            router.back();
+          }}
           title="Save"
         />
       </View>

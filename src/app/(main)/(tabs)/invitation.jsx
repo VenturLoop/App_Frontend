@@ -2,21 +2,47 @@ import {
   View,
   Text,
   SafeAreaView,
-  Image,
   TouchableOpacity,
+  Dimensions,
   FlatList,
 } from "react-native";
 import React, { useState } from "react";
+import { useFocusEffect } from "@react-navigation/native"; // Importing useFocusEffect
 import Send from "../../../components/invitation/Send";
 import Saved from "../../../components/invitation/Saved";
 import Invitation from "../../../components/invitation/Invitation";
 
-const invitation = () => {
-  const [activeTab, setActiveTab] = useState("invitation"); // To track active tab
+const { width } = Dimensions.get("window");
+
+const InvitationPage = () => {
+  const [activeTab, setActiveTab] = useState("invitation"); // Default tab
+  const tabs = ["invitation", "send", "saved"]; // Tab identifiers
+
+  // Reset to Invitation tab when the page is focused
+  useFocusEffect(
+    React.useCallback(() => {
+      setActiveTab("invitation");
+    }, [])
+  );
+
+  // Tab Components
+  const renderContent = (tab) => {
+    switch (tab) {
+      case "send":
+        return <Send />;
+      case "saved":
+        return <Saved />;
+      case "invitation":
+        return <Invitation />;
+      default:
+        return <Invitation />;
+    }
+  };
 
   return (
-    <SafeAreaView className="bg-[#F0F6FB] h-screen  flex-1 justify-between  items-center w-full ">
-      <View className="bg-white px-4 pt-4 pb-4 border-b-[0.5px] border-gray-300  w-full">
+    <SafeAreaView className="bg-[#F0F6FB] h-screen flex-1 w-full">
+      {/* Header with Tabs */}
+      <View className="bg-white px-4 pt-4 pb-4 border-b border-gray-300 w-full">
         <View className="flex-row bg-[#F0F6FB]  rounded-full  justify-between items-center">
           {/* Invitation Tab */}
           <TouchableOpacity
@@ -71,17 +97,28 @@ const invitation = () => {
           </TouchableOpacity>
         </View>
       </View>
-      <View className="w-full flex-1 px-4  ">
-        {activeTab === "send" ? (
-          <Send />
-        ) : activeTab === "saved" ? (
-          <Saved />
-        ) : (
-          <Invitation />
+
+      {/* Swipable Content */}
+      <FlatList
+        data={tabs}
+        keyExtractor={(item) => item}
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        onScroll={(event) => {
+          // Handle tab switching when swiping
+          const index = Math.round(event.nativeEvent.contentOffset.x / width);
+          setActiveTab(tabs[index]);
+        }}
+        renderItem={({ item }) => (
+          <View style={{ width }}>{renderContent(item)}</View>
         )}
-      </View>
+        scrollEnabled
+        contentContainerStyle={{ flexGrow: 1 }}
+        initialScrollIndex={tabs.indexOf("invitation")} // Always start from the Invitation tab
+      />
     </SafeAreaView>
   );
 };
 
-export default invitation;
+export default InvitationPage;

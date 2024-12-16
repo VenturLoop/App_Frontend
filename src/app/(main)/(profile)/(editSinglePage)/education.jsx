@@ -13,6 +13,7 @@ import EditLayout from "../../../../components/ModelLayoul/EditLayout";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import imagePath from "../../../../constants/imagePath";
 import CustomeButton from "../../../../components/buttons/CustomeButton";
+import { router } from "expo-router";
 
 const FormInput = ({
   label,
@@ -208,7 +209,7 @@ const Education = () => {
           {/* Footer with Save Button */}
 
           <CustomeButton
-            // onButtonPress={handleNextButtonPress}
+            onButtonPress={()=>{router.back()}}
             title="Save"
           />
         </ScrollView>

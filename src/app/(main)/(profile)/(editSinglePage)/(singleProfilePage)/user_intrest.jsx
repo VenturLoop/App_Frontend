@@ -89,7 +89,7 @@ const user_intrest = () => {
       <View className="footer px-5 w-full">
         <CustomeButton
           onButtonPress={() => {
-            // router.navigate("/commitment");
+            router.back();
           }}
           title="Save"
         />

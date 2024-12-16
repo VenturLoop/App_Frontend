@@ -12,6 +12,7 @@ import {
 import EditLayout from "../../../../components/ModelLayoul/EditLayout";
 import imagePath from "../../../../constants/imagePath";
 import CustomeButton from "../../../../components/buttons/CustomeButton";
+import { router } from "expo-router";
 
 const FormInput = ({
   label,
@@ -50,7 +51,9 @@ const MyProject = () => {
   return (
     <EditLayout
       title="My Project"
-      saveButtonFunction={() => {}}
+      saveButtonFunction={() => {
+        router.back();
+      }}
       saveButtonTitle="Save"
     >
       <KeyboardAvoidingView

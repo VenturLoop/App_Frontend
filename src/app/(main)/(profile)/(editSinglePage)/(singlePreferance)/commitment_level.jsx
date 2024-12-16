@@ -64,7 +64,7 @@ const commitment_level = () => {
       <View className="footer px-5 w-full">
         <CustomeButton
           onButtonPress={() => {
-            // router.navigate("/prior_experience");
+            router.back();
           }}
           title="Save"
         />

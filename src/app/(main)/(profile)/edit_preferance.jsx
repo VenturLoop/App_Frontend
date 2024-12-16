@@ -267,7 +267,9 @@ const edit_preferance = () => {
 
           {/* Continue Button */}
           <TouchableOpacity
-            // onPress={handleContinue} // Call handleContinue function
+            onPress={() => {
+              router.back();
+            }} // Call handleContinue function
             className={`flex-1 w-2/3 rounded-lg py-3  bg-[#2983DC]
               `} // Disable button if no referral code
           >

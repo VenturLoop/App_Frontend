@@ -91,7 +91,12 @@ const user_expectation = () => {
 
       {/* Footer Section */}
       <View className="footer px-5 w-full">
-        <CustomeButton onButtonPress={handleNextButtonPress} title="Save" />
+        <CustomeButton
+          onButtonPress={() => {
+            router.back();
+          }}
+          title="Save"
+        />
       </View>
     </SafeAreaView>
   );

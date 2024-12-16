@@ -668,13 +668,13 @@ const ProfilePage = () => {
             className="p-3 bg-white rounded-full border border-gray-300 shadow-md flex items-center justify-center"
           >
             <Ionicons name="bookmark-outline" size={27} color="#FD890C" />
-            {attempts3th > 0 && (
+            {/* {attempts3th > 0 && (
               <View className="absolute top-[-5px] right-[-5px] bg-[#2983DC] w-8 h-8 rounded-full items-center justify-center border-2 border-white shadow-xl">
                 <Text className="text-white font-semibold text-sm">
                   {attempts3th}
                 </Text>
               </View>
-            )}
+            )} */}
           </TouchableOpacity>
 
           {/* 4th Button with attempts counter */}

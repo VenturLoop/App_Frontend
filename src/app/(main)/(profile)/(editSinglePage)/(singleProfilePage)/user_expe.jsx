@@ -67,7 +67,7 @@ const user_expe = () => {
       <View className="footer px-5 w-full">
         <CustomeButton
           onButtonPress={() => {
-            // router.navigate("/equity_exceptation");
+            router.back();
           }}
           title="Save"
         />

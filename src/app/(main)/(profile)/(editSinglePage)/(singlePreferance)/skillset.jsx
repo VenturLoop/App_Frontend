@@ -80,7 +80,7 @@ const skillset = () => {
       <View className="footer px-5 w-full">
         <CustomeButton
           onButtonPress={() => {
-            // router.navigate("/");
+            router.back();
           }}
           title="Save"
         />
