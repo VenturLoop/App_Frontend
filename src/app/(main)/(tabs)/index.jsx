@@ -83,6 +83,22 @@ const ProfilePage = () => {
   const [isPremiumModel, setisPremiumModel] = useState(false);
   const [isIncompleteProfileModel, setisIncompleteProfileModel] =
     useState(false);
+  const [attempts4th, setAttempts4th] = useState(5); // Initial attempts for the 4th button
+  const [attempts5th, setAttempts5th] = useState(3); // Initial attempts for the 5th button
+  // const router = useRouter();
+
+  const handle4thButtonPress = () => {
+    if (attempts4th > 0) {
+      setAttempts4th(attempts4th - 1); // Decrease attempt count on press
+    }
+  };
+
+  const handle5thButtonPress = () => {
+    if (attempts5th > 0) {
+      router.navigate("/message_invite");
+      setAttempts5th(attempts5th - 1); // Decrease attempt count on press
+    }
+  };
 
   const [translateX] = useState(new Animated.Value(0)); // Animation value
 
@@ -432,14 +448,11 @@ const ProfilePage = () => {
           </Animated.View>
         </View>
 
-        <View className="absolute bottom-0 pb-3  shadow-  w-full items-center justify-between flex-row px-6 z-10">
-          {/* Other buttons */}
+        <View className="absolute bottom-0 pb-2 w-full items-center justify-between flex-row px-6 z-10 space-x-4">
+          {/* Premium Model Button */}
           <TouchableOpacity
-            // onPress={handlePreviousUser}
-            onPress={() => {
-              setisPremiumModel(true);
-            }}
-            className="p-3 bg-white rounded-full border-[0.5px] border-gray-300"
+            onPress={() => setisPremiumModel(true)}
+            className="p-3 bg-white rounded-full border border-gray-300 shadow-md flex items-center justify-center"
           >
             <Ionicons name="refresh" size={27} color="#EEDE00" />
           </TouchableOpacity>
@@ -447,31 +460,48 @@ const ProfilePage = () => {
           {/* Cross Button */}
           <TouchableOpacity
             onPress={handleNextUser}
-            className="p-3  bg-white rounded-full border-[0.5px] border-gray-300"
+            className="p-3 bg-white rounded-full border border-gray-300 shadow-md flex items-center justify-center"
           >
             <Ionicons size={35} name="close" color="#F2223A" />
           </TouchableOpacity>
 
-          <TouchableOpacity className="p-3 bg-white rounded-full border-[0.5px] border-gray-300">
+          {/* Bookmark Button */}
+          <TouchableOpacity className="p-3 bg-white rounded-full border border-gray-300 shadow-md flex items-center justify-center">
             <Ionicons name="bookmark-outline" size={27} color="#FD890C" />
           </TouchableOpacity>
 
+          {/* 4th Button with attempts counter */}
           <TouchableOpacity
-            onPress={() => {
-              setisIncompleteProfileModel(!isIncompleteProfileModel);
-            }}
-            className="p-4 bg-white rounded-full border-[0.5px] border-gray-300"
+            onPress={handle4thButtonPress}
+            className="relative p-4 bg-white rounded-full border border-gray-300 shadow-xl flex items-center justify-center"
           >
-            <Ionicons size={28} name="person-add-outline" color="#2983DC" />
+            <Ionicons size={28} name="person-add-outline" color="#27C2BF" />
+
+            {/* Attempts counter */}
+            {attempts4th > 0 && (
+              <View className="absolute top-[-5px] right-[-5px] bg-[#2983DC] w-8 h-8 rounded-full items-center justify-center border-2 border-white shadow-xl">
+                <Text className="text-white font-semibold text-sm">
+                  {attempts4th}
+                </Text>
+              </View>
+            )}
           </TouchableOpacity>
 
+          {/* 5th Button with attempts counter */}
           <TouchableOpacity
-            onPress={() => {
-              router.navigate("/message_invite");
-            }}
-            className="p-3 bg-white rounded-full border-[0.5px] border-gray-300"
+            onPress={handle5thButtonPress}
+            className="relative p-4 bg-white rounded-full border border-gray-300 shadow-xl flex items-center justify-center"
           >
-            <Ionicons size={25} name="paper-plane-outline" color="#2983DC" />
+            <Ionicons size={23} name="paper-plane-outline" color="#2983DC" />
+
+            {/* Attempts counter */}
+            {attempts5th > 0 && (
+              <View className="absolute top-[-5px] right-[-5px] bg-[#2983DC] w-8 h-8 rounded-full items-center justify-center border-2 border-white shadow-xl">
+                <Text className="text-white font-semibold text-sm">
+                  {attempts5th}
+                </Text>
+              </View>
+            )}
           </TouchableOpacity>
         </View>
       </SafeAreaView>

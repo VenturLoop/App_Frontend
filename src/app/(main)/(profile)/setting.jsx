@@ -13,10 +13,12 @@ import { Ionicons } from "@expo/vector-icons";
 import imagePath from "../../../constants/imagePath";
 import { router } from "expo-router";
 import DeleteModel from "../../../components/models/DeleteModel";
+import LogoutModel from "../../../components/models/LogoutModel";
 
 const setting = () => {
   const [isEnabled, setIsEnabled] = useState(false);
   const [deleteModel, setDeleteModel] = useState(false);
+  const [logoutModel, setLogoutModel] = useState(false);
   const [isNotiEnabled, setIsNotiEnabled] = useState(true);
 
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
@@ -235,7 +237,7 @@ const setting = () => {
               <View className="">
                 {/* Setting Button */}
                 <TouchableOpacity
-                  // onPress={() => handleNavigation("/setting")}
+                  onPress={() => setLogoutModel(true)}
                   className="w-full border border-gray-300 rounded-xl py-4 my-2"
                 >
                   <Text className="text-center text-gray-500 text-lg font-semibold">
@@ -267,6 +269,12 @@ const setting = () => {
         isModalVisible={deleteModel}
         handleModalVisibility={() => {
           setDeleteModel(!deleteModel);
+        }}
+      />
+      <LogoutModel
+        isModalVisible={logoutModel}
+        handleModalVisibility={() => {
+          setLogoutModel(!logoutModel);
         }}
       />
     </>

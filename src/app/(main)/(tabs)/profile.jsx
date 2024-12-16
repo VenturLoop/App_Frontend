@@ -25,8 +25,10 @@ const profile = () => {
             }`}
           >
             <Text
-              className={`text-lg font-medium text-center ${
-                activeTab === "myProfile" ? "text-white" : "text-black"
+              className={`text-lg  text-center ${
+                activeTab === "myProfile"
+                  ? "text-white font-medium"
+                  : "text-black"
               }`}
             >
               My Profile
@@ -36,13 +38,17 @@ const profile = () => {
           {/* Preview Profile Tab */}
           <TouchableOpacity
             onPress={() => setActiveTab("previewProfile")}
-            className={`py-3 px-6 w-1/2 font-medium rounded-full ${
-              activeTab === "previewProfile" ? "bg-[#2983DC]" : "bg-transparent"
+            className={`py-3 px-6 w-1/2  rounded-full ${
+              activeTab === "previewProfile"
+                ? "bg-[#2983DC] "
+                : "bg-transparent"
             }`}
           >
             <Text
               className={`text-lg text-center ${
-                activeTab === "previewProfile" ? "text-white" : "text-black"
+                activeTab === "previewProfile"
+                  ? "text-white font-medium "
+                  : "text-black"
               }`}
             >
               Preview Profile
@@ -50,10 +56,9 @@ const profile = () => {
           </TouchableOpacity>
         </View>
       </View>
-      <View className="flex-1 items-center py-4 px-6">
+      <View className="flex-1 items-center py-2 px-6">
         {activeTab === "previewProfile" ? <PreviewProfile /> : <MyProfile />}
       </View>
-      <View></View>
     </SafeAreaView>
   );
 };

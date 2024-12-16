@@ -24,7 +24,7 @@ const Otp = ({ buttonRoute, resentRoute }) => {
           Enter OTP
         </Text>
         <Text className="text-center text- text-[#61677D]">
-          Enter the OTP sent to your mobile for secure verification!
+          Enter the OTP sent to your Email for secure verification!
         </Text>
       </View>
       <View className="flex justify-start mb-10 px-10 h-64  items-center">

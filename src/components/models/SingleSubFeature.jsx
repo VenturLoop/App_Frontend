@@ -11,7 +11,11 @@ import {
 import { router } from "expo-router";
 import imagePath from "../../constants/imagePath";
 
-const SubscriptionModel = ({ isModalVisible, handleModalVisibility }) => {
+const SingleSubFeature = ({
+  isModalVisible,
+  handleModalVisibility,
+  titleModel,
+}) => {
   const translateY = React.useRef(new Animated.Value(300)).current; // Initial offset (off-screen)
 
   useEffect(() => {
@@ -34,10 +38,10 @@ const SubscriptionModel = ({ isModalVisible, handleModalVisibility }) => {
 
   const handleNavigation = (route) => {
     if (isModalVisible) {
-      // handleModalVisibility(); // Close modal after navigation
+      //   handleModalVisibility(); // Close modal after navigation
       setTimeout(() => {
         router.push(route);
-      }, 100); // Wait for modal close animation before routing
+      }, 1); // Wait for modal close animation before routing
     }
   };
 
@@ -61,7 +65,7 @@ const SubscriptionModel = ({ isModalVisible, handleModalVisibility }) => {
           {/* Title */}
           <Image source={imagePath.premiumImage} className="w-20 h-20" />
           <Text className="text-2xl font-bold text-gray-800 text-center mb-4">
-            Upgrade to pro plan to access this feature
+            {titleModel}
           </Text>
 
           {/* Referral Input */}
@@ -98,4 +102,4 @@ const SubscriptionModel = ({ isModalVisible, handleModalVisibility }) => {
   );
 };
 
-export default SubscriptionModel;
+export default SingleSubFeature;

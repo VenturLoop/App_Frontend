@@ -117,7 +117,7 @@ const Index = () => {
               Create Account
             </Text>
             <Text className="text-center text-[#61677D]">
-              Create Your Account – Sign Up with LinkedIn or Mobile for Quick
+              Create Your Account – Sign Up with Google or Email for Quick
               Access!
             </Text>
           </View>
@@ -131,10 +131,10 @@ const Index = () => {
               <Image
                 className="w-6 h-6 mr-3"
                 resizeMode="contain"
-                source={imagePath.lingedInLogo}
+                source={imagePath.google}
               />
               <Text className="text-[#61677D] font-medium text-lg">
-                LinkedIn
+                Google
               </Text>
             </TouchableOpacity>
             <View className="flex-row items-center my-4">

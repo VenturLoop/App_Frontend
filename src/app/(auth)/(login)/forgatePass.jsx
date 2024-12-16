@@ -21,13 +21,13 @@ const forgatePass = () => {
           Forget Password
         </Text>
         <Text className="text-center text- text-[#61677D]">
-          Forgot your password? No worries! Simply add your connected number to
+          Forgot your password? No worries! Simply add your connected Email to
           reset your account quickly and securely.
         </Text>
       </View>
       <View className="flex justify-start mb-20  h-64 items-center">
         <TextInput
-          placeholder="Phone Number"
+          placeholder="Email address"
           className="bg-[#2982dc23] w-full  px-6 py-5 placeholder:opacity-70 rounded-lg text-lg tracking-widest text-gray-600 p-2"
           // placeholderTextColor="#61677D"
           keyboardType="numeric"

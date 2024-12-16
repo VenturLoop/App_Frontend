@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Pressable,
   Animated,
+  Share,
 } from "react-native";
 import { router } from "expo-router";
 
@@ -17,14 +18,14 @@ const UserModel = ({ isModalVisible, handleModalVisibility }) => {
       // Slide-up animation
       Animated.timing(translateY, {
         toValue: 0, // Bring modal to visible position
-        duration: 100, // Animation duration
+        duration: 200, // Animation duration for smoother effect
         useNativeDriver: true, // Use native driver for better performance
       }).start();
     } else {
       // Slide-down animation
       Animated.timing(translateY, {
         toValue: 300, // Move modal off-screen
-        duration: 100,
+        duration: 200,
         useNativeDriver: true,
       }).start();
     }
@@ -35,7 +36,17 @@ const UserModel = ({ isModalVisible, handleModalVisibility }) => {
       handleModalVisibility(); // Close modal after navigation
       setTimeout(() => {
         router.push(route);
-      }, 100); // Wait for modal close animation before routing
+      }, 200); // Wait for modal close animation before routing
+    }
+  };
+
+  const shareProfile = async () => {
+    try {
+      await Share.share({
+        message: "Check out this profile! [Insert Profile Link Here]", // Customize the message with the profile link
+      });
+    } catch (error) {
+      alert("Failed to share profile");
     }
   };
 
@@ -56,29 +67,30 @@ const UserModel = ({ isModalVisible, handleModalVisibility }) => {
           style={{ transform: [{ translateY }] }}
           className="bg-white rounded-t-3xl px-8 py-6 shadow-lg"
         >
-          {/* Setting Button */}
+          {/* Block User Button */}
           <TouchableOpacity
             // onPress={() => handleNavigation("/setting")}
-            className="w-full border border-gray-300 rounded-xl py-4 my-2"
+            className="w-full border border-gray-300 rounded-xl py-4 my-2 "
           >
             <Text className="text-center text-gray-800 text-lg font-semibold">
               Block User
             </Text>
           </TouchableOpacity>
 
-          {/* Share Profile Button */}
+          {/* Report User Button */}
           <TouchableOpacity
-            //   onPress={() => handleNavigation("/share")}
-            className="w-full border border-red-500 rounded-xl py-4 my-2"
+            //   onPress={() => handleNavigation("/report")}
+            className="w-full border border-red-500 rounded-xl py-4 my-2 "
           >
             <Text className="text-center text-red-600 text-lg font-semibold">
               Report User
             </Text>
           </TouchableOpacity>
 
+          {/* Share Profile Button */}
           <TouchableOpacity
-            //   onPress={() => handleNavigation("/share")}
-            className="w-full border border-gray-300 rounded-xl py-4 my-2"
+            onPress={shareProfile} // Call the shareProfile function
+            className="w-full border border-gray-300 rounded-xl py-4 my-2 bg-white"
           >
             <Text className="text-center text-gray-800 text-lg font-semibold">
               Share Profile

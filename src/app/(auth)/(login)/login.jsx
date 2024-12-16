@@ -54,7 +54,7 @@ const Login = () => {
               Login to your Account
             </Text>
             <Text className="text-center text-[#61677D]">
-              Log in with LinkedIn or mobile number for quick and secure access!
+              Log in with Google or Email address for quick and secure access!
             </Text>
           </View>
 
@@ -69,10 +69,10 @@ const Login = () => {
               <Image
                 className="w-6 h-6 mr-3"
                 resizeMode="contain"
-                source={imagePath.lingedInLogo}
+                source={imagePath.google}
               />
-              <Text className="text-[#61677D] font-medium text-lg">
-                LinkedIn
+              <Text className="text-[#61677D] text-xl font-medium ">
+                Google
               </Text>
             </TouchableOpacity>
 

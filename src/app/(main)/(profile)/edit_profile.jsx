@@ -308,7 +308,7 @@ const EditProfile = () => {
                 >
                   <View className="gap-1">
                     <Text className="text-gray-500 font-semibold">
-                      Compensation Expectation
+                      Equity Expectation
                     </Text>
                     <Text className="text-gray-400  text-sm ">Equity</Text>
                   </View>

@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   Image,
   Platform,
+  KeyboardAvoidingView,
+  ScrollView,
 } from "react-native";
 import EditLayout from "../../../../components/ModelLayoul/EditLayout";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -47,7 +49,7 @@ const CircularCheckbox = ({ isChecked, onPress }) => (
   </TouchableOpacity>
 );
 
-const education = () => {
+const Education = () => {
   const [formData, setFormData] = useState({
     project_name: "",
     company_name: "",
@@ -66,128 +68,153 @@ const education = () => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleDateChange = (event, date) => {
-    if (date) {
-      setFormData((prev) => ({ ...prev, [showDatePicker.type]: date }));
+  const handleDateChange = (event, selectedDate) => {
+    if (selectedDate) {
+      // Store the date as a Date object (not formatted as a string)
+      const date = new Date(selectedDate);
+      setFormData((prev) => ({
+        ...prev,
+        [showDatePicker.type]: date, // Save the Date object
+      }));
     }
     setShowDatePicker({ type: "", visible: false });
   };
 
   return (
     <EditLayout title="My Education">
-      <View className="flex-1 gap-5 bg-white p-6">
-        {/* Title/Position Input */}
-        <FormInput
-          placeholder="Degree"
-          value={formData.project_name}
-          onChangeText={(text) => handleInputChange("project_name", text)}
-        />
-
-        {/* Company Name Input */}
-        <FormInput
-          placeholder="School/College"
-          value={formData.company_name}
-          onChangeText={(text) => handleInputChange("company_name", text)}
-        />
-        <FormInput
-          placeholder="Field of Study"
-          value={formData.company_name}
-          onChangeText={(text) => handleInputChange("company_name", text)}
-        />
-
-        {/* Currently Studying Checkbox */}
-        <View className="flex-row items-center  mb-4">
-          <CircularCheckbox
-            isChecked={formData.isCurrentlyStudying}
-            onPress={() =>
-              handleInputChange(
-                "isCurrentlyStudying",
-                !formData.isCurrentlyStudying
-              )
-            }
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        className="flex-1"
+      >
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            // paddingBottom: 100,
+            gap: 15,
+          }}
+          className="bg-white p-6"
+          keyboardShouldPersistTaps="handled"
+        >
+          {/* Title/Position Input */}
+          <FormInput
+            placeholder="Degree"
+            value={formData.project_name}
+            onChangeText={(text) => handleInputChange("project_name", text)}
           />
-          <Text className="text-gray-700 text-lg font-semibold">
-            I’m currently studying here
-          </Text>
-        </View>
 
-        {/* Start Date Picker */}
-        <View className="gap-4 w-full">
-          <Text className="font-semibold text-lg">Starting Date</Text>
-          <TouchableOpacity
-            onPress={() =>
-              setShowDatePicker({ type: "startDate", visible: true })
-            }
-            className="bg-[#2982dc14] w-full flex flex-row items-center justify-between placeholder:text-sm placeholder:text-[#7C8BA0] px-6 rounded-lg py-4"
-          >
-            <Text
-              className={`text-md ${
-                formData.startDate ? "text-[#3B4054]" : "text-[#7C8BA0]"
-              }`}
-            >
-              {formData.startDate
-                ? formData.startDate.toDateString()
-                : "DD/MM/YYYY"}
-            </Text>
-            <Image source={imagePath.calender} />
-          </TouchableOpacity>
-        </View>
-
-        {/* End Date Picker */}
-        <View className="gap-4 w-full">
-          <Text className="font-semibold text-lg">Ending Date</Text>
-          <TouchableOpacity
-            onPress={() =>
-              !formData.isCurrentlyStudying &&
-              setShowDatePicker({ type: "endDate", visible: true })
-            }
-            className="bg-[#2982dc14] w-full flex flex-row items-center justify-between placeholder:text-sm placeholder:text-[#7C8BA0] px-6 rounded-lg py-4"
-            disabled={formData.isCurrentlyStudying}
-          >
-            <Text
-              className={`text-md ${
-                formData.endDate ? "text-[#3B4054]" : "text-[#7C8BA0]"
-              }`}
-            >
-              {formData.isCurrentlyStudying
-                ? "Currently Studying"
-                : formData.endDate
-                ? formData.endDate.toDateString()
-                : "DD/MM/YYYY"}
-            </Text>
-            <Image source={imagePath.calender} />
-          </TouchableOpacity>
-        </View>
-
-        {/* DateTimePicker Modal */}
-        {showDatePicker.visible && (
-          <DateTimePicker
-            value={formData[showDatePicker.type] || new Date()}
-            mode="date"
-            display={Platform.OS === "ios" ? "spinner" : "default"}
-            onChange={handleDateChange}
+          {/* School/College Input */}
+          <FormInput
+            placeholder="School/College"
+            value={formData.company_name}
+            onChangeText={(text) => handleInputChange("company_name", text)}
           />
-        )}
+          <FormInput
+            placeholder="Field of Study"
+            value={formData.company_name}
+            onChangeText={(text) => handleInputChange("company_name", text)}
+          />
 
-        {/* Description Input */}
-        <FormInput
-          label="Description"
-          placeholder="Add details about your experience"
-          multiline
-          maxLength={2000}
-          numberOfLines={4}
-          value={formData.description}
-          onChangeText={(text) => handleInputChange("description", text)}
-        />
-      </View>
-      <View className="footer px-5 w-full">
-        <CustomeButton
-          // onButtonPress={handleNextButtonPress}
-          title="Save"
-        />
-      </View>
+          {/* Currently Studying Checkbox */}
+          <View className="flex-row items-center mb-4">
+            <CircularCheckbox
+              isChecked={formData.isCurrentlyStudying}
+              onPress={() =>
+                handleInputChange(
+                  "isCurrentlyStudying",
+                  !formData.isCurrentlyStudying
+                )
+              }
+            />
+            <Text className="text-gray-700 text-lg font-semibold">
+              I’m currently studying here
+            </Text>
+          </View>
+
+          {/* Start Date Picker */}
+          <View className="gap-4 w-full">
+            <Text className="font-semibold text-lg">Starting Date</Text>
+            <TouchableOpacity
+              onPress={() =>
+                setShowDatePicker({ type: "startDate", visible: true })
+              }
+              className="bg-[#2982dc14] w-full flex flex-row items-center justify-between placeholder:text-sm placeholder:text-[#7C8BA0] px-6 rounded-lg py-4"
+            >
+              <Text
+                className={`text-md ${
+                  formData.startDate ? "text-[#3B4054]" : "text-[#7C8BA0]"
+                }`}
+              >
+                {formData.startDate
+                  ? new Date(formData.startDate).toLocaleDateString("en-GB") // Format the date as DD/MM/YYYY
+                  : "DD/MM/YYYY"}
+              </Text>
+
+              <Image source={imagePath.calender} />
+            </TouchableOpacity>
+          </View>
+
+          {/* End Date Picker */}
+          <View className="gap-4 w-full">
+            <Text className="font-semibold text-lg">Ending Date</Text>
+            <TouchableOpacity
+              onPress={() =>
+                !formData.isCurrentlyStudying &&
+                setShowDatePicker({ type: "endDate", visible: true })
+              }
+              className="bg-[#2982dc14] w-full flex flex-row items-center justify-between placeholder:text-sm placeholder:text-[#7C8BA0] px-6 rounded-lg py-4"
+              disabled={formData.isCurrentlyStudying}
+            >
+              <Text
+                className={`text-md ${
+                  formData.isCurrentlyStudying
+                    ? "text-[#3B4054]"
+                    : formData.endDate
+                    ? "text-[#3B4054]"
+                    : "text-[#7C8BA0]"
+                }`}
+              >
+                {formData.isCurrentlyStudying
+                  ? "Currently Studying"
+                  : formData.endDate
+                  ? new Date(formData.endDate).toLocaleDateString("en-GB") // Format the date as DD/MM/YYYY
+                  : "DD/MM/YYYY"}
+              </Text>
+
+              <Image source={imagePath.calender} />
+            </TouchableOpacity>
+          </View>
+
+          {/* DateTimePicker Modal */}
+          {showDatePicker.visible && (
+            <DateTimePicker
+              value={formData[showDatePicker.type] || new Date()}
+              mode="date"
+              display={Platform.OS === "ios" ? "spinner" : "default"}
+              onChange={handleDateChange}
+            />
+          )}
+
+          {/* Description Input */}
+          <FormInput
+            label="Description"
+            placeholder="Add details about your experience"
+            multiline
+            maxLength={2000}
+            numberOfLines={4}
+            value={formData.description}
+            onChangeText={(text) => handleInputChange("description", text)}
+          />
+
+          {/* Footer with Save Button */}
+
+          <CustomeButton
+            // onButtonPress={handleNextButtonPress}
+            title="Save"
+          />
+        </ScrollView>
+      </KeyboardAvoidingView>
     </EditLayout>
   );
 };
 
-export default education;
+export default Education;

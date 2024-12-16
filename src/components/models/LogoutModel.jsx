@@ -10,8 +10,9 @@ import {
 } from "react-native";
 import { router } from "expo-router";
 import imagePath from "../../constants/imagePath";
+import { Ionicons } from "@expo/vector-icons";
 
-const SubscriptionModel = ({ isModalVisible, handleModalVisibility }) => {
+const LogoutModel = ({ isModalVisible, handleModalVisibility }) => {
   const translateY = React.useRef(new Animated.Value(300)).current; // Initial offset (off-screen)
 
   useEffect(() => {
@@ -34,7 +35,7 @@ const SubscriptionModel = ({ isModalVisible, handleModalVisibility }) => {
 
   const handleNavigation = (route) => {
     if (isModalVisible) {
-      // handleModalVisibility(); // Close modal after navigation
+      handleModalVisibility(); // Close modal after navigation
       setTimeout(() => {
         router.push(route);
       }, 100); // Wait for modal close animation before routing
@@ -56,12 +57,12 @@ const SubscriptionModel = ({ isModalVisible, handleModalVisibility }) => {
         {/* Modal Content */}
         <Animated.View
           style={{ transform: [{ translateY }] }}
-          className="bg-white rounded-t-3xl gap-6 px-6 py-8 items-center"
+          className="bg-white rounded-t-3xl justify-center gap-6 px-6 py-8 items-center"
         >
           {/* Title */}
-          <Image source={imagePath.premiumImage} className="w-20 h-20" />
+          <Ionicons name="log-out-outline" color="#2983DC" size={80} />
           <Text className="text-2xl font-bold text-gray-800 text-center mb-4">
-            Upgrade to pro plan to access this feature
+            Are you sure you want to Logout?
           </Text>
 
           {/* Referral Input */}
@@ -80,7 +81,7 @@ const SubscriptionModel = ({ isModalVisible, handleModalVisibility }) => {
             {/* Continue Button */}
             <TouchableOpacity
               onPress={() => {
-                handleNavigation("/subscription_page");
+                handleNavigation("/login");
               }} // Call handleContinue function
               className={`flex-1 w-2/3 rounded-lg py-3 
                          bg-[#2983DC]
@@ -88,7 +89,7 @@ const SubscriptionModel = ({ isModalVisible, handleModalVisibility }) => {
               // Disable the button if referral is empty
             >
               <Text className="text-center text-lg text-white font-medium">
-                Updrade
+                Logout
               </Text>
             </TouchableOpacity>
           </View>
@@ -98,4 +99,4 @@ const SubscriptionModel = ({ isModalVisible, handleModalVisibility }) => {
   );
 };
 
-export default SubscriptionModel;
+export default LogoutModel;

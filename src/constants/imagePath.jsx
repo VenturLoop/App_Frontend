@@ -21,6 +21,8 @@ export default {
   delete: require("../assets/images/delete.png"),
   premiumImage: require("../assets/images/premium.png"),
   cake: require("../assets/images/cake.png"),
+  google: require("../assets/images/google.png"),
+
 
 
 
