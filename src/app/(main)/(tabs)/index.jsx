@@ -21,7 +21,7 @@ import SingleSubFeature from "../../../components/models/SingleSubFeature";
 // Sample Data for multiple users
 const users = [
   {
-    name: "Atharv Kete",
+    name: "Atharv Tete",
     status: "Looking for Co-founder",
     location: "Mumbai",
     mindset: "I want to build something in the food industry",
