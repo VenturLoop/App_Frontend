@@ -118,9 +118,9 @@ const Saved = () => {
         </View>
       ) : (
         <View className="flex-1 items-center justify-center">
-          <Image source={imagePath.NoMessage} />
+          <Image source={imagePath.NoSaved} />
           <Text className="font-semibold text-lg text-gray-500 ">
-            No invitation received yet !
+          You haven’t saved any profile yet ! 
           </Text>
         </View>
       )}

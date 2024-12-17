@@ -2,6 +2,8 @@ import { View, Text, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import EditLayout from "../../../components/ModelLayoul/EditLayout";
 import { Ionicons } from "@expo/vector-icons";
+import CustomeButton from "../../../components/buttons/CustomeButton";
+import { router } from "expo-router";
 
 const plans = [
   {
@@ -56,6 +58,7 @@ const plans = [
 
 const SubscriptionPage = () => {
   const [selectedPlan, setSelectedPlan] = useState(plans[1]); // Default to "Recommended"
+  const [isPremium, setisPremium] = useState(false);
 
   const handlePlanSelect = (plan) => {
     setSelectedPlan(plan);
@@ -63,51 +66,92 @@ const SubscriptionPage = () => {
 
   return (
     <EditLayout
-      buttonTitle="Subscribe"
-      buttonRoute="/(tabs)"
+      // buttonTitle="Subscribe"
+      // buttonRoute="/(tabs)"
       title="Business Class Membership"
     >
-      <View className="flex-1 pt-4 justify-between  gap-5">
+      <View className="flex-1  justify-between  gap-5">
         {/* Pricing Plans */}
-        <View className="flex flex-row gap-4 items-start justify-center">
-          {plans.map((plan, index) => (
-            <TouchableOpacity
-              key={index}
-              onPress={() => handlePlanSelect(plan)}
-              className={`w-32 rounded-xl overflow-hidden  ${
-                selectedPlan.title === plan.title
-                  ? "border border-[#2983DC]"
-                  : ""
-              }`}
-            >
-              {/* Header Section */}
-              <View
-                className={`py-2 flex items-center justify-center ${
+        {isPremium ? (
+          <View className=" flex-row bg-[#F0F6FB] p-4 rounded-xl items-center justify-between">
+            <View className="flex gap-2">
+              <Text className="font-semibold">Current Plan</Text>
+              <Text className="text-sm ">Validity</Text>
+              <Text className="text-sm font-medium">
+                1st December to 1st January
+              </Text>
+            </View>
+            <View>
+              <TouchableOpacity
+                // key={index}
+                // onPress={() => handlePlanSelect(plan)}
+                className={`w-32 rounded-xl overflow-hidden  border border-[#2983DC]`}
+              >
+                {/* Header Section */}
+                <View
+                  className={`py-2 flex items-center justify-center bg-[#2983DC]`}
+                >
+                  <Text className="text-white  font-semibold text-sm">
+                    Business Pro
+                  </Text>
+                </View>
+
+                {/* Content Section */}
+                <View className="bg-[#F0F6FB] py-4 px-3 flex items-center">
+                  {/* <Text className="text-gray-600 font-medium text-sm">
+                    {plan.duration}
+                  </Text> */}
+                  <Text className="text-black font-bold text-lg mt-1">
+                    ₹200.00/
+                  </Text>
+                  <Text className="text-gray-500 font-semibold text-sm mt-1">
+                    Month
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </View>
+        ) : (
+          <View className="flex flex-row gap-4 items-start justify-center">
+            {plans.map((plan, index) => (
+              <TouchableOpacity
+                key={index}
+                onPress={() => handlePlanSelect(plan)}
+                className={`w-32 rounded-xl overflow-hidden  ${
                   selectedPlan.title === plan.title
-                    ? "bg-[#2983DC]"
-                    : "bg-blue-300"
+                    ? "border border-[#2983DC]"
+                    : ""
                 }`}
               >
-                <Text className="text-white  font-semibold text-sm">
-                  {plan.title}
-                </Text>
-              </View>
+                {/* Header Section */}
+                <View
+                  className={`py-2 flex items-center justify-center ${
+                    selectedPlan.title === plan.title
+                      ? "bg-[#2983DC]"
+                      : "bg-blue-300"
+                  }`}
+                >
+                  <Text className="text-white  font-semibold text-sm">
+                    {plan.title}
+                  </Text>
+                </View>
 
-              {/* Content Section */}
-              <View className="bg-[#F0F6FB] py-4 px-3 flex items-center">
-                <Text className="text-gray-600 font-medium text-sm">
-                  {plan.duration}
-                </Text>
-                <Text className="text-black font-bold text-lg mt-1">
-                  {plan.price}
-                </Text>
-                <Text className="text-gray-500 font-semibold text-sm mt-1">
-                  {plan.weeklyRate}
-                </Text>
-              </View>
-            </TouchableOpacity>
-          ))}
-        </View>
+                {/* Content Section */}
+                <View className="bg-[#F0F6FB] py-4 px-3 flex items-center">
+                  <Text className="text-gray-600 font-medium text-sm">
+                    {plan.duration}
+                  </Text>
+                  <Text className="text-black font-bold text-lg mt-1">
+                    {plan.price}
+                  </Text>
+                  <Text className="text-gray-500 font-semibold text-sm mt-1">
+                    {plan.weeklyRate}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
 
         {/* Features Section */}
         <View className="flex flex-col gap-6 bg-[#F0F6FB] px-4 py-4">
@@ -154,13 +198,22 @@ const SubscriptionPage = () => {
         </View>
 
         {/* Footer Section */}
-        <View>
+        <View className="flex justify-between">
           <Text className="text-xs text-center text-gray-500 mt-4">
             By tapping subscribe, you will be charged. Your subscription will
             automatically renew for the same price and package length until you
             cancel via App Store/Play Store settings. By subscribing, you agree
             to our Terms & Conditions.
           </Text>
+        </View>
+        <View className="footer  w-full ">
+          <CustomeButton
+            background={isPremium === true ? true : false}
+            onButtonPress={() => {
+              router.navigate("/(tabs)");
+            }}
+            title="Subscribe"
+          />
         </View>
       </View>
     </EditLayout>

@@ -154,7 +154,7 @@ const UserMessages = () => {
         <View className="flex-1 items-center justify-center">
           <Image source={imagePath.NoMessage} />
           <Text className="font-semibold">
-            No Direct connect request received yet !
+          No messaging thread started yet
           </Text>
         </View>
       )}

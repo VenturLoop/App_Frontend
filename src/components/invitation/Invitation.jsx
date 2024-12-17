@@ -49,6 +49,8 @@ const messages = [
   },
 ];
 
+// const messages = [];
+
 const Invitation = () => {
   const [isPremiumModel, setIsPremiumModel] = useState(false);
   const [isPremium, setIsPremium] = useState(false); // Premium subscription state
@@ -105,7 +107,7 @@ const Invitation = () => {
         <View className="flex-1 items-center justify-center">
           <Image source={imagePath.NoMessage} />
           <Text className="font-semibold text-lg text-gray-500">
-            No invitation received yet!
+            No invitation received yet !
           </Text>
         </View>
       )}

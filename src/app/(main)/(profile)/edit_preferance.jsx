@@ -9,6 +9,7 @@ import SubscriptionModel from "../../../components/models/SubscriptionModel";
 const edit_preferance = () => {
   const [userRole, setuserRole] = useState("co-founder");
   const [isPremiumModel, setisPremiumModel] = useState(false);
+  const [isPremium, setisPremium] = useState(true);
 
   const handleNavigation = (route) => {
     setTimeout(() => {
@@ -206,7 +207,11 @@ const edit_preferance = () => {
             {/* Age Range */}
             <TouchableOpacity
               onPress={() => {
-                setisPremiumModel(true);
+                {
+                  isPremium
+                    ? handleNavigation("/age_range")
+                    : setisPremiumModel(true);
+                }
               }}
               className="border-y-[0.5px] border-gray-300 py-3  px-2 flex flex-row justify-between items-center "
             >
@@ -216,13 +221,29 @@ const edit_preferance = () => {
                   Open to all
                 </Text>
               </View>
-              <Ionicons name="lock-closed-outline" size={20} color="#2983DC" />
+              {!isPremium ? (
+                <Ionicons
+                  name="lock-closed-outline"
+                  size={20}
+                  color="#2983DC"
+                />
+              ) : (
+                <Ionicons
+                  name="chevron-forward-outline"
+                  size={20}
+                  color="black"
+                />
+              )}
             </TouchableOpacity>
 
             {/* P S Experience  */}
             <TouchableOpacity
               onPress={() => {
-                setisPremiumModel(true);
+                {
+                  isPremium
+                    ? handleNavigation("/p_experience")
+                    : setisPremiumModel(true);
+                }
               }}
               className="border-b-[0.5px] border-gray-300 py-3  px-2 flex flex-row justify-between items-center "
             >
@@ -232,13 +253,29 @@ const edit_preferance = () => {
                   Open to all
                 </Text>
               </View>
-              <Ionicons name="lock-closed-outline" size={20} color="#2983DC" />
+              {!isPremium ? (
+                <Ionicons
+                  name="lock-closed-outline"
+                  size={20}
+                  color="#2983DC"
+                />
+              ) : (
+                <Ionicons
+                  name="chevron-forward-outline"
+                  size={20}
+                  color="black"
+                />
+              )}
             </TouchableOpacity>
 
             {/* Equity exchenge */}
             <TouchableOpacity
               onPress={() => {
-                setisPremiumModel(true);
+                {
+                  isPremium
+                    ? handleNavigation("/p_equity_expectation")
+                    : setisPremiumModel(true);
+                }
               }}
               className="border-b-[0.5px] border-gray-300 py-3  px-2 flex flex-row justify-between items-center "
             >
@@ -248,7 +285,19 @@ const edit_preferance = () => {
                   Open to all
                 </Text>
               </View>
-              <Ionicons name="lock-closed-outline" size={20} color="#2983DC" />
+              {!isPremium ? (
+                <Ionicons
+                  name="lock-closed-outline"
+                  size={20}
+                  color="#2983DC"
+                />
+              ) : (
+                <Ionicons
+                  name="chevron-forward-outline"
+                  size={20}
+                  color="black"
+                />
+              )}
             </TouchableOpacity>
           </View>
         </View>

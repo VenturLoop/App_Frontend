@@ -48,7 +48,7 @@ const age_range = () => {
 
   const isCustomOption = selectedOption === "custome";
   return (
-    <EditLayout title="Distance">
+    <EditLayout title="Age Range">
       {/* Body Section */}
       <View className="px-4 py- w-full flex-1">
         {/* Option Selection */}

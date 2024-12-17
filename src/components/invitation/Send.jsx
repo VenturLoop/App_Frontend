@@ -108,7 +108,7 @@ const Send = () => {
         <View className="flex-1 items-center justify-center">
           <Image source={imagePath.NoMessage} />
           <Text className="font-semibold text-lg text-gray-500 ">
-            No invitation received yet !
+            No invitation sent yet !
           </Text>
         </View>
       )}

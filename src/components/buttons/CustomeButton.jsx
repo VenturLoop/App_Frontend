@@ -2,13 +2,21 @@ import { Text, TouchableOpacity, StyleSheet, View } from "react-native";
 import React from "react";
 import { scale } from "react-native-size-matters";
 
-const CustomeButton = ({ onButtonPress, title, style, textStyle }) => {
+const CustomeButton = ({
+  onButtonPress,
+  title,
+  style,
+  background = false,
+  textStyle,
+}) => {
   return (
     <TouchableOpacity
       onPress={onButtonPress}
       className={` rounded-xl ${
         style ? style : "my-10"
-      } w-full flex justify-center items-center py-4 bg-[#2983DC] text-center`}
+      } w-full flex justify-center items-center py-4 ${
+        background === true ? "bg-gray-500 opacity-50" : "bg-[#2983DC]"
+      } text-center`}
       accessibilityRole="button"
     >
       <Text
