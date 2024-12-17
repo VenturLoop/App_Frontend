@@ -167,11 +167,11 @@ const Index = () => {
                 color={isChecked ? "#2983DC" : undefined}
               />
               <Text>
-                I agree to the{" "}
+                I agree to the
                 <Link className="font-semibold text-[#2983DC]" href={"/"}>
                   Terms of Service
-                </Link>{" "}
-                and{" "}
+                </Link>
+                and
                 <Link className="font-semibold text-[#2983DC]" href={"/"}>
                   Privacy Policy
                 </Link>

@@ -55,7 +55,6 @@ const ProfilePage = () => {
               paddingBottom: 80,
               gap: 20,
               paddingHorizontal: 10,
-              
             }}
             className="w-full pt-3"
           >

@@ -46,9 +46,12 @@ const MyProfile = () => {
 
   return (
     <>
-      <View className="flex-1 bg-[#F0F6FB] w-full px-1 pl-0.5 py-3  h-screen gap-7 items-center">
+      <View
+        // style={{ paddingBottom: 80, gap: 20, paddingHorizontal: 10 }}
+        className="flex-1 bg-[#F0F6FB] w-full px-1 pl-0.5 py-3  h-screen gap-7 items-center"
+      >
         {/* user Info view */}
-        <View className="   w-full gap-5">
+        <View className="   w-full px-2.5 gap-5">
           <View className=" flex flex-row  justify-between">
             <View className="flex flex-row  gap-4">
               <Image
@@ -82,7 +85,7 @@ const MyProfile = () => {
           </View>
         </View>
         {/* Collection View */}
-        <View className="w-full ">
+        <View className="w-full px-2.5 ">
           <Text className="text-sm font-medium">
             <Text className="font-semibold text-lg">500</Text> Connections
           </Text>
@@ -92,7 +95,7 @@ const MyProfile = () => {
         </View>
 
         {/* Edit */}
-        <View className="flex-1 px-6 ">
+        <View className="flex-1 px-2.5 ">
           {/* Edit Profile */}
           <TouchableOpacity
             onPress={() => {

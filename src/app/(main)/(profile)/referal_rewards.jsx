@@ -32,7 +32,7 @@ const referal_rewards = () => {
               </Text>
               <Text className="text-[#505050] ">
                 On hitting 10 referrals you will get complementary business
-                class for 3 Months{" "}
+                class for 3 Months
               </Text>
             </View>
             <View className="flex flex-col gap-2 items-center justify-center mx-5 bg-[#50505014] mt-10  py-6 rounded-2xl  ">

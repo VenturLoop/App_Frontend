@@ -6,7 +6,7 @@ import {
   Dimensions,
   FlatList,
 } from "react-native";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import { useFocusEffect } from "@react-navigation/native"; // Importing useFocusEffect
 import Request from "../../../components/message/Request";
 import UserMessages from "../../../components/message/UserMessages";
@@ -20,12 +20,31 @@ const Message = () => {
     { key: "request", label: "Requests", component: <Request /> },
   ];
 
+  const flatListRef = useRef(null); // Ref for FlatList
+
   // Reset to "message" tab when the page is focused
   useFocusEffect(
     useCallback(() => {
       setActiveTab("message");
+      flatListRef.current?.scrollToIndex({ index: 0, animated: true });
     }, [])
   );
+
+  // Handle tab change when tab buttons are clicked
+  const handleTabChange = (key) => {
+    setActiveTab(key);
+    const index = tabs.findIndex((tab) => tab.key === key);
+    flatListRef.current?.scrollToIndex({ index, animated: true });
+  };
+
+  const safeRenderComponent = (component) => {
+    try {
+      return component; // Return the component if there is no error
+    } catch (error) {
+      console.log("Error in rendering component:", error);
+      return <Text>Error loading content</Text>; // Fallback UI
+    }
+  };
 
   return (
     <SafeAreaView className="bg-[#F0F6FB] h-screen flex-1 w-full">
@@ -35,7 +54,7 @@ const Message = () => {
           {tabs.map((tab) => (
             <TouchableOpacity
               key={tab.key}
-              onPress={() => setActiveTab(tab.key)}
+              onPress={() => handleTabChange(tab.key)}
               className={`py-3 px-6 w-1/2 rounded-full ${
                 activeTab === tab.key ? "bg-[#2983DC]" : "bg-transparent"
               }`}
@@ -56,6 +75,7 @@ const Message = () => {
 
       {/* Swipable Content */}
       <FlatList
+        ref={flatListRef} // Attach FlatList ref
         data={tabs}
         keyExtractor={(item) => item.key}
         horizontal
@@ -66,12 +86,15 @@ const Message = () => {
           setActiveTab(tabs[index].key); // Sync active tab with swipe
         }}
         renderItem={({ item }) => (
-          <View style={{ width }}>
-            {item.component} {/* Render corresponding tab content */}
-          </View>
+          <View style={{ width }}>{safeRenderComponent(item.component)}</View>
         )}
         contentContainerStyle={{ flexGrow: 1 }}
-        initialScrollIndex={tabs.findIndex((tab) => tab.key === "message")} // Start from "message" tab
+        initialScrollIndex={tabs.findIndex((tab) => tab.key === "message")}
+        getItemLayout={(data, index) => ({
+          length: width,
+          offset: width * index,
+          index,
+        })}
       />
     </SafeAreaView>
   );

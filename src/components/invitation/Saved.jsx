@@ -22,7 +22,7 @@ const Saved = () => {
   return (
     <>
       {messages.length > 0 ? (
-        <View className="bg-gray-100 flex px-2 py-4 justify-between h-full ">
+        <View className="bg-gray-100 flex px-4 py-4 justify-between h-full ">
           <FlatList
             data={messages}
             keyExtractor={(item) => item.id.toString()}
