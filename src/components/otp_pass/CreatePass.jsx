@@ -6,16 +6,98 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Platform,
+  ActivityIndicator,
+  TextInput,
+  TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
-import { Link, router } from "expo-router";
-import TextBox from "react-native-password-eye";
+import { router } from "expo-router";
+import { useSelector } from "react-redux";
 import imagePath from "../../constants/imagePath";
 import CustomeButton from "../buttons/CustomeButton";
+import { Ionicons } from "@expo/vector-icons"; // For password visibility toggle icon
 
-const CreatePass = ({ buttonTittle, route }) => {
+const CreatePass = () => {
   const [newPassword, setNewPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
+  const [newPasswordError, setNewPasswordError] = useState("");
+  const [repeatPasswordError, setRepeatPasswordError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showRepeatPassword, setShowRepeatPassword] = useState(false);
+
+  // Retrieve name and email from Redux
+  const { name, email } = useSelector((state) => state.user);
+
+  const validatePasswords = () => {
+    let isValid = true;
+
+    if (!/^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/.test(email.trim())) {
+      setRepeatPasswordError("Invalid email format.");
+      isValid = false;
+    }
+
+    if (newPassword.length < 6) {
+      setNewPasswordError("Password must be at least 6 characters long.");
+      isValid = false;
+    }
+
+    if (!name.trim()) {
+      setRepeatPasswordError("Name cannot be empty.");
+      isValid = false;
+    }
+
+    return isValid;
+  };
+
+  const handleCreatePassword = async () => {
+    if (!validatePasswords()) return;
+
+    setLoading(true);
+
+    // Trim values to remove leading/trailing spaces
+    const trimmedName = name.trim();
+    const trimmedEmail = email.trim();
+    const trimmedPassword = newPassword.trim();
+
+    console.log("Name: " + trimmedName, "Type:", typeof trimmedName);
+    console.log("Email: " + trimmedEmail, "Type:", typeof trimmedEmail);
+    console.log(
+      "Password: " + trimmedPassword,
+      "Type:",
+      typeof trimmedPassword
+    );
+
+    try {
+      const response = await fetch(
+        "https://verturloop-server-v01.onrender.com/auth/signup",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: trimmedName,
+            email: trimmedEmail,
+            password: trimmedPassword,
+          }),
+        }
+      );
+
+      const result = await response.json();
+      console.log(result);
+
+      if (response.ok) {
+        router.push("/otp"); // Navigate to the OTP page
+      } else {
+        setRepeatPasswordError(result.message || "Failed to create password.");
+      }
+    } catch (error) {
+      setRepeatPasswordError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -29,8 +111,8 @@ const CreatePass = ({ buttonTittle, route }) => {
             flexGrow: 1,
             justifyContent: "space-between",
           }}
-          className=""
         >
+          {/* Header Section */}
           <View className="px-8">
             <View className="header flex flex-col items-center gap-4 mt-6">
               <Image className="w-auto" source={imagePath.password} />
@@ -42,29 +124,76 @@ const CreatePass = ({ buttonTittle, route }) => {
                 connections!
               </Text>
             </View>
-            <View className="flex justify-start mt-10 gap-4 items-center">
-              <TextBox
-                className="bg-[#2982dc14] w-full placeholder:font-medium px-6 rounded-lg text-gray-500 p-2"
-                onChangeText={(text) => setNewPassword(text)}
-                secureTextEntry={true}
-                placeholder="New Password"
-              />
-              <TextBox
-                className="bg-[#2982dc14] w-full placeholder:font-medium px-6 rounded-lg text-gray-500 p-2"
-                onChangeText={(text) => setRepeatPassword(text)}
-                secureTextEntry={true}
-                placeholder="Repeat Password"
-              />
+
+            {/* Input Fields */}
+            <View className="flex justify-start mt-10 gap-6">
+              {/* New Password Input */}
+              <View>
+                <View className="flex items-center  justify-between ">
+                  <TextInput
+                    className="bg-[#2982dc14] text-lg w-full placeholder:font-medium px-6 py-5 rounded-lg text-gray-500"
+                    onChangeText={(text) => setNewPassword(text)}
+                    secureTextEntry={!showNewPassword}
+                    placeholder="New Password"
+                    value={newPassword}
+                  />
+                  <TouchableOpacity
+                    className="absolute right-4 py-1 px-3 top-4"
+                    onPress={() => setShowNewPassword(!showNewPassword)}
+                  >
+                    <Ionicons
+                      name={showNewPassword ? "eye-off-outline" : "eye-outline"}
+                      size={23}
+                      color="#2983DC"
+                    />
+                  </TouchableOpacity>
+                </View>
+                {newPasswordError ? (
+                  <Text className="text-red-500 text-sm mt-1">
+                    {newPasswordError}
+                  </Text>
+                ) : null}
+              </View>
+
+              {/* Repeat Password Input */}
+              <View>
+                <View className="flex items-center justify-between ">
+                  <TextInput
+                    className="bg-[#2982dc14] text-lg w-full placeholder:font-medium px-6 py-5 rounded-lg text-gray-500"
+                    onChangeText={(text) => setRepeatPassword(text)}
+                    secureTextEntry={!showRepeatPassword}
+                    placeholder="Repeat Password"
+                    value={repeatPassword}
+                  />
+                  <TouchableOpacity
+                    className="absolute right-4 py-1 px-3 top-4"
+                    onPress={() => setShowRepeatPassword(!showRepeatPassword)}
+                  >
+                    <Ionicons
+                      name={
+                        showRepeatPassword ? "eye-off-outline" : "eye-outline"
+                      }
+                      size={23}
+                      color="#2983DC"
+                    />
+                  </TouchableOpacity>
+                </View>
+                {repeatPasswordError ? (
+                  <Text className="text-red-500 text-sm mt-1">
+                    {repeatPasswordError}
+                  </Text>
+                ) : null}
+              </View>
             </View>
           </View>
         </ScrollView>
+
+        {/* Footer Section */}
         <View className="footer px-8 mb-10">
           <CustomeButton
-            title={buttonTittle}
+            title={loading ? <ActivityIndicator color="white" /> : "Continue"}
             style="my-4"
-            onButtonPress={() => {
-              router.navigate(route);
-            }}
+            onButtonPress={handleCreatePassword}
           />
         </View>
       </KeyboardAvoidingView>

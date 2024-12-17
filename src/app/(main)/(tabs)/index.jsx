@@ -17,223 +17,224 @@ import SubscriptionModel from "../../../components/models/SubscriptionModel";
 import UserInviteModel from "../../../components/models/UserInviteModel";
 import { router } from "expo-router";
 import SingleSubFeature from "../../../components/models/SingleSubFeature";
+import { useSelector } from "react-redux";
 
 // Sample Data for multiple users
-// const users = [
-//   {
-//     name: "Atharv Tete",
-//     status: "Looking for Co-founder",
-//     location: "Mumbai",
-//     mindset: "I want to build something in the food industry",
-//     experience: [
-//       {
-//         title: "Founder",
-//         company: "TechX",
-//         duration: "3 yrs 6 months",
-//         description: "A tech startup focused on AI solutions.",
-//       },
-//       {
-//         title: "Co-Founder",
-//         company: "TechX",
-//         duration: "3 yrs 6 months",
-//         description: "A tech startup focused on AI solutions.",
-//       },
-//     ],
-//     projects: ["AI Chatbot", "Task Manager", "E-Commerce Platform"],
-//   },
+const users = [
+  {
+    name: "Atharv Tete",
+    status: "Looking for Co-founder",
+    location: "Mumbai",
+    mindset: "I want to build something in the food industry",
+    experience: [
+      {
+        title: "Founder",
+        company: "TechX",
+        duration: "3 yrs 6 months",
+        description: "A tech startup focused on AI solutions.",
+      },
+      {
+        title: "Co-Founder",
+        company: "TechX",
+        duration: "3 yrs 6 months",
+        description: "A tech startup focused on AI solutions.",
+      },
+    ],
+    projects: ["AI Chatbot", "Task Manager", "E-Commerce Platform"],
+  },
 
-//   {
-//     name: "Souptik Das",
-//     status: "Looking for Co-founder",
-//     location: "Kolkata",
-//     mindset: "I want to build something in the transportation industry",
-//     experience: [
-//       {
-//         title: "Co-Founder",
-//         company: "Amachie",
-//         duration: "4 yrs 2 months",
-//         description: "Maternal Care Platform",
-//       },
-//       {
-//         title: "Corporate Lead",
-//         company: "Dibex",
-//         duration: "2 yrs 3 months",
-//         description: "Digital first business service provider.",
-//       },
-//     ],
-//     projects: ["Weather App", "Calculator", "To Do List"],
-//   },
-//   {
-//     name: "Guarav Gaur",
-//     status: "Looking for Co-founder",
-//     location: "Kolkata",
-//     mindset: "I want to build something in the transportation industry",
-//     experience: [
-//       {
-//         title: "Co-Founder",
-//         company: "Amachie",
-//         duration: "4 yrs 2 months",
-//         description: "Maternal Care Platform",
-//       },
-//       {
-//         title: "Corporate Lead",
-//         company: "Dibex",
-//         duration: "2 yrs 3 months",
-//         description: "Digital first business service provider.",
-//       },
-//     ],
-//     projects: ["Weather App", "Calculator", "To Do List"],
-//   },
-//   {
-//     name: "Raj Rathod",
-//     status: "Looking for Co-founder",
-//     location: "Kolkata",
-//     mindset: "I want to build something in the transportation industry",
-//     experience: [
-//       {
-//         title: "Co-Founder",
-//         company: "Amachie",
-//         duration: "4 yrs 2 months",
-//         description: "Maternal Care Platform",
-//       },
-//       {
-//         title: "Corporate Lead",
-//         company: "Dibex",
-//         duration: "2 yrs 3 months",
-//         description: "Digital first business service provider.",
-//       },
-//     ],
-//     projects: ["Weather App", "Calculator", "To Do List"],
-//   },
-//   {
-//     name: "Kumar Sanu",
-//     status: "Looking for Co-founder",
-//     location: "Kolkata",
-//     mindset: "I want to build something in the transportation industry",
-//     experience: [
-//       {
-//         title: "Co-Founder",
-//         company: "Amachie",
-//         duration: "4 yrs 2 months",
-//         description: "Maternal Care Platform",
-//       },
-//       {
-//         title: "Corporate Lead",
-//         company: "Dibex",
-//         duration: "2 yrs 3 months",
-//         description: "Digital first business service provider.",
-//       },
-//     ],
-//     projects: ["Weather App", "Calculator", "To Do List"],
-//   },
-//   {
-//     name: "Tilak Varma",
-//     status: "Looking for Co-founder",
-//     location: "Kolkata",
-//     mindset: "I want to build something in the transportation industry",
-//     experience: [
-//       {
-//         title: "Co-Founder",
-//         company: "Amachie",
-//         duration: "4 yrs 2 months",
-//         description: "Maternal Care Platform",
-//       },
-//       {
-//         title: "Corporate Lead",
-//         company: "Dibex",
-//         duration: "2 yrs 3 months",
-//         description: "Digital first business service provider.",
-//       },
-//     ],
-//     projects: ["Weather App", "Calculator", "To Do List"],
-//   },
-//   {
-//     name: "Nitish Mishra",
-//     status: "Looking for Co-founder",
-//     location: "Kolkata",
-//     mindset: "I want to build something in the transportation industry",
-//     experience: [
-//       {
-//         title: "Co-Founder",
-//         company: "Amachie",
-//         duration: "4 yrs 2 months",
-//         description: "Maternal Care Platform",
-//       },
-//       {
-//         title: "Corporate Lead",
-//         company: "Dibex",
-//         duration: "2 yrs 3 months",
-//         description: "Digital first business service provider.",
-//       },
-//     ],
-//     projects: ["Weather App", "Calculator", "To Do List"],
-//   },
-//   {
-//     name: "Sanjay Sharma",
-//     status: "Looking for Co-founder",
-//     location: "Kolkata",
-//     mindset: "I want to build something in the transportation industry",
-//     experience: [
-//       {
-//         title: "Co-Founder",
-//         company: "Amachie",
-//         duration: "4 yrs 2 months",
-//         description: "Maternal Care Platform",
-//       },
-//       {
-//         title: "Corporate Lead",
-//         company: "Dibex",
-//         duration: "2 yrs 3 months",
-//         description: "Digital first business service provider.",
-//       },
-//     ],
-//     projects: ["Weather App", "Calculator", "To Do List"],
-//   },
-//   {
-//     name: "Sonali Pritam",
-//     status: "Looking for Co-founder",
-//     location: "Kolkata",
-//     mindset: "I want to build something in the transportation industry",
-//     experience: [
-//       {
-//         title: "Co-Founder",
-//         company: "Amachie",
-//         duration: "4 yrs 2 months",
-//         description: "Maternal Care Platform",
-//       },
-//       {
-//         title: "Corporate Lead",
-//         company: "Dibex",
-//         duration: "2 yrs 3 months",
-//         description: "Digital first business service provider.",
-//       },
-//     ],
-//     projects: ["Weather App", "Calculator", "To Do List"],
-//   },
-//   {
-//     name: "Gauri Raut",
-//     status: "Looking for Co-founder",
-//     location: "Kolkata",
-//     mindset: "I want to build something in the transportation industry",
-//     experience: [
-//       {
-//         title: "Co-Founder",
-//         company: "Amachie",
-//         duration: "4 yrs 2 months",
-//         description: "Maternal Care Platform",
-//       },
-//       {
-//         title: "Corporate Lead",
-//         company: "Dibex",
-//         duration: "2 yrs 3 months",
-//         description: "Digital first business service provider.",
-//       },
-//     ],
-//     projects: ["Weather App", "Calculator", "To Do List"],
-//   },
-// ];
+  {
+    name: "Souptik Das",
+    status: "Looking for Co-founder",
+    location: "Kolkata",
+    mindset: "I want to build something in the transportation industry",
+    experience: [
+      {
+        title: "Co-Founder",
+        company: "Amachie",
+        duration: "4 yrs 2 months",
+        description: "Maternal Care Platform",
+      },
+      {
+        title: "Corporate Lead",
+        company: "Dibex",
+        duration: "2 yrs 3 months",
+        description: "Digital first business service provider.",
+      },
+    ],
+    projects: ["Weather App", "Calculator", "To Do List"],
+  },
+  {
+    name: "Guarav Gaur",
+    status: "Looking for Co-founder",
+    location: "Kolkata",
+    mindset: "I want to build something in the transportation industry",
+    experience: [
+      {
+        title: "Co-Founder",
+        company: "Amachie",
+        duration: "4 yrs 2 months",
+        description: "Maternal Care Platform",
+      },
+      {
+        title: "Corporate Lead",
+        company: "Dibex",
+        duration: "2 yrs 3 months",
+        description: "Digital first business service provider.",
+      },
+    ],
+    projects: ["Weather App", "Calculator", "To Do List"],
+  },
+  {
+    name: "Raj Rathod",
+    status: "Looking for Co-founder",
+    location: "Kolkata",
+    mindset: "I want to build something in the transportation industry",
+    experience: [
+      {
+        title: "Co-Founder",
+        company: "Amachie",
+        duration: "4 yrs 2 months",
+        description: "Maternal Care Platform",
+      },
+      {
+        title: "Corporate Lead",
+        company: "Dibex",
+        duration: "2 yrs 3 months",
+        description: "Digital first business service provider.",
+      },
+    ],
+    projects: ["Weather App", "Calculator", "To Do List"],
+  },
+  {
+    name: "Kumar Sanu",
+    status: "Looking for Co-founder",
+    location: "Kolkata",
+    mindset: "I want to build something in the transportation industry",
+    experience: [
+      {
+        title: "Co-Founder",
+        company: "Amachie",
+        duration: "4 yrs 2 months",
+        description: "Maternal Care Platform",
+      },
+      {
+        title: "Corporate Lead",
+        company: "Dibex",
+        duration: "2 yrs 3 months",
+        description: "Digital first business service provider.",
+      },
+    ],
+    projects: ["Weather App", "Calculator", "To Do List"],
+  },
+  {
+    name: "Tilak Varma",
+    status: "Looking for Co-founder",
+    location: "Kolkata",
+    mindset: "I want to build something in the transportation industry",
+    experience: [
+      {
+        title: "Co-Founder",
+        company: "Amachie",
+        duration: "4 yrs 2 months",
+        description: "Maternal Care Platform",
+      },
+      {
+        title: "Corporate Lead",
+        company: "Dibex",
+        duration: "2 yrs 3 months",
+        description: "Digital first business service provider.",
+      },
+    ],
+    projects: ["Weather App", "Calculator", "To Do List"],
+  },
+  {
+    name: "Nitish Mishra",
+    status: "Looking for Co-founder",
+    location: "Kolkata",
+    mindset: "I want to build something in the transportation industry",
+    experience: [
+      {
+        title: "Co-Founder",
+        company: "Amachie",
+        duration: "4 yrs 2 months",
+        description: "Maternal Care Platform",
+      },
+      {
+        title: "Corporate Lead",
+        company: "Dibex",
+        duration: "2 yrs 3 months",
+        description: "Digital first business service provider.",
+      },
+    ],
+    projects: ["Weather App", "Calculator", "To Do List"],
+  },
+  {
+    name: "Sanjay Sharma",
+    status: "Looking for Co-founder",
+    location: "Kolkata",
+    mindset: "I want to build something in the transportation industry",
+    experience: [
+      {
+        title: "Co-Founder",
+        company: "Amachie",
+        duration: "4 yrs 2 months",
+        description: "Maternal Care Platform",
+      },
+      {
+        title: "Corporate Lead",
+        company: "Dibex",
+        duration: "2 yrs 3 months",
+        description: "Digital first business service provider.",
+      },
+    ],
+    projects: ["Weather App", "Calculator", "To Do List"],
+  },
+  {
+    name: "Sonali Pritam",
+    status: "Looking for Co-founder",
+    location: "Kolkata",
+    mindset: "I want to build something in the transportation industry",
+    experience: [
+      {
+        title: "Co-Founder",
+        company: "Amachie",
+        duration: "4 yrs 2 months",
+        description: "Maternal Care Platform",
+      },
+      {
+        title: "Corporate Lead",
+        company: "Dibex",
+        duration: "2 yrs 3 months",
+        description: "Digital first business service provider.",
+      },
+    ],
+    projects: ["Weather App", "Calculator", "To Do List"],
+  },
+  {
+    name: "Gauri Raut",
+    status: "Looking for Co-founder",
+    location: "Kolkata",
+    mindset: "I want to build something in the transportation industry",
+    experience: [
+      {
+        title: "Co-Founder",
+        company: "Amachie",
+        duration: "4 yrs 2 months",
+        description: "Maternal Care Platform",
+      },
+      {
+        title: "Corporate Lead",
+        company: "Dibex",
+        duration: "2 yrs 3 months",
+        description: "Digital first business service provider.",
+      },
+    ],
+    projects: ["Weather App", "Calculator", "To Do List"],
+  },
+];
 
-const users = [];
+// const users = [];
 
 const ProfilePage = () => {
   const [currentUserIndex, setCurrentUserIndex] = useState(0);
@@ -250,6 +251,8 @@ const ProfilePage = () => {
   const [attempts5th, setAttempts5th] = useState(users.length > 0 ? 3 : 0); // Initial attempts for the 5th button
   // const router = useRouter();
 
+  const { isPremium, sendMessage } = useSelector((state) => state.subscription);
+
   const handle4thButtonPress = () => {
     if (attempts4th > 0) {
       setAttempts4th(attempts4th - 1); // Decrease attempt count on press
@@ -260,10 +263,10 @@ const ProfilePage = () => {
   };
 
   const handle5thButtonPress = async () => {
-    if (attempts5th > 0) {
+    if (sendMessage > 0) {
       await router.push("/message_invite");
-      setAttempts5th(attempts5th - 1); // Decrease attempt count on press
-      handleNextUser();
+      // setAttempts5th(sendMessage - 1); // Decrease attempt count on press
+      // handleNextUser();
     } else {
       setisFifthPremiumModel(true);
     }
@@ -649,7 +652,7 @@ const ProfilePage = () => {
               </ScrollView>
             </Animated.View>
           ) : (
-            <View className="flex-1 items-center justify-center">
+            <View className="flex-1 px-4 items-center justify-center">
               <Image source={imagePath.NoSaved} />
               <Text className="font-semibold text-lg text-center text-gray-500">
                 No more profiles found! either change your preference or try
@@ -718,10 +721,10 @@ const ProfilePage = () => {
             <Ionicons size={23} name="paper-plane-outline" color="#2983DC" />
 
             {/* Attempts counter */}
-            {attempts5th >= 0 && (
+            {sendMessage >= 0 && (
               <View className="absolute top-[-5px] right-[-5px] bg-[#2983DC] w-8 h-8 rounded-full items-center justify-center border-2 border-white shadow-xl">
                 <Text className="text-white font-semibold text-sm">
-                  {attempts5th}
+                  {sendMessage}
                 </Text>
               </View>
             )}

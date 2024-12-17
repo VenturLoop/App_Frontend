@@ -5,11 +5,15 @@ import { Ionicons } from "@expo/vector-icons";
 import CustomeButton from "../../../components/buttons/CustomeButton";
 import { router } from "expo-router";
 import SubscriptionModel from "../../../components/models/SubscriptionModel";
+import { useSelector, useDispatch } from "react-redux";
 
 const edit_preferance = () => {
   const [userRole, setuserRole] = useState("co-founder");
   const [isPremiumModel, setisPremiumModel] = useState(false);
-  const [isPremium, setisPremium] = useState(true);
+  const dispatch = useDispatch();
+
+  // Access the isPremium state from Redux store
+  const { isPremium } = useSelector((state) => state.subscription);
 
   const handleNavigation = (route) => {
     setTimeout(() => {

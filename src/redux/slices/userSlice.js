@@ -1,34 +1,37 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
+
+const initialState = {
+  name: "",
+  email: "",
+  password: "",
+  isPremium: false,
+  isLogin: true,
+  token: "", // Store login token
+  userId: "", // Store unique user ID
+};
 
 const userSlice = createSlice({
-    name: 'user',
-    initialState: {
-        name: '',
-        email: '',
-        mobile: '',
-        address: '',
+  name: "user",
+  initialState,
+  reducers: {
+    updateUser: (state, action) => {
+      const { field, value } = action.payload;
+      state[field] = value;
     },
-    reducers: {
-        setName: (state, action) => {
-            state.name = action.payload;
-        },
-        setEmail: (state, action) => {
-            state.email = action.payload;
-        },
-        setMobile: (state, action) => {
-            state.mobile = action.payload;
-        },
-        setAddress: (state, action) => {
-            state.address = action.payload;
-        },
-        resetUser: (state) => {
-            state.name = '';
-            state.email = '';
-            state.mobile = '';
-            state.address = '';
-        },
+    resetUser: () => initialState,
+    setPremium: (state, action) => {
+      state.isPremium = action.payload;
     },
+    setLogin: (state, action) => {
+      const { isLogin, token, userId } = action.payload;
+      state.isLogin = isLogin;
+      state.token = token || "";
+      state.userId = userId || ""; // Update userId when logging in
+    },
+  },
 });
 
-export const { setName, setEmail, setMobile, setAddress, resetUser } = userSlice.actions;
+export const { updateUser, resetUser, setPremium, setLogin } =
+  userSlice.actions;
+
 export default userSlice.reducer;

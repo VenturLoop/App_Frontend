@@ -1,8 +1,13 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import EditLayout from "../../../components/ModelLayoul/EditLayout";
 import { Ionicons } from "@expo/vector-icons";
 import CustomeButton from "../../../components/buttons/CustomeButton";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  setPremium,
+  resetSubscription,
+} from "../../../redux/slices/subscriptionSlice";
 import { router } from "expo-router";
 
 const plans = [
@@ -11,15 +16,14 @@ const plans = [
     duration: "1 Week",
     price: "₹100.00",
     weeklyRate: "₹100/Week",
-    isRecommended: false,
     features: [
-      { feature: "Daily recomendation", free: "20", business: "Unlimited" },
+      { feature: "Daily recommendation", free: "20", business: "Unlimited" },
       { feature: "Direct Connect", free: "2/Days", business: "10/Days" },
-      { feature: "See all invitation", free: "-", business: "Unlimited" },
+      { feature: "See all invitations", free: "-", business: "Unlimited" },
       { feature: "Premium Preferences", free: "-", business: "Yes" },
       { feature: "Save Profiles", free: "10", business: "Unlimited" },
-      { feature: "Invitation", free: "10/Days", business: "Unlimited" },
-      { feature: "Verifies Badge", free: "-", business: "Yes" },
+      { feature: "Invitations", free: "10/Days", business: "Unlimited" },
+      { feature: "Verified Badge", free: "-", business: "Yes" },
     ],
   },
   {
@@ -27,15 +31,14 @@ const plans = [
     duration: "1 Month",
     price: "₹200.00",
     weeklyRate: "₹50/Week",
-    isRecommended: true,
     features: [
-      { feature: "Daily recomendation", free: "20", business: "Unlimited" },
+      { feature: "Daily recommendation", free: "20", business: "Unlimited" },
       { feature: "Direct Connect", free: "2/Days", business: "10/Days" },
-      { feature: "See all invitation", free: "-", business: "Unlimited" },
+      { feature: "See all invitations", free: "-", business: "Unlimited" },
       { feature: "Premium Preferences", free: "-", business: "Yes" },
       { feature: "Save Profiles", free: "10", business: "Unlimited" },
-      { feature: "Invitation", free: "10/Days", business: "Unlimited" },
-      { feature: "Verifies Badge", free: "-", business: "Yes" },
+      { feature: "Invitations", free: "10/Days", business: "Unlimited" },
+      { feature: "Verified Badge", free: "-", business: "Yes" },
     ],
   },
   {
@@ -43,37 +46,50 @@ const plans = [
     duration: "3 Months",
     price: "₹500.00",
     weeklyRate: "₹41/Week",
-    isRecommended: false,
     features: [
-      { feature: "Daily recomendation", free: "20", business: "Unlimited" },
+      { feature: "Daily recommendation", free: "20", business: "Unlimited" },
       { feature: "Direct Connect", free: "2/Days", business: "10/Days" },
-      { feature: "See all invitation", free: "-", business: "Unlimited" },
+      { feature: "See all invitations", free: "-", business: "Unlimited" },
       { feature: "Premium Preferences", free: "-", business: "Yes" },
       { feature: "Save Profiles", free: "10", business: "Unlimited" },
-      { feature: "Invitation", free: "10/Days", business: "Unlimited" },
-      { feature: "Verifies Badge", free: "-", business: "Yes" },
+      { feature: "Invitations", free: "10/Days", business: "Unlimited" },
+      { feature: "Verified Badge", free: "-", business: "Yes" },
     ],
   },
 ];
 
 const SubscriptionPage = () => {
-  const [selectedPlan, setSelectedPlan] = useState(plans[1]); // Default to "Recommended"
-  const [isPremium, setisPremium] = useState(false);
+  const dispatch = useDispatch();
+  const { isPremium, planNumber } = useSelector((state) => state.subscription);
+  const [selectedPlan, setSelectedPlan] = useState(
+    plans[planNumber] || plans[1]
+  ); // Default to recommended
 
-  const handlePlanSelect = (plan) => {
-    setSelectedPlan(plan);
+  useEffect(() => {
+    // Update selected plan if `planNumber` changes in Redux
+    if (planNumber !== null) {
+      setSelectedPlan(plans[planNumber]);
+    }
+  }, [planNumber]);
+
+  const handlePlanSelect = (planIndex) => {
+    setSelectedPlan(plans[planIndex]);
+  };
+
+  const handleSubscribe = () => {
+    const selectedIndex = plans.indexOf(selectedPlan); // Find index of selected plan
+    if (selectedIndex !== -1) {
+      dispatch(setPremium(selectedIndex)); // Set premium and plan number in Redux
+      router.push("/(tabs)"); // Navigate to main page
+    }
   };
 
   return (
-    <EditLayout
-      // buttonTitle="Subscribe"
-      // buttonRoute="/(tabs)"
-      title="Business Class Membership"
-    >
-      <View className="flex-1  justify-between  gap-5">
-        {/* Pricing Plans */}
+    <EditLayout title="Business Class Membership">
+      <View className="flex-1 justify-between gap-5">
+        {/* Display Current Plan if Premium */}
         {isPremium ? (
-          <View className=" flex-row bg-[#F0F6FB] p-4 rounded-xl items-center justify-between">
+          <View className="flex-row bg-[#F0F6FB] p-4 rounded-xl items-center justify-between">
             <View className="flex gap-2">
               <Text className="font-semibold">Current Plan</Text>
               <Text className="text-sm ">Validity</Text>
@@ -82,27 +98,15 @@ const SubscriptionPage = () => {
               </Text>
             </View>
             <View>
-              <TouchableOpacity
-                // key={index}
-                // onPress={() => handlePlanSelect(plan)}
-                className={`w-32 rounded-xl overflow-hidden  border border-[#2983DC]`}
-              >
-                {/* Header Section */}
-                <View
-                  className={`py-2 flex items-center justify-center bg-[#2983DC]`}
-                >
-                  <Text className="text-white  font-semibold text-sm">
-                    Business Pro
+              <TouchableOpacity className="w-32 rounded-xl overflow-hidden border border-[#2983DC]">
+                <View className="py-2 flex items-center justify-center bg-[#2983DC]">
+                  <Text className="text-white font-semibold text-sm">
+                    {selectedPlan.title}
                   </Text>
                 </View>
-
-                {/* Content Section */}
                 <View className="bg-[#F0F6FB] py-4 px-3 flex items-center">
-                  {/* <Text className="text-gray-600 font-medium text-sm">
-                    {plan.duration}
-                  </Text> */}
                   <Text className="text-black font-bold text-lg mt-1">
-                    ₹200.00/
+                    {selectedPlan.price}
                   </Text>
                   <Text className="text-gray-500 font-semibold text-sm mt-1">
                     Month
@@ -116,14 +120,13 @@ const SubscriptionPage = () => {
             {plans.map((plan, index) => (
               <TouchableOpacity
                 key={index}
-                onPress={() => handlePlanSelect(plan)}
-                className={`w-32 rounded-xl overflow-hidden  ${
+                onPress={() => handlePlanSelect(index)}
+                className={`w-32 rounded-xl overflow-hidden ${
                   selectedPlan.title === plan.title
                     ? "border border-[#2983DC]"
                     : ""
                 }`}
               >
-                {/* Header Section */}
                 <View
                   className={`py-2 flex items-center justify-center ${
                     selectedPlan.title === plan.title
@@ -131,12 +134,10 @@ const SubscriptionPage = () => {
                       : "bg-blue-300"
                   }`}
                 >
-                  <Text className="text-white  font-semibold text-sm">
+                  <Text className="text-white font-semibold text-sm">
                     {plan.title}
                   </Text>
                 </View>
-
-                {/* Content Section */}
                 <View className="bg-[#F0F6FB] py-4 px-3 flex items-center">
                   <Text className="text-gray-600 font-medium text-sm">
                     {plan.duration}
@@ -155,9 +156,9 @@ const SubscriptionPage = () => {
 
         {/* Features Section */}
         <View className="flex flex-col gap-6 bg-[#F0F6FB] px-4 py-4">
-          <View className="flex flex-row justify-between  gap-1 items-center">
-            <Text className="flex-1  font-bold text-gray-800">
-              Whats Included?
+          <View className="flex flex-row justify-between gap-1 items-center">
+            <Text className="flex-1 font-bold text-gray-800">
+              What's Included?
             </Text>
             <Text className="flex-1 text-center font-medium text-gray-800">
               Free
@@ -171,17 +172,12 @@ const SubscriptionPage = () => {
               key={index}
               className="flex flex-row justify-between items-center"
             >
-              {/* Feature Name */}
               <Text className="text-sm text-gray-800 flex-1">
                 {item.feature}
               </Text>
-
-              {/* Free Plan Value */}
               <Text className="text-sm font-semibold text-gray-800 text-center flex-1">
                 {item.free}
               </Text>
-
-              {/* Business Plan Value */}
               <Text className="text-sm text-[#2983DC] font-semibold text-center flex-1">
                 {item.business === "Yes" ? (
                   <Ionicons
@@ -198,20 +194,10 @@ const SubscriptionPage = () => {
         </View>
 
         {/* Footer Section */}
-        <View className="flex justify-between">
-          <Text className="text-xs text-center text-gray-500 mt-4">
-            By tapping subscribe, you will be charged. Your subscription will
-            automatically renew for the same price and package length until you
-            cancel via App Store/Play Store settings. By subscribing, you agree
-            to our Terms & Conditions.
-          </Text>
-        </View>
-        <View className="footer  w-full ">
+        <View className="footer w-full">
           <CustomeButton
-            background={isPremium === true ? true : false}
-            onButtonPress={() => {
-              router.navigate("/(tabs)");
-            }}
+            background={isPremium}
+            onButtonPress={handleSubscribe}
             title="Subscribe"
           />
         </View>

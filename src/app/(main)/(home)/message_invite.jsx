@@ -15,6 +15,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import imagePath from "../../../constants/imagePath";
 import SingleSubFeature from "../../../components/models/SingleSubFeature";
+import { useDispatch, useSelector } from "react-redux";
+import { setSendMessage } from "../../../redux/slices/subscriptionSlice";
 
 const MessageInvite = ({ route }) => {
   const user = route?.params?.user || {
@@ -27,6 +29,8 @@ const MessageInvite = ({ route }) => {
   const [messagesLeft, setMessagesLeft] = useState(3); // Track remaining messages
   const [inputMessage, setInputMessage] = useState(""); // Message input state
   const [confirmationMessage, setConfirmationMessage] = useState(""); // To display success or error message
+  const { isPremium, sendMessage } = useSelector((state) => state.subscription);
+  const dispatch = useDispatch();
 
   // Reset the confirmation message after 3 seconds
   const resetConfirmationMessage = () => {
@@ -42,8 +46,9 @@ const MessageInvite = ({ route }) => {
       return;
     }
 
-    if (messagesLeft > 0) {
-      setMessagesLeft((prev) => prev - 1); // Decrease remaining messages
+    if (sendMessage > 0) {
+      // Dispatch a numeric value to update sendMessage
+      dispatch(setSendMessage(sendMessage - 1)); // Decrease remaining messages
       router.back();
       setInputMessage(""); // Clear input field
     } else {
@@ -79,7 +84,7 @@ const MessageInvite = ({ route }) => {
               <Text className="text-xl font-semibold">Direct Connect</Text>
             </View>
             <View className="px-4 py-2 rounded-xl bg-[#F0F6FB] flex-row items-center">
-              <Text className="text-[#2983DC] font-medium">{messagesLeft}</Text>
+              <Text className="text-[#2983DC] font-medium">{sendMessage}</Text>
               <Text> Left</Text>
             </View>
           </View>
@@ -139,19 +144,21 @@ const MessageInvite = ({ route }) => {
             </View>
 
             {/* Upgrade Section */}
-            <View className="bg-[#2983DC1C] mx-4 my-4 flex-row items-center gap-5 rounded-xl px-4 py-3">
-              <TouchableOpacity
-                onPress={handleUpgrade}
-                className="bg-[#2983DC] px-4 py-2 rounded-xl"
-              >
-                <Text className="text-lg text-white font-semibold">
-                  Upgrade
+            {!isPremium && (
+              <View className="bg-[#2983DC1C] mx-4 my-4 flex-row items-center gap-5 rounded-xl px-4 py-3">
+                <TouchableOpacity
+                  onPress={handleUpgrade}
+                  className="bg-[#2983DC] px-4 py-2 rounded-xl"
+                >
+                  <Text className="text-lg text-white font-semibold">
+                    Upgrade
+                  </Text>
+                </TouchableOpacity>
+                <Text className="text-lg font-medium text-gray-700">
+                  to get 10 direct connects/day
                 </Text>
-              </TouchableOpacity>
-              <Text className="text-lg font-medium text-gray-700">
-                to get 10 direct connects/day
-              </Text>
-            </View>
+              </View>
+            )}
           </ScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>

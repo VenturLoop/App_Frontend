@@ -65,9 +65,12 @@ const Request = ({ route }) => {
               />
             ))
           ) : (
-            <Text className="text-gray-400 text-center mt-4">
-              No messages yet. Start the conversation!
-            </Text>
+            <View className="flex-1 justify-center items-center">
+              <Image source={imagePath.NoMessage} />
+              <Text className="text-gray-600 text-center mt-4">
+                No messages yet. Start the conversation!
+              </Text>
+            </View>
           )}
         </View>
 

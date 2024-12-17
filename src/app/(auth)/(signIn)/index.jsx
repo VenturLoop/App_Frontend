@@ -8,13 +8,15 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-  Alert,
+  ActivityIndicator, // Importing the loader
 } from "react-native";
 import React, { useState } from "react";
 import imagePath from "../../../constants/imagePath";
 import CustomeButton from "../../../components/buttons/CustomeButton";
 import { Link, router } from "expo-router";
 import Checkbox from "expo-checkbox";
+import { useDispatch, useSelector } from "react-redux";
+import { updateUser } from "../../../redux/slices/userSlice";
 
 const Index = () => {
   const [isChecked, setChecked] = useState(false);
@@ -22,6 +24,9 @@ const Index = () => {
     name: "",
     email: "",
   });
+  const [loading, setLoading] = useState(false); // State for loading
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user); // Get the user data from the Redux store
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleNavigation = (route) => {
@@ -33,7 +38,6 @@ const Index = () => {
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     setErrorMessage(""); // Clear error message when user starts typing
-    console.log(field, value);
   };
 
   const validateForm = () => {
@@ -59,40 +63,22 @@ const Index = () => {
     return true;
   };
 
-  console.log(formData);
-
-  const createUser = async () => {
-    try {
-      // Mock API call
-      const response = await fetch(
-        "https://ventureloop-server.onrender.com/auth/signup",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
-      );
-
-      const result = await response.json();
-      console.log(result);
-
-      if (response.ok) {
-        Alert.alert("Success", "User created successfully!");
-        handleNavigation("/otp");
-      } else {
-        Alert.alert("Error", result.message || "Failed to create user.");
-      }
-    } catch (error) {
-      Alert.alert("Error", "Something went wrong. Please try again.");
-    }
-  };
-
-  const handleContinue = () => {
+  const handleContinue = async () => {
     if (validateForm()) {
-      // createUser();
-      handleNavigation("/otp");
+      setLoading(true); // Start the loading state
+
+      try {
+        // Wait for the Redux dispatch to complete
+        await dispatch(updateUser({ field: "name", value: formData.name }));
+        await dispatch(updateUser({ field: "email", value: formData.email }));
+
+        // After dispatch completes, navigate
+        handleNavigation("/createPass");
+      } catch (error) {
+        setErrorMessage("Something went wrong. Please try again.");
+      } finally {
+        setLoading(false); // Stop the loading state
+      }
     }
   };
 
@@ -133,9 +119,7 @@ const Index = () => {
                 resizeMode="contain"
                 source={imagePath.google}
               />
-              <Text className="text-[#61677D] font-medium text-lg">
-                Google
-              </Text>
+              <Text className="text-[#61677D] font-medium text-lg">Google</Text>
             </TouchableOpacity>
             <View className="flex-row items-center my-4">
               <View className="flex-1 h-px bg-gray-300" />
@@ -167,13 +151,13 @@ const Index = () => {
                 color={isChecked ? "#2983DC" : undefined}
               />
               <Text>
-                I agree to the
+                I agree to the{" "}
                 <Link className="font-semibold text-[#2983DC]" href={"/"}>
-                  Terms of Service
+                  Terms of Service{" "}
                 </Link>
-                and
+                and{" "}
                 <Link className="font-semibold text-[#2983DC]" href={"/"}>
-                  Privacy Policy
+                  Privacy Policy{" "}
                 </Link>
               </Text>
             </View>
@@ -181,11 +165,15 @@ const Index = () => {
 
           {/* Footer Section */}
           <View className="footer mt-4">
-            <CustomeButton
-              title="Continue"
-              style="my-3"
-              onButtonPress={handleContinue}
-            />
+            {loading ? (
+              <ActivityIndicator size="large" color="#2983DC" /> // Loader shown while saving data
+            ) : (
+              <CustomeButton
+                title="Continue"
+                style="my-3"
+                onButtonPress={handleContinue}
+              />
+            )}
             <View className="mt-4">
               <Text className="text-center">
                 Do you have an account?{" "}
