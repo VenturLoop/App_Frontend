@@ -68,19 +68,18 @@ const Invitation = () => {
                       resizeMode="cover"
                       source={imagePath.userImage2}
                     />
-
+                   
                     <View className="gap-0.5 flex items-start justify-center">
-                      <BlurView intensity={50} tint="light" className="p-10"/>
-                        <Text
-                          className={`text-xl font-semibold ${
-                            !isPremium && index > 0
-                              ? "text-gray-400"
-                              : "text-black"
-                          }`}
-                        >
-                          {item.name}
-                        </Text>
-
+                      <Text
+                        className={`text-xl font-semibold ${
+                          !isPremium && index > 0
+                            ? "text-gray-400"
+                            : "text-black"
+                        }`}
+                      >
+                        {item.name}
+                      </Text> 
+                      
                       <View className="flex-row gap-1.5 justify-center items-center">
                         <FontAwesome6
                           size={12}
