@@ -1,4 +1,3 @@
-// redux/subscriptionSlice.js
 import { createSlice } from "@reduxjs/toolkit";
 
 const subscriptionSlice = createSlice({
@@ -12,6 +11,9 @@ const subscriptionSlice = createSlice({
     setPremium: (state, action) => {
       state.isPremium = true;
       state.planNumber = action.payload; // Set the selected plan number
+
+      // Increment sendMessage by 10 when user becomes premium
+      state.sendMessage += 10;
     },
     resetSubscription: (state) => {
       state.isPremium = false;

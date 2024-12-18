@@ -1,14 +1,10 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  Image,
-  TouchableOpacity,
-  Alert,
-} from "react-native";
+import { View, Text, FlatList, Image, TouchableOpacity } from "react-native";
+import { useFocusEffect } from "@react-navigation/native"; // Import useFocusEffect
 import imagePath from "../../constants/imagePath";
 import { router } from "expo-router";
+import DeleteModel from "../models/DeleteModel";
+import { Ionicons } from "@expo/vector-icons";
 
 const initialRequests = [
   {
@@ -31,52 +27,35 @@ const initialRequests = [
 const Request = () => {
   const [requests, setRequests] = useState(initialRequests);
   const [selectedRequests, setSelectedRequests] = useState([]);
+  const [isDeleteModel, setisDeleteModel] = useState(false);
+
+  // Reset selectedRequests when the user navigates back or the component unmounts
+  useFocusEffect(
+    React.useCallback(() => {
+      setSelectedRequests([]); // Clear selection on focus (page return)
+    }, [])
+  );
 
   const handleLongPress = (id) => {
-    if (selectedRequests.includes(id)) {
-      setSelectedRequests(selectedRequests.filter((reqId) => reqId !== id));
-    } else {
-      setSelectedRequests([...selectedRequests, id]);
-    }
-  };
-
-  const handleDelete = () => {
-    Alert.alert(
-      "Delete Requests",
-      "Are you sure you want to delete the selected requests?",
-      [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "Delete",
-          style: "destructive",
-          onPress: () => {
-            setRequests(
-              requests.filter(
-                (request) => !selectedRequests.includes(request.id)
-              )
-            );
-            setSelectedRequests([]);
-          },
-        },
-      ]
-    );
+    setSelectedRequests((prevSelectedRequests) => {
+      // Toggle selection of the request
+      if (prevSelectedRequests.includes(id)) {
+        return prevSelectedRequests.filter((reqId) => reqId !== id);
+      } else {
+        return [...prevSelectedRequests, id];
+      }
+    });
   };
 
   return (
     <>
       {selectedRequests.length > 0 && (
-        <View className="flex-row items-center justify-between bg-gray-100 p-4">
+        <View className="flex-row items-center justify-between p-4">
           <Text className="text-lg font-bold">
             {selectedRequests.length} Selected
           </Text>
-          <TouchableOpacity
-            onPress={handleDelete}
-            className="bg-red-500 px-4 py-2 rounded-lg"
-          >
-            <Text className="text-white font-semibold">Delete</Text>
+          <TouchableOpacity onPress={() => setisDeleteModel(true)}>
+            <Ionicons name="trash-outline" color="red" size={23} />
           </TouchableOpacity>
         </View>
       )}
@@ -98,9 +77,7 @@ const Request = () => {
                 }}
                 onLongPress={() => handleLongPress(item.id)}
                 className={`flex-row items-center pb-7 p-4 border-b-[0.5px] ${
-                  selectedRequests.includes(item.id)
-                    ? "bg-gray-200"
-                    : "bg-white"
+                  selectedRequests.includes(item.id) ? "bg-gray-50" : "bg-white"
                 } border-gray-300 mb-3`}
               >
                 <Image
@@ -124,6 +101,13 @@ const Request = () => {
           </Text>
         </View>
       )}
+
+      <DeleteModel
+        isModalVisible={isDeleteModel}
+        handleModalVisibility={() => {
+          setisDeleteModel(false);
+        }}
+      />
     </>
   );
 };

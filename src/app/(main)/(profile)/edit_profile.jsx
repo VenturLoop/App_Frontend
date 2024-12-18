@@ -229,27 +229,30 @@ const EditProfile = () => {
                   )}
                 </View>
               </View>
-              {/* Mindset */}
-              <View className=" gap-4 ">
+              <View className="gap-4">
+                {/* Mindset Input Section */}
                 <Text className="text-gray-500 font-semibold">Mindset</Text>
                 <TextInput
-                  placeholder="Looking for Co-founder "
+                  placeholder="Looking for Co-founder"
                   editable
                   multiline
                   numberOfLines={4}
-                  maxLength={40}
+                  maxLength={200}
                   value={isMindset}
                   onChangeText={(text) => setisMindset(text)}
-                  className="bg-[#2982dc14] w-full flex flex-row items-center justify-between placeholder:text-[#7C8BA0] px-6 rounded-lg py-4 "
+                  className="bg-[#2982dc14] w-full flex flex-row items-center justify-between placeholder:text-[#7C8BA0] px-6 rounded-lg py-4"
+                  // Accessible label for screen readers
+                  accessibilityLabel="Mindset input field"
                 />
+
+                {/* Conditional Warning Text */}
+                {!isMindset && (
+                  <Text className="text-red-600 font-normal">
+                    Mindset section is mandatory for individuals looking for a
+                    co-founder for startup
+                  </Text>
+                )}
               </View>
-              {/* Warning text */}
-              {isMindset === "" && (
-                <Text className="text-red-600 font-normal">
-                  Mindset section is mandatory for individuals looking for
-                  co-founder for startup
-                </Text>
-              )}
 
               {/* Location */}
               <View className="gap-3">

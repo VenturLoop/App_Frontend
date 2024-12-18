@@ -7,9 +7,9 @@ import {
   ScrollView,
   Animated,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Ionicons, FontAwesome, FontAwesome6 } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import imagePath from "../../constants/imagePath";
 import UserModel from "../models/UserModel";
 
@@ -40,8 +40,18 @@ const users = [
 
 const ProfilePage = () => {
   const [currentUserIndex, setCurrentUserIndex] = useState(0);
-  const currentUser = users[currentUserIndex];
   const [isHomeModel, setisHomeModel] = useState(false);
+
+  const scrollViewRef = useRef(null); // Reference to ScrollView
+
+  // Reset scroll position when the page is focused
+  useFocusEffect(
+    React.useCallback(() => {
+      scrollViewRef.current?.scrollTo({ y: 0, animated: false });
+    }, [])
+  );
+
+  const currentUser = users[currentUserIndex];
 
   return (
     <>
@@ -49,6 +59,7 @@ const ProfilePage = () => {
         {/* Profile Section */}
         <View className=" items-center  border-b-[0.5px] border-gray-300">
           <ScrollView
+            ref={scrollViewRef}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{
               // width: full,

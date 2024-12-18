@@ -3,7 +3,7 @@ import {
   Text,
   SafeAreaView,
   Image,
-  TouchableOpacity, 
+  TouchableOpacity,
   ScrollView,
   Animated,
   Easing,
@@ -15,7 +15,7 @@ import imagePath from "../../../constants/imagePath";
 import UserModel from "../../../components/models/UserModel";
 import SubscriptionModel from "../../../components/models/SubscriptionModel";
 import UserInviteModel from "../../../components/models/UserInviteModel";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import SingleSubFeature from "../../../components/models/SingleSubFeature";
 import { useSelector } from "react-redux";
 
@@ -251,7 +251,11 @@ const ProfilePage = () => {
   const [attempts5th, setAttempts5th] = useState(users.length > 0 ? 3 : 0); // Initial attempts for the 5th button
   // const router = useRouter();
 
-  const { isPremium, sendMessage } = useSelector((state) => state.subscription);
+  const { isPremium, sendMessage, planNumber } = useSelector(
+    (state) => state.subscription
+  );
+  const scrollViewRef = useRef(null); // Reference to ScrollView
+  const [translateX] = useState(new Animated.Value(0)); // Animation value
 
   const handle4thButtonPress = () => {
     if (attempts4th > 0) {
@@ -262,6 +266,13 @@ const ProfilePage = () => {
     }
   };
 
+  // Reset scroll position when the page is focused
+  useFocusEffect(
+    React.useCallback(() => {
+      scrollViewRef.current?.scrollTo({ y: 0, animated: false });
+    }, [])
+  );
+
   const handle5thButtonPress = async () => {
     if (sendMessage > 0) {
       await router.push("/message_invite");
@@ -271,9 +282,6 @@ const ProfilePage = () => {
       setisFifthPremiumModel(true);
     }
   };
-
-  const scrollViewRef = useRef(null); // Reference to ScrollView
-  const [translateX] = useState(new Animated.Value(0)); // Animation value
 
   const currentUser = users[currentUserIndex];
 
@@ -666,8 +674,10 @@ const ProfilePage = () => {
           {/* Premium Model Button */}
           <TouchableOpacity
             disabled={currentUserIndex === 0}
-            // onPress={() => setisPremiumModel(true)}
-            onPress={handlePreviousUser}
+            onPress={() => {
+              isPremium ? handlePreviousUser() : setisPremiumModel(true);
+            }}
+            // onPress={handlePreviousUser}
             className="p-3 bg-white rounded-full disabled:opacity-50 border border-gray-300 shadow-md flex items-center justify-center"
           >
             <Ionicons name="refresh" size={27} color="#EEDE00" />

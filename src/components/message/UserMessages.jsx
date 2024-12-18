@@ -1,14 +1,9 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  Image,
-  TouchableOpacity,
-  Alert,
-} from "react-native";
-import { router } from "expo-router";
+import { View, Text, FlatList, Image, TouchableOpacity } from "react-native";
+import { useFocusEffect } from "@react-navigation/native"; // Import the hook
+import { Ionicons } from "@expo/vector-icons";
 import imagePath from "../../constants/imagePath";
+import DeleteModel from "../models/DeleteModel";
 
 const initialMessages = [
   {
@@ -128,52 +123,35 @@ const initialMessages = [
 const UserMessages = () => {
   const [messages, setMessages] = useState(initialMessages);
   const [selectedMessages, setSelectedMessages] = useState([]);
+  const [isDeleteModel, setisDeleteModel] = useState(false);
+
+  // Reset selectedMessages when the user navigates back or the component unmounts
+  useFocusEffect(
+    React.useCallback(() => {
+      setSelectedMessages([]); // Clear the selection on focus (page return)
+    }, [])
+  );
 
   const handleLongPress = (id) => {
-    if (selectedMessages.includes(id)) {
-      setSelectedMessages(selectedMessages.filter((msgId) => msgId !== id));
-    } else {
-      setSelectedMessages([...selectedMessages, id]);
-    }
-  };
-
-  const handleDelete = () => {
-    Alert.alert(
-      "Delete Messages",
-      "Are you sure you want to delete the selected messages?",
-      [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "Delete",
-          style: "destructive",
-          onPress: () => {
-            setMessages(
-              messages.filter(
-                (message) => !selectedMessages.includes(message.id)
-              )
-            );
-            setSelectedMessages([]);
-          },
-        },
-      ]
-    );
+    setSelectedMessages((prevSelectedMessages) => {
+      // Toggle selection of the message
+      if (prevSelectedMessages.includes(id)) {
+        return prevSelectedMessages.filter((msgId) => msgId !== id);
+      } else {
+        return [...prevSelectedMessages, id];
+      }
+    });
   };
 
   return (
     <>
       {selectedMessages.length > 0 && (
-        <View className="flex-row items-center justify-between bg-gray-100 p-4">
+        <View className="flex-row items-center justify-between bg-gray-100 px-6 p-4">
           <Text className="text-lg font-bold">
             {selectedMessages.length} Selected
           </Text>
-          <TouchableOpacity
-            onPress={handleDelete}
-            className="bg-red-500 px-4 py-2 rounded-lg"
-          >
-            <Text className="text-white font-semibold">Delete</Text>
+          <TouchableOpacity onPress={() => setisDeleteModel(true)}>
+            <Ionicons name="trash-outline" color="red" size={23} />
           </TouchableOpacity>
         </View>
       )}
@@ -189,13 +167,11 @@ const UserMessages = () => {
                 onPress={() =>
                   selectedMessages.length > 0
                     ? handleLongPress(item.id)
-                    : router.push("/(message)/chat")
+                    : console.log("Navigate to chat page")
                 }
                 onLongPress={() => handleLongPress(item.id)}
                 className={`flex-row items-center pb-7 p-4 border-b-[0.5px] ${
-                  selectedMessages.includes(item.id)
-                    ? "bg-gray-200"
-                    : "bg-white"
+                  selectedMessages.includes(item.id) ? "bg-blue-50" : "bg-white"
                 } border-gray-300 mb-3`}
               >
                 <Image
@@ -214,9 +190,7 @@ const UserMessages = () => {
       ) : (
         <View className="flex-1 items-center justify-center">
           <Image
-            source={{
-              uri: "https://via.placeholder.com/150?text=No+Messages",
-            }}
+            source={{ uri: "https://via.placeholder.com/150?text=No+Messages" }}
             className="w-40 h-40"
           />
           <Text className="font-semibold text-gray-500 mt-4">
@@ -224,6 +198,11 @@ const UserMessages = () => {
           </Text>
         </View>
       )}
+
+      <DeleteModel
+        isModalVisible={isDeleteModel}
+        handleModalVisibility={() => setisDeleteModel(false)}
+      />
     </>
   );
 };

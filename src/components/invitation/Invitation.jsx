@@ -65,7 +65,7 @@ const Invitation = () => {
                 return (
                   <TouchableOpacity
                     onPress={() => {
-                      router.navigate("/subscription_page");
+                      setisPremiumModel(true);
                     }}
                     className="flex flex-col shadow  mb-6 rounded-lg bg-white"
                   >

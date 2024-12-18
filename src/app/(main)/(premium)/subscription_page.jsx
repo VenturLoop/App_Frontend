@@ -111,8 +111,8 @@ const SubscriptionPage = () => {
             <FontAwesome6 size={25} name="headset" color="#2983DC" />
           </TouchableOpacity>
         </View>
-        <View className="body w-full  py-3 flex-1 px-3 ">
-          <View className="flex-1 justify-between gap-5">
+        <View className="body w-full justify-between  py-3 flex-1 px-3 ">
+          <View className="flex-1 gap-6">
             {/* Display Current Plan if Premium */}
             {isPremium ? (
               <View className="flex-row bg-[#F0F6FB] p-4 rounded-xl items-center justify-between">
@@ -218,15 +218,23 @@ const SubscriptionPage = () => {
                 </View>
               ))}
             </View>
+            {!isPremium && (
+              <Text className="text-center  text-sm ">
+                By tapping subscribe ,tou will be charged,your subscription will
+                automatically renue for the same prise and package length untill
+                you cancel via App Store/Play store setting and you agree to our
+                terms & condition
+              </Text>
+            )}
+          </View>
 
-            {/* Footer Section */}
-            <View className="footer w-full">
-              <CustomeButton
-                background={isPremium}
-                onButtonPress={handleSubscribe}
-                title="Subscribe"
-              />
-            </View>
+          {/* Footer Section */}
+          <View className="footer w-full">
+            <CustomeButton
+              background={isPremium}
+              onButtonPress={handleSubscribe}
+              title="Subscribe"
+            />
           </View>
         </View>
       </SafeAreaView>
