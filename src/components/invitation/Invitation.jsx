@@ -54,7 +54,7 @@ const Invitation = () => {
   return (
     <>
       {messages.length > 0 ? (
-        <View className="bg-gray-100 flex-1 px-4 py-6">
+        <View className="bg-gray-100 flex-1 px-4 py-4 ">
           <FlatList
             data={messages}
             showsVerticalScrollIndicator={false}
