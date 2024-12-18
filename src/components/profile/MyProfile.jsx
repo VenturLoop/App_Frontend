@@ -33,7 +33,7 @@ const MyProfile = () => {
   const [isModalVisible, setModalVisible] = useState(false);
 
   const handleNext = () => {
-    setModalVisible(false);
+    setModalVisible(!isModalVisible);
   };
 
   const handleNavigation = (route) => {
@@ -195,7 +195,9 @@ const MyProfile = () => {
         {/* Login/Signup Modal */}
         <ProfileModel
           isModalVisible={isModalVisible}
-          handleModalVisibility={handleNext}
+          handleModalVisibility={() => {
+            setModalVisible(false);
+          }}
         />
       </View>
     </>
