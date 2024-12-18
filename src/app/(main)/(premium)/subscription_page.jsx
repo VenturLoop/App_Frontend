@@ -102,15 +102,14 @@ const SubscriptionPage = () => {
               Business Class Membership
             </Text>
           </View>
-          {isPremium && (
-            <TouchableOpacity
-              onPress={() => {
-                setisHelp(true);
-              }}
-            >
-              <FontAwesome6 size={25} name="headset" color="#2983DC" />
-            </TouchableOpacity>
-          )}
+
+          <TouchableOpacity
+            onPress={() => {
+              setisHelp(true);
+            }}
+          >
+            <FontAwesome6 size={25} name="headset" color="#2983DC" />
+          </TouchableOpacity>
         </View>
         <View className="body w-full  py-3 flex-1 px-3 ">
           <View className="flex-1 justify-between gap-5">

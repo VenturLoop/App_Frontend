@@ -1,6 +1,12 @@
-import { View, Text, TouchableOpacity, TextInput, Image } from "react-native";
-import React, { useState } from "react";
-import UserChat from "../../../components/message/UserChat";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  TextInput,
+  Image,
+  ScrollView,
+} from "react-native";
+import React, { useState, useRef, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
@@ -8,127 +14,182 @@ import imagePath from "../../../constants/imagePath";
 import UserModel from "../../../components/models/UserModel";
 
 const Request = ({ route }) => {
-  // Simulated user data (could come from route params or props)
   const user = route?.params?.user || {
     name: "Souptik Das",
     status: "Active Now",
     avatar: "../../../assets/userImage2.png",
   };
 
-  const [isSideModel, setIsSideModel] = useState(false);
-  const [messages, setMessages] = useState([]); // Chat messages state
-  const [inputMessage, setInputMessage] = useState(""); // Message input state
+  const [messageRequest, setMessageRequest] = useState({
+    status: "pending",
+    sender: "Smit Patel",
+    message: "Hi, I'd like to connect with you!",
+    sentAt: "10:30 AM",
+  });
 
-  // Function to handle sending a message
+  const [messages, setMessages] = useState([
+    {
+      id: 1,
+      text: "Hey, what's up how are you?",
+      time: "11:15 AM",
+      isSentByMe: false,
+    },
+  ]);
+
+  const [inputMessage, setInputMessage] = useState("");
+  const [isSideModel, setIsSideModel] = useState(false);
+
+  // ScrollView reference
+  const scrollViewRef = useRef();
+
+  // Automatically scroll to the bottom when messages are updated
+  useEffect(() => {
+    scrollViewRef.current?.scrollToEnd({ animated: true });
+  }, [messages]);
+
+  // Approve message request
+  const handleApproveRequest = () => {
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: Date.now(),
+        text: messageRequest.message,
+        isSentByMe: false,
+        time: messageRequest.sentAt,
+      },
+    ]);
+    setMessageRequest({ ...messageRequest, status: "approved" });
+  };
+
+  // Decline message request
+  const handleDeclineRequest = () => {
+    setMessageRequest({ ...messageRequest, status: "declined" });
+  };
+
+  // Send a new message
   const handleSendMessage = () => {
     if (inputMessage.trim()) {
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { id: Date.now(), text: inputMessage, isSentByMe: true },
+      setMessages((prev) => [
+        ...prev,
+        { id: Date.now(), text: inputMessage, isSentByMe: true, time: "Now" },
       ]);
-      setInputMessage(""); // Clear input field
+      setInputMessage("");
     }
   };
+
   return (
-    <>
-      <SafeAreaView className="flex-1  bg-white ">
-        {/* Header */}
-        <View className="header flex-row px-5 justify-between border-b border-gray-300 py-4 w-full items-center">
-          <View className="flex-row items-center gap-3">
-            <TouchableOpacity onPress={() => router.back()}>
-              <Ionicons name="arrow-back-outline" size={25} color="black" />
-            </TouchableOpacity>
-            <View className="flex-row gap-3 items-center">
-              <Image
-                source={imagePath.userImage2} // Ensure correct image path
-                className="w-12 h-12 rounded-full"
-              />
-              <View>
-                <Text className="text-xl font-semibold">{user.name}</Text>
-                <Text className="text-xs">{user.status}</Text>
-              </View>
+    <SafeAreaView className="flex-1 bg-white">
+      {/* Header */}
+      <View className="header flex-row px-3 justify-between border-b border-gray-300 py-4 items-center">
+        <View className="flex-row items-center gap-2">
+          <TouchableOpacity onPress={() => router.back()}>
+            <Ionicons name="arrow-back-outline" size={25} color="black" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              router.push("/(tabs)");
+            }}
+            className="flex-row px-2 justify-start gap-3 items-center"
+          >
+            <Image
+              source={imagePath.userImage2}
+              className="w-12 h-12 rounded-full"
+            />
+            <View>
+              <Text className="text-xl font-semibold">{user.name}</Text>
+              <Text className="text-xs">{user.status}</Text>
             </View>
-          </View>
-          <TouchableOpacity onPress={() => setIsSideModel(true)}>
-            <Ionicons name="ellipsis-vertical" color="black" size={25} />
           </TouchableOpacity>
         </View>
+        <TouchableOpacity onPress={() => setIsSideModel(true)}>
+          <Ionicons name="ellipsis-vertical" color="black" size={25} />
+        </TouchableOpacity>
+      </View>
 
-        {/* Body */}
-        <View className="body w-full py-3 flex-1 px-3">
-          {messages.length > 0 ? (
-            messages.map((message) => (
-              <UserChat
-                key={message.id}
-                text={message.text}
-                isSentByMe={message.isSentByMe}
-              />
-            ))
-          ) : (
-            <View className="flex-1 justify-center items-center">
-              <Image source={imagePath.NoMessage} />
-              <Text className="text-gray-600 text-center mt-4">
-                No messages yet. Start the conversation!
-              </Text>
+      {/* Chat Body */}
+      <View className="flex-1 px-3 py-3">
+        <ScrollView
+          ref={scrollViewRef} // Attach the ref to the ScrollView
+          className="flex-1"
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 20 }}
+        >
+          {messages.map((message) => (
+            <View
+              key={message.id}
+              className={`flex max-w-[80%] mb-2 ${
+                message.isSentByMe
+                  ? "self-end items-end"
+                  : "self-start items-start"
+              }`}
+            >
+              <View
+                className={`px-4 py-3.5 rounded-2xl ${
+                  message.isSentByMe
+                    ? "bg-[#2983DC] rounded-br-none"
+                    : "bg-gray-100 border border-[#2983DC] rounded-bl-none"
+                }`}
+              >
+                <Text
+                  className={`text-base font-medium ${
+                    message.isSentByMe ? "text-white" : "text-slate-700"
+                  }`}
+                >
+                  {message.text}
+                </Text>
+              </View>
+              <Text className="text-xs text-gray-500 mt-1">{message.time}</Text>
             </View>
-          )}
-        </View>
+          ))}
+        </ScrollView>
+      </View>
 
-        <View className="px-4">
-          <View className="bg-[#2983DC1C]  flex items-center justify-center  gap-4  rounded-xl px-3 py-4">
-            <Text className="font-semibold ">
-              <Text className="text-lg font-bold">Smit Patel</Text> sent you a
-              message Invite
+      {/* Footer Input */}
+      <View className="px-4 gap-4 py-2">
+        {messageRequest.status === "pending" && (
+          <View className="bg-[#2983DC1C] rounded-lg gap-2 p-5 items-center">
+            <Text className="font-semibold text-center mb-3">
+              <Text className="text-lg font-bold">{messageRequest.sender}</Text>{" "}
+              sent you a message request
             </Text>
-            <View className="flex-row items-center gap-5">
-              {/* Upgrade button */}
-              <TouchableOpacity className=" bg-[#2983DC] px-3 py-1.5 rounded-xl">
-                <Text className="text-lg tracking-widest text-white font-semibold">
+            <View className="flex-row items-center justify-center gap-5">
+              <TouchableOpacity
+                className="bg-[#2983DC] px-5 py-2 rounded-lg"
+                onPress={handleApproveRequest}
+              >
+                <Text className="text-white text-lg font-semibold">
                   Approve
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity>
-                <Text className="text-lg tracking-wider text-[#2983DC] font-medium">
+              <TouchableOpacity onPress={handleDeclineRequest}>
+                <Text className="text-[#2983DC] text-lg font-semibold">
                   Decline
                 </Text>
               </TouchableOpacity>
             </View>
           </View>
+        )}
 
-          {/* {buttonRoute && (
-          <View className="footer px-5 w-full">
-            <CustomeButton
-              onButtonPress={() => {
-                router.navigate(buttonRoute);
-              }}
-              title={buttonTitle}
-            />
-          </View>
-        )} */}
-
-          <View className="footer my-4 ">
-            <View className="flex-row border border-gray-400 rounded-full w-full justify-between py-2 px-6 items-center">
-              <TextInput
-                className="flex-1"
-                placeholder="Your Message"
-                value={inputMessage}
-                onChangeText={setInputMessage}
-              />
-              <TouchableOpacity onPress={handleSendMessage}>
-                <Text className="text-gray-900 font-semibold text-lg">
-                  Send
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+        <View className="flex-row border border-gray-400 rounded-full items-center px-4 py-2">
+          <TextInput
+            className="flex-1 text-base"
+            placeholder="Your Message"
+            value={inputMessage}
+            onChangeText={setInputMessage}
+            onSubmitEditing={handleSendMessage} // Allows 'Enter' key on keyboard to send message
+          />
+          <TouchableOpacity onPress={handleSendMessage}>
+            <Text className="text-[#2983DC] text-lg font-semibold">Send</Text>
+          </TouchableOpacity>
         </View>
-      </SafeAreaView>
+      </View>
+
       {/* Modal */}
       <UserModel
         isModalVisible={isSideModel}
         handleModalVisibility={() => setIsSideModel(!isSideModel)}
       />
-    </>
+    </SafeAreaView>
   );
 };
 
