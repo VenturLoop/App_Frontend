@@ -5,6 +5,7 @@ import {
   TextInput,
   Image,
   Switch,
+  Linking,
 } from "react-native";
 import React, { useState } from "react";
 import EditLayout from "../../../components/ModelLayoul/EditLayout";
@@ -31,6 +32,28 @@ const setting = () => {
       router.navigate(route);
     }, 10); // Wait for modal close animation before routing
   };
+
+  const handlePress1 = () => {
+    const url = "https://venturloop.com/privacy-policy";
+    Linking.openURL(url).catch((err) =>
+      console.error("Failed to open URL:", err)
+    );
+  };
+
+  const handlePress2 = () => {
+    const url = "https://venturloop.com/venturloopcom-terms-and-conditions-";
+    Linking.openURL(url).catch((err) =>
+      console.error("Failed to open URL:", err)
+    );
+  };
+
+  const handlePress3 = () => {
+    const url = "https://venturloop.com/community-guidelines-venturloop";
+    Linking.openURL(url).catch((err) =>
+      console.error("Failed to open URL:", err)
+    );
+  };
+
   return (
     <>
       <EditLayout title="Setting">
@@ -183,13 +206,16 @@ const setting = () => {
                 <Text className="text-gray-400 font-semibold ">Legal</Text>
                 <View className="gap-3 ">
                   {/* Privacy */}
-                  <TouchableOpacity className="  border-y-[0.5px] py-3 justify-between items-center pr-2 flex flex-row border-gray-300">
+                  <TouchableOpacity
+                    onPress={handlePress1}
+                    className="  border-y-[0.5px] py-3 justify-between items-center pr-2 flex flex-row border-gray-300"
+                  >
                     <View className="gap-1">
                       <Text className="text-gray-500 font-semibold">
                         Privacy Policy
                       </Text>
                       <Text className="text-gray-400  text-sm ">
-                        https://puuf.in/privacy policy
+                        https://venturloop.com/privacy-policy
                       </Text>
                     </View>
                     <Ionicons
@@ -199,13 +225,16 @@ const setting = () => {
                     />
                   </TouchableOpacity>
                   {/* Term and consition */}
-                  <TouchableOpacity className="border-b-[0.5px] pb-3  justify-between items-center pr-2 flex flex-row border-gray-300">
+                  <TouchableOpacity
+                    onPress={handlePress2}
+                    className="border-b-[0.5px] pb-3  justify-between items-center pr-2 flex flex-row border-gray-300"
+                  >
                     <View className="gap-1">
                       <Text className="text-gray-500 font-semibold">
                         Terms and Condition
                       </Text>
                       <Text className="text-gray-400  text-sm ">
-                        https://puuf.in/terms-condition
+                        https://venturloop.com/venturloopcom-terms-and-conditions-
                       </Text>
                     </View>
                     <Ionicons
@@ -215,13 +244,16 @@ const setting = () => {
                     />
                   </TouchableOpacity>
                   {/*  Policy Startup */}
-                  <TouchableOpacity className="border-b-[0.5px] pb-3  justify-between items-center pr-2 flex flex-row border-gray-300">
+                  <TouchableOpacity
+                    onPress={handlePress3}
+                    className="border-b-[0.5px] pb-3 justify-between items-center pr-2 flex flex-row border-gray-300"
+                  >
                     <View className="gap-1">
                       <Text className="text-gray-500 font-semibold">
                         Community Guidelines
                       </Text>
-                      <Text className="text-gray-400  text-sm ">
-                        https://puuf.in/community-policy
+                      <Text className="text-gray-400 text-sm">
+                        https://venturloop.com/community-guidelines-venturloop
                       </Text>
                     </View>
                     <Ionicons
@@ -268,13 +300,13 @@ const setting = () => {
       <DeleteModel
         isModalVisible={deleteModel}
         handleModalVisibility={() => {
-          setDeleteModel(!deleteModel);
+          setDeleteModel(false);
         }}
       />
       <LogoutModel
         isModalVisible={logoutModel}
         handleModalVisibility={() => {
-          setLogoutModel(!logoutModel);
+          setLogoutModel(false);
         }}
       />
     </>

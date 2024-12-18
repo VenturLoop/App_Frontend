@@ -33,7 +33,7 @@ const MyProfile = () => {
   const [isModalVisible, setModalVisible] = useState(false);
 
   const handleNext = () => {
-    setModalVisible(!isModalVisible);
+    setModalVisible(false);
   };
 
   const handleNavigation = (route) => {

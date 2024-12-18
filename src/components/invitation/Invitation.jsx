@@ -46,7 +46,6 @@ const messages = [
     dob: "23/12/2015",
   },
 ];
-// const messages = [];
 
 const Invitation = () => {
   const [isPremiumModel, setisPremiumModel] = useState(false);
@@ -55,54 +54,69 @@ const Invitation = () => {
   return (
     <>
       {messages.length > 0 ? (
-        <View className="bg-gray-100 flex px-4 py-4 justify-between h-full ">
+        <View className="bg-gray-100 flex-1 px-4 py-6">
           <FlatList
             data={messages}
             showsVerticalScrollIndicator={false}
             keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item, index }) => (
-              <View
-                className={`flex flex-col gap-3  mb-8 rounded-lg shadow ${
-                  index > 0 && !isPremium ? "bg-gray-200 blur-3xl" : "bg-white"
-                }`}
-              >
-                {/* Header */}
-                <View className="flex flex-row border-b border-gray-200 px-4 py-3 items-center justify-between w-full">
-                  <View className="flex items-start flex-row gap-4">
+            renderItem={({ item, index }) => {
+              if (!isPremium && index > 0) {
+                // Non-premium users, show placeholder image for items after the first one
+                return (
+                  <View className="flex flex-col shadow  mb-6 rounded-lg bg-white">
                     <Image
-                      className="w-12 h-12 rounded-xl"
                       resizeMode="cover"
-                      source={imagePath.userImage2}
+                      source={imagePath.blurInvitationImage}
+                      className="w-full h-50 rounded-lg"
                     />
-                    <View className="gap-0.5 flex items-start justify-center">
-                      <Text
-                        className={`text-xl font-semibold ${
-                          index > 0 && !isPremium
-                            ? "text-gray-400"
-                            : "text-black"
-                        }`}
-                      >
-                        {item.name}
-                      </Text>
-                      <View className="flex-row gap-1.5 justify-center items-center">
-                        <FontAwesome6
-                          size={12}
-                          color="gray"
-                          name="location-dot"
-                        />
+                  </View>
+                );
+              }
+
+              return (
+                <View
+                  className={`flex flex-col gap-4 mb-6 rounded-lg shadow-lg ${
+                    index > 0 && !isPremium
+                      ? "bg-gray-200 blur-3xl"
+                      : "bg-white"
+                  }`}
+                >
+                  {/* Header */}
+                  <View className="flex flex-row border-b border-gray-200 px-4 py-3 items-center justify-between w-full">
+                    <View className="flex flex-row gap-4 items-center">
+                      <Image
+                        className="w-12 h-12 rounded-xl"
+                        resizeMode="cover"
+                        source={imagePath.userImage2}
+                      />
+                      <View className="gap-0.5">
                         <Text
-                          className={` text-sm font-medium  ${
+                          className={`text-xl font-semibold ${
                             index > 0 && !isPremium
-                              ? "text-gray-400 "
-                              : "text-gray-500"
+                              ? "text-gray-400"
+                              : "text-black"
                           }`}
                         >
-                          {item.location}
+                          {item.name}
                         </Text>
+                        <View className="flex-row gap-1.5 items-center">
+                          <FontAwesome6
+                            size={12}
+                            color="gray"
+                            name="location-dot"
+                          />
+                          <Text
+                            className={`text-sm font-medium ${
+                              index > 0 && !isPremium
+                                ? "text-gray-400"
+                                : "text-gray-500"
+                            }`}
+                          >
+                            {item.location}
+                          </Text>
+                        </View>
                       </View>
                     </View>
-                  </View>
-                  <View>
                     <TouchableOpacity
                       onPress={() => {
                         if (index === 0 || isPremium) {
@@ -111,70 +125,64 @@ const Invitation = () => {
                           setisPremiumModel(true); // Prompt to upgrade
                         }
                       }}
-                      className={`flex-row gap-1 items-center justify-center px-3 py-1 rounded-xl ${
+                      className={`flex-row gap-2 items-center justify-center px-4 py-2 rounded-xl ${
                         index > 0 && !isPremium ? "bg-gray-300" : "bg-[#2983DC]"
                       }`}
                     >
                       <Ionicons
                         name="chatbox-ellipses-outline"
                         color={index > 0 && !isPremium ? "gray" : "white"}
-                        size={17}
+                        size={18}
                       />
                       <Text
                         className={`${
                           index > 0 && !isPremium
                             ? "text-gray-500"
                             : "text-white"
-                        }
-                        text-lg
-                        `}
+                        } text-lg font-semibold`}
                       >
                         Chat
                       </Text>
                     </TouchableOpacity>
                   </View>
-                </View>
 
-                {/* Footer */}
-                <View className=" w-full gap-2 pb-3 overflow-hidden">
-                  {/* Top Section: Age and Location */}
+                  {/* Footer */}
+                  <View className="w-full gap-2 pb-3 overflow-hidden px-4">
+                    <View className="flex-row items-center gap-4">
+                      <Ionicons name="walk-outline" size={20} color="#6B7280" />
+                      <Text className="text-gray-700 text-sm leading-snug">
+                        Ready to go full time with the right co-founder
+                      </Text>
+                    </View>
 
-                  {/* Ready to go full time */}
-                  <View className="flex-row items-center  px-5 gap-4">
-                    <Ionicons name="walk-outline" size={20} color="#6B7280" />
-                    <Text className="text-gray-700 text-sm  leading-snug">
-                      Ready to go full time with the right co-founder
-                    </Text>
-                  </View>
+                    <View className="flex-row items-center gap-4  pt-2">
+                      <Ionicons
+                        name="briefcase-outline"
+                        size={20}
+                        color="#6B7280"
+                      />
+                      <Text className="text-gray-700 text-sm leading-snug">
+                        Worked in a startup
+                      </Text>
+                    </View>
 
-                  {/* Worked in a startup */}
-                  <View className="flex-row items-center  border-gray-200  px-5 gap-4">
-                    <Ionicons
-                      name="briefcase-outline"
-                      size={20}
-                      color="#6B7280"
-                    />
-                    <Text className="text-gray-700 text-sm  leading-snug">
-                      Worked in a startup
-                    </Text>
-                  </View>
-                  {/* Fully Negotiable */}
-                  <View className="flex-row items-center px-5 gap-4">
-                    <Ionicons
-                      name="accessibility-outline"
-                      size={20}
-                      color="#6B7280"
-                    />
-                    <Text className="text-gray-700 text-sm  leading-snug">
-                      Fully Negotiable
-                    </Text>
+                    <View className="flex-row items-center gap-4 pt-2">
+                      <Ionicons
+                        name="accessibility-outline"
+                        size={20}
+                        color="#6B7280"
+                      />
+                      <Text className="text-gray-700 text-sm leading-snug">
+                        Fully Negotiable
+                      </Text>
+                    </View>
                   </View>
                 </View>
-              </View>
-            )}
+              );
+            }}
           />
           {!isPremium && (
-            <View className="bg-[#2983DC1C]   flex-row items-center gap-4 rounded-xl px-3 py-3">
+            <View className="bg-[#2983DC1C] flex-row items-center gap-4 rounded-xl px-3 py-3">
               <TouchableOpacity
                 onPress={() => {
                   // setisPremiumModel(true);
@@ -196,7 +204,7 @@ const Invitation = () => {
         <View className="flex-1 items-center justify-center">
           <Image source={imagePath.NoMessage} />
           <Text className="font-semibold text-lg text-gray-500">
-            No invitation received yet !
+            No invitation received yet!
           </Text>
         </View>
       )}

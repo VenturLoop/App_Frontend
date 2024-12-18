@@ -152,11 +152,19 @@ const Index = () => {
               />
               <Text>
                 I agree to the{" "}
-                <Link className="font-semibold text-[#2983DC]" href={"/"}>
+                <Link
+                  className="font-semibold text-[#2983DC]"
+                  href={
+                    "https://venturloop.com/venturloopcom-terms-and-conditions-"
+                  }
+                >
                   Terms of Service{" "}
                 </Link>
                 and{" "}
-                <Link className="font-semibold text-[#2983DC]" href={"/"}>
+                <Link
+                  className="font-semibold text-[#2983DC]"
+                  href={"https://venturloop.com/privacy-policy"}
+                >
                   Privacy Policy{" "}
                 </Link>
               </Text>

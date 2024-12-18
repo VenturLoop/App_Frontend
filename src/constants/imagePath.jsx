@@ -23,12 +23,7 @@ export default {
   premiumImage: require("../assets/images/premium.png"),
   cake: require("../assets/images/cake.png"),
   google: require("../assets/images/google.png"),
-
-
-
-
-
-
+  blurInvitationImage: require("../assets/images/blurImage.png"),
 
   // start_auth2: require("@/src/assets/images/Linkedin.png.png"),
   // start_auth3: require("@/src/assets/images/image2.png"),

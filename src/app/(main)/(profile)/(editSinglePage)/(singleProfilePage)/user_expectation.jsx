@@ -9,18 +9,12 @@ const UserExpectation = () => {
   const [selectedOption, setSelectedOption] = useState("");
   const [equityRange, setEquityRange] = useState({ min: 0, max: 0 }); // Combined state
   const [localEquityRange, setLocalEquityRange] = useState({ min: 0, max: 0 }); // Immediate slider updates
+  const [minimum, setminimum] = useState(0);
 
   const handleNextButtonPress = () => {
     // Save the changes or move to the next step
     setEquityRange(localEquityRange);
     router.back();
-  };
-
-  const handleSliderChange = (key, value) => {
-    setLocalEquityRange((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
   };
 
   const isCustomOption =
@@ -73,12 +67,27 @@ const UserExpectation = () => {
         {/* Render Sliders Conditionally */}
         {isCustomOption && (
           <>
-            <EquitySlider
-              label="Minimum Equity"
-              value={localEquityRange.min}
-              onValueChange={(value) => handleSliderChange("min", value)}
-              disabled={!isCustomOption}
-            />
+            <View className="my-4">
+              <Text
+                className={`text-base font-medium mb-2 ${
+                  !isCustomOption ? "opacity-50" : "text-gray-950"
+                }`}
+              >
+                Minimum Equity
+              </Text>
+              <Slider
+                minimumValue={0}
+                maximumValue={100}
+                step={1}
+                value={minimum}
+                onValueChange={(value) => setminimum(value)}
+                disabled={!isCustomOption}
+                minimumTrackTintColor={!isCustomOption ? "#E2E8F0" : "#007BFF"}
+                maximumTrackTintColor="#E2E8F0"
+                thumbTintColor={!isCustomOption ? "#E2E8F0" : "#007BFF"}
+              />
+              <Text className="text-base text-gray-700 mt-2">{minimum}%</Text>
+            </View>
             <EquitySlider
               label="Maximum Equity"
               value={localEquityRange.max}
