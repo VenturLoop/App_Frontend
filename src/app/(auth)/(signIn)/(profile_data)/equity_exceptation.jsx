@@ -43,20 +43,23 @@ const EquitySlider = ({ label, value, onValueChange, disabled }) => {
 
 const EquityExpectation = () => {
   const [selectedOption, setSelectedOption] = useState("");
-  const [minEquity, setMinEquity] = useState(0);
-  const [maxEquity, setMaxEquity] = useState(0);
+  const [equityRange, setEquityRange] = useState({ min: 0, max: 0 }); // Combined state
   const [isModalVisible, setModalVisible] = useState(false);
 
-  const handleModalVisibility = () => {
-    setModalVisible((prevState) => !prevState);
-  };
+  const handleModalVisibility = () => setModalVisible(!isModalVisible);
 
-  const handleNextButtonPress = () => {
-    setModalVisible(true);
-  };
+  const handleNextButtonPress = () => setModalVisible(true);
 
   const isCustomOption =
     selectedOption === "offer" || selectedOption === "accept";
+
+  const handleSliderChange = (key, value) => {
+    // Updates the equity range smoothly
+    setEquityRange((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -104,18 +107,19 @@ const EquityExpectation = () => {
         ))}
 
         {/* Render Sliders Conditionally */}
+        {/* Render Sliders Conditionally */}
         {isCustomOption && (
           <>
             <EquitySlider
               label="Minimum Equity"
-              value={minEquity}
-              onValueChange={setMinEquity}
+              value={equityRange.min}
+              onValueChange={(value) => handleSliderChange("min", value)}
               disabled={!isCustomOption}
             />
             <EquitySlider
               label="Maximum Equity"
-              value={maxEquity}
-              onValueChange={setMaxEquity}
+              value={equityRange.max}
+              onValueChange={(value) => handleSliderChange("max", value)}
               disabled={!isCustomOption}
             />
           </>

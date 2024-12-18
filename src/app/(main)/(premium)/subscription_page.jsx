@@ -106,7 +106,7 @@ const SubscriptionPage = () => {
                 </View>
                 <View className="bg-[#F0F6FB] py-4 px-3 flex items-center">
                   <Text className="text-black font-bold text-lg mt-1">
-                    {selectedPlan.price}
+                    {selectedPlan.price}/
                   </Text>
                   <Text className="text-gray-500 font-semibold text-sm mt-1">
                     Month

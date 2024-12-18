@@ -13,12 +13,15 @@ import { Ionicons } from "@expo/vector-icons";
 import imagePath from "../../../constants/imagePath";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { router } from "expo-router";
+import * as ImagePicker from "expo-image-picker";
 
 const EditProfile = () => {
   const [birthdate, setBirthdate] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [isMindset, setisMindset] = useState("");
+  const [profileImage, setProfileImage] = useState(null); // Stores the uploaded image URI
+
   // Profile fields with initial values
   const [formData, setformData] = useState({
     name: "",
@@ -56,6 +59,48 @@ const EditProfile = () => {
       setBirthdate(formattedDate);
     }
     setShowDatePicker(false);
+  };
+
+  const pickImage = async () => {
+    try {
+      // Request permission to access the media library
+      const permissionResponse =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+      if (!permissionResponse.granted) {
+        Alert.alert(
+          "Permission Required",
+          "Camera roll permissions are required to upload your profile photo."
+        );
+        return;
+      }
+
+      // Launch image picker
+      const imagePickerResult = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ["images"],
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
+      });
+
+      // Check if the user canceled the action
+      if (imagePickerResult.canceled) {
+        return; // Exit if no image was selected
+      }
+
+      // Update the profile image with the selected image URI
+      if (imagePickerResult.assets && imagePickerResult.assets.length > 0) {
+        setProfileImage(imagePickerResult.assets[0].uri);
+      } else {
+        console.warn("No assets found in image picker result.");
+      }
+    } catch (error) {
+      console.error("Error picking image:", error);
+      Alert.alert(
+        "Error",
+        "An error occurred while picking the image. Please try again."
+      );
+    }
   };
 
   return (
@@ -122,17 +167,23 @@ const EditProfile = () => {
           <View className="w-full gap-3">
             <Text className="text-gray-400 font-semibold">Basic Details</Text>
 
-            {/* first section */}
-            <View className="gap-5 border-t-[0.5px] border-gray-300 py-4 ">
-              {/* Profile image */}
-              <Text className="text-gray-500 font-semibold">Profile photo</Text>
-              <View className=" flex flex-row gap-7 justify-start items-center ">
+            {/* Profile Photo First section */}
+            <View className="gap-5 border-t-[0.5px] border-gray-300 py-4 w-full">
+              <Text className="text-gray-500 font-semibold">Profile Photo</Text>
+              <View className="flex flex-row gap-7 justify-start items-center">
                 <Image
-                  source={imagePath.userImage}
+                  source={
+                    profileImage ? { uri: profileImage } : imagePath.userImage
+                  }
                   className="w-24 h-24 rounded-xl"
                 />
-                <TouchableOpacity className="border-[0.5px] p-3 border-[#2983DC] rounded-xl">
-                  <Text className="font-medium text-gray-800">Edit Photo</Text>
+                <TouchableOpacity
+                  onPress={pickImage}
+                  className="border-[0.5px] p-3 border-[#2983DC] rounded-xl"
+                >
+                  <Text className="font-medium text-gray-800">
+                    Upload Photo
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>

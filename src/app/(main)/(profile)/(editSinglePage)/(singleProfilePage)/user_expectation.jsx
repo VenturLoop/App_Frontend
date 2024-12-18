@@ -1,23 +1,26 @@
-import {
-  View,
-  Text,
-  SafeAreaView,
-  TouchableOpacity,
-  Image,
-} from "react-native";
+import { View, Text, SafeAreaView, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { router } from "expo-router";
 import Slider from "@react-native-community/slider";
 import { Ionicons } from "@expo/vector-icons";
 import CustomeButton from "../../../../../components/buttons/CustomeButton";
 
-const user_expectation = () => {
+const UserExpectation = () => {
   const [selectedOption, setSelectedOption] = useState("");
-  const [minEquity, setMinEquity] = useState(0);
-  const [maxEquity, setMaxEquity] = useState(0);
+  const [equityRange, setEquityRange] = useState({ min: 0, max: 0 }); // Combined state
+  const [localEquityRange, setLocalEquityRange] = useState({ min: 0, max: 0 }); // Immediate slider updates
 
   const handleNextButtonPress = () => {
-    // setModalVisible(true);
+    // Save the changes or move to the next step
+    setEquityRange(localEquityRange);
+    router.back();
+  };
+
+  const handleSliderChange = (key, value) => {
+    setLocalEquityRange((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
   };
 
   const isCustomOption =
@@ -33,7 +36,6 @@ const user_expectation = () => {
           </TouchableOpacity>
           <Text className="text-xl font-semibold">Equity Expectation</Text>
         </View>
-        {/* <Text className="text-xl font-semibold text-[#2983DC]">6/6</Text> */}
       </View>
 
       {/* Body Section */}
@@ -73,16 +75,14 @@ const user_expectation = () => {
           <>
             <EquitySlider
               label="Minimum Equity"
-              value={minEquity}
-              onValueChange={(e) => {
-                setMinEquity(e);
-              }}
+              value={localEquityRange.min}
+              onValueChange={(value) => handleSliderChange("min", value)}
               disabled={!isCustomOption}
             />
             <EquitySlider
               label="Maximum Equity"
-              value={maxEquity}
-              onValueChange={setMaxEquity}
+              value={localEquityRange.max}
+              onValueChange={(value) => handleSliderChange("max", value)}
               disabled={!isCustomOption}
             />
           </>
@@ -91,12 +91,7 @@ const user_expectation = () => {
 
       {/* Footer Section */}
       <View className="footer px-5 w-full">
-        <CustomeButton
-          onButtonPress={() => {
-            router.back();
-          }}
-          title="Save"
-        />
+        <CustomeButton onButtonPress={handleNextButtonPress} title="Save" />
       </View>
     </SafeAreaView>
   );
@@ -129,4 +124,4 @@ const EquitySlider = ({ label, value, onValueChange, disabled }) => {
   );
 };
 
-export default user_expectation;
+export default UserExpectation;
