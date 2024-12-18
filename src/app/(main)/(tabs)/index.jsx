@@ -3,7 +3,7 @@ import {
   Text,
   SafeAreaView,
   Image,
-  TouchableOpacity,
+  TouchableOpacity, 
   ScrollView,
   Animated,
   Easing,

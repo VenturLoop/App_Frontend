@@ -390,7 +390,9 @@ const EditProfile = () => {
               </View>
               {/* Education bar */}
               <View className="flex flex-row border-y-[0.5px] py-4 border-gray-300">
-                <Image className="w-16 h-16" source={imagePath.Eduimage} />
+                <View className="bg-blue-50 w-16 h-16 rounded-xl flex items-center justify-center shadow-sm">
+                  <Ionicons name="school-outline" size={28} color="#2983DC" />
+                </View>
                 <View className="px-4">
                   <Text className="text-gray-800 font-semibold">
                     Rajiv Gandhi Institute of Knowledge Technologies

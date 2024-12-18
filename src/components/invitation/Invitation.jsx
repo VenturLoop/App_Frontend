@@ -63,18 +63,26 @@ const Invitation = () => {
               if (!isPremium && index > 0) {
                 // Non-premium users, show placeholder image for items after the first one
                 return (
-                  <View className="flex flex-col shadow  mb-6 rounded-lg bg-white">
+                  <TouchableOpacity
+                    onPress={() => {
+                      router.navigate("/subscription_page");
+                    }}
+                    className="flex flex-col shadow  mb-6 rounded-lg bg-white"
+                  >
                     <Image
                       resizeMode="cover"
                       source={imagePath.blurInvitationImage}
                       className="w-full h-50 rounded-lg"
                     />
-                  </View>
+                  </TouchableOpacity>
                 );
               }
 
               return (
-                <View
+                <TouchableOpacity
+                  onPress={() => {
+                    router.navigate("/(tabs)");
+                  }}
                   className={`flex flex-col gap-4 mb-6 rounded-lg shadow-lg ${
                     index > 0 && !isPremium
                       ? "bg-gray-200 blur-3xl"
@@ -177,7 +185,7 @@ const Invitation = () => {
                       </Text>
                     </View>
                   </View>
-                </View>
+                </TouchableOpacity>
               );
             }}
           />

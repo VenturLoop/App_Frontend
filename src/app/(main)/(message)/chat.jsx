@@ -175,7 +175,8 @@ const Chat = ({ route }) => {
               blurOnSubmit={false} // Keeps the keyboard open
             />
             <TouchableOpacity onPress={handleSendMessage} className="ml-2">
-              <Text className="text-[#2983DC] font-semibold text-lg">Send</Text>
+              {/* <Text className="text-[#2983DC] font-semibold text-lg">Send</Text> */}
+              <Ionicons name="send" size={28} color="#2983DC" />
             </TouchableOpacity>
           </View>
         </View>

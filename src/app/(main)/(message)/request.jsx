@@ -179,7 +179,8 @@ const Request = ({ route }) => {
             onSubmitEditing={handleSendMessage} // Allows 'Enter' key on keyboard to send message
           />
           <TouchableOpacity onPress={handleSendMessage}>
-            <Text className="text-[#2983DC] text-lg font-semibold">Send</Text>
+            {/* <Text className="text-[#2983DC] text-lg font-semibold">Send</Text> */}
+            <Ionicons name="send" size={28} color="#2983DC" />
           </TouchableOpacity>
         </View>
       </View>
