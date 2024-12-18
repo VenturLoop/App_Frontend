@@ -229,11 +229,11 @@ const setting = () => {
                     onPress={handlePress2}
                     className="border-b-[0.5px] pb-3  justify-between items-center pr-2 flex flex-row border-gray-300"
                   >
-                    <View className="gap-1">
+                    <View className="gap-1 w-[80vw]  ">
                       <Text className="text-gray-500 font-semibold">
                         Terms and Condition
                       </Text>
-                      <Text className="text-gray-400  text-sm ">
+                      <Text className="text-gray-400 text-sm ">
                         https://venturloop.com/venturloopcom-terms-and-conditions-
                       </Text>
                     </View>
@@ -248,7 +248,7 @@ const setting = () => {
                     onPress={handlePress3}
                     className="border-b-[0.5px] pb-3 justify-between items-center pr-2 flex flex-row border-gray-300"
                   >
-                    <View className="gap-1">
+                    <View className="gap-1 w-[80vw]">
                       <Text className="text-gray-500 font-semibold">
                         Community Guidelines
                       </Text>

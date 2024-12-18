@@ -34,17 +34,19 @@ const ProfileModel = ({ isModalVisible, handleModalVisibility, profile }) => {
 
   const handleNavigation = (route) => {
     if (isModalVisible) {
-      // handleModalVisibility(); // Close modal after navigation
+      handleModalVisibility(); // Close modal before navigation
       setTimeout(() => {
-        router.push(route);
-      }, 300); // Wait for modal close animation before routing
+        router.push(route); // Navigate after the modal close animation
+      }, 300); // Ensure smooth transition
     }
   };
 
   const handleShareProfile = async () => {
     try {
       await Share.share({
-        message: `Check out my profile: ${profile?.name || "Souptik Das"} - ${profile?.status || ""}`,
+        message: `Check out my profile: ${profile?.name || "Souptik Das"} - ${
+          profile?.status || ""
+        }`,
       });
     } catch (error) {
       Alert.alert("Error", "Something went wrong while sharing the profile.");
@@ -70,8 +72,8 @@ const ProfileModel = ({ isModalVisible, handleModalVisibility, profile }) => {
         >
           {/* Setting Button */}
           <TouchableOpacity
-            onPress={() => handleNavigation("/setting")}
-            className="w-full border border-gray-300 rounded-xl py-4 my-2 "
+            onPress={() => handleNavigation("/setting")} // Close modal and route
+            className="w-full border border-gray-300 rounded-xl py-4 my-2"
           >
             <Text className="text-center text-gray-800 text-lg font-semibold">
               Settings
@@ -81,7 +83,7 @@ const ProfileModel = ({ isModalVisible, handleModalVisibility, profile }) => {
           {/* Share Profile Button */}
           <TouchableOpacity
             onPress={handleShareProfile}
-            className="w-full border border-gray-300 rounded-xl py-4 my-2 "
+            className="w-full border border-gray-300 rounded-xl py-4 my-2"
           >
             <Text className="text-center text-gray-800 text-lg font-semibold">
               Share Profile
