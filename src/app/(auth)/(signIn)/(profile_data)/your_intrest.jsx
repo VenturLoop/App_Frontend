@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState } from "react";
 import CustomeButton from "../../../../components/buttons/CustomeButton";
@@ -15,6 +16,8 @@ import { Ionicons } from "@expo/vector-icons";
 const your_intrest = () => {
   const [selectedTags, setSelectedTags] = useState([""]);
   const [searchQuery, setSearchQuery] = useState("");
+    const [loading, setLoading] = useState(false);
+  
 
   const tags = [
     "AI/ML",
@@ -84,7 +87,7 @@ const your_intrest = () => {
           onButtonPress={() => {
             router.navigate("/commitment");
           }}
-          title="Continue"
+          title={loading ? <ActivityIndicator color="white" /> : "Continue"}
         />
       </View>
     </SafeAreaView>

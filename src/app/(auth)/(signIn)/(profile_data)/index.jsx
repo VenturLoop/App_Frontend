@@ -1,5 +1,5 @@
-import React from "react";
-import { ImageBackground, Text, View } from "react-native";
+import React, { useState } from "react";
+import { ActivityIndicator, ImageBackground, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import imagePath from "../../../../constants/imagePath";
 import CustomeButton from "../../../../components/buttons/CustomeButton";
@@ -7,6 +7,8 @@ import { Sen_700Bold } from "@expo-google-fonts/sen";
 import { router } from "expo-router";
 
 const index = () => {
+    const [loading, setLoading] = useState(false);
+  
   return (
     <SafeAreaView className="flex-1  bg-white" edges={["left", "right"]}>
       <ImageBackground
@@ -24,7 +26,7 @@ const index = () => {
           </Text>
         </View>
         <CustomeButton
-          title="Continue"
+          title={loading ? <ActivityIndicator color="white" /> : "Continue"}
           onButtonPress={() => {
             router  .navigate("/what_your_status");
           }}

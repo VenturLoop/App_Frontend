@@ -4,6 +4,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState } from "react";
 import CustomeButton from "../../../../components/buttons/CustomeButton";
@@ -13,6 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 const prior_experience = () => {
   const [selected, setSelected] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const options = [
     { id: "1", label: "Sold a startup" },
@@ -70,7 +72,7 @@ const prior_experience = () => {
           onButtonPress={() => {
             router.navigate("/equity_exceptation");
           }}
-          title="Continue"
+          title={loading ? <ActivityIndicator color="white" /> : "Continue"}
         />
       </View>
     </SafeAreaView>

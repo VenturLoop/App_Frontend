@@ -5,21 +5,21 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState } from "react";
 import { Link, router } from "expo-router";
 import imagePath from "../../../constants/imagePath";
 import CustomeButton from "../../../components/buttons/CustomeButton";
-import {  useToast } from "react-native-toast-notifications";
+import { useToast } from "react-native-toast-notifications";
 
 const forgatePass = () => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const toast = useToast();
 
-  const handleSendOtp = async () => {
+  const handleForfateEmail = async () => {
     setLoading(true);
-
     // Simulate API call to send OTP
     setTimeout(() => {
       setLoading(false);
@@ -43,14 +43,15 @@ const forgatePass = () => {
       <View className="flex justify-start mb-20  h-64 items-center">
         <TextInput
           placeholder="Email address"
-          className="bg-[#2982dc23] w-full  px-6 py-5 placeholder:opacity-70 rounded-lg text-lg tracking-widest text-gray-600 p-2"
-          // placeholderTextColor="#61677D"
-          keyboardType="numeric"
+          value={email}
+          onChangeText={setEmail}
+          className="bg-[#2982dc23] w-full px-6 py-5 placeholder:opacity-70 rounded-lg text-lg tracking-widest text-gray-600 p-2"
+          keyboardType="email-address"
         />
       </View>
-      <View className="footer mb-3 flex ">
+      <View className="footer mb-3 flex">
         <CustomeButton
-          title="Continue"
+          title={loading ? <ActivityIndicator color="white" /> : "Continue"}
           style="my-6"
           onButtonPress={handleForfateEmail}
         />
@@ -58,7 +59,7 @@ const forgatePass = () => {
           onPress={() => {
             router.back();
           }}
-          className="w-full "
+          className="w-full"
         >
           <Text className="text-center text-xl text-gray-500 font-medium ">
             Cancel

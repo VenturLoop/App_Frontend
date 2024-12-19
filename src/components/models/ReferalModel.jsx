@@ -5,26 +5,29 @@ import {
   TouchableOpacity,
   TextInput,
   Pressable,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState } from "react";
 import PageLoading from "../loading/PageLoading"; // Ensure the PageLoading component is imported
 import Animated from "react-native-reanimated";
+import { router } from "expo-router";
+import { Toast } from "react-native-toast-notifications";
 
 const ReferalModel = ({
   isModalVisible,
   handleModalVisibility,
-  routerToNextPage,
+  // routerToNextPage,
 }) => {
   const [isLoading, setIsLoading] = useState(false); // State to manage loading
   const [referal, setReferal] = useState(""); // Store referral code input
 
   // Function to handle the "Continue" button press
   const handleContinue = () => {
-    setIsLoading(true); // Show loading screen
+    setIsLoading(true);
     setTimeout(() => {
-      setIsLoading(false); // Hide loading screen after 4000ms
-      routerToNextPage(); // Navigate to the next page
-    }, 4000);
+      setIsLoading(false);
+      handleNavigation("/(tabs)"); // Navigate to the next page
+    }, 3000); // Shortened the delay for smooth navigation
   };
 
   const translateY = React.useRef(new Animated.Value(300)).current; // Initial offset (off-screen)
@@ -56,6 +59,12 @@ const ReferalModel = ({
     }
   };
 
+  const handleNotReferal = () => {
+    setIsLoading(true);
+    Toast.show("Account Created Successfully", { type: "success" });
+    handleNavigation("/(tabs)"); // Navigate to the next page
+  };
+
   return (
     <Modal
       animationType="none" // Disable default animations to apply custom ones
@@ -83,18 +92,23 @@ const ReferalModel = ({
             </Text>
 
             {/* Referral Input */}
-            <TextInput
-              placeholder="Referral Code"
-              value={referal} // Set the value of the input field to referal state
-              onChangeText={(text) => setReferal(text)} // Update the referal state on change
-              className="bg-[#2982dc11] w-full tracking-widest px-6 py-5 text-lg text-gray-600  rounded-2xl"
-            />
+            <View className="bg-[#2982dc11] w-full px-6 py-5 rounded-2xl flex-row items-center justify-between">
+              <TextInput
+                placeholder="Referral Code"
+                value={referal} // Set the value of the input field to referal state
+                onChangeText={(text) => setReferal(text)} // Update the referal state on change
+                className="tracking-widest  text-lg text-gray-600  "
+              />
+              <View>
+                {isLoading && <ActivityIndicator size={20} color="#2983DC" />}
+              </View>
+            </View>
 
             {/* Button Group */}
             <View className="flex-row justify-between gap-3 w-full mt-6 space-x-4">
               {/* "Don't Have" Button */}
               <TouchableOpacity
-                onPress={routerToNextPage}
+                onPress={handleNotReferal}
                 className="flex-1 border w-1/3 border-gray-100 rounded-lg py-3"
               >
                 <Text className="text-center text-lg text-gray-700 font-medium">

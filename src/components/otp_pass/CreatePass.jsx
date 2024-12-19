@@ -87,7 +87,7 @@ const CreatePass = () => {
       console.log(result);
 
       if (response.ok) {
-        router.push("/otp"); // Navigate to the OTP page
+        router.push("/add_basic_details"); // Navigate to the add basic setail page page
       } else {
         Toast.show("Failed to create password.", {
           type: "error",

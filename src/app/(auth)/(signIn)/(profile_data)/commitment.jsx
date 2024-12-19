@@ -4,6 +4,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState } from "react";
 import CustomeButton from "../../../../components/buttons/CustomeButton";
@@ -13,6 +14,8 @@ import { Ionicons } from "@expo/vector-icons";
 
 const commitment = () => {
   const [selected, setSelected] = useState("");
+    const [loading, setLoading] = useState(false);
+  
 
   const options = [
     { id: "1", label: "Already full time in a startup" },
@@ -67,7 +70,7 @@ const commitment = () => {
           onButtonPress={() => {
             router.navigate("/prior_experience");
           }}
-          title="Continue"
+         title={loading ? <ActivityIndicator color="white" /> : "Continue"}
         />
       </View>
     </SafeAreaView>

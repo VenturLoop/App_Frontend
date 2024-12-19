@@ -111,15 +111,12 @@ const Otp = () => {
 
       {/* Footer Section */}
       <View className="footer  flex">
-        {isLoading ? (
-          <ActivityIndicator size="large" color="#2983DC" />
-        ) : (
-          <CustomeButton
-            title="Verify"
-            style="mb-1"
-            onButtonPress={dumiVerify}
-          />
-        )}
+        <CustomeButton
+          title={isLoading ? <ActivityIndicator color="white" /> : "Verify"}
+          style="mb-1"
+          onButtonPress={dumiVerify}
+        />
+
         <View className="flex-row justify-center items-center gap-2 mt-4">
           <Text className="text-center">Didn’t get OTP? </Text>
           {timer > 0 ? (

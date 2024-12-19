@@ -4,6 +4,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState } from "react";
 import CustomeButton from "../../../../components/buttons/CustomeButton";
@@ -13,6 +14,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 
 const what_your_status = () => {
   const [selected, setSelected] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const options = [
     { id: "co-founder", label: "Looking for a co-founder" },
@@ -64,7 +66,7 @@ const what_your_status = () => {
           onButtonPress={() => {
             router.navigate("/skillset");
           }}
-          title="Continue"
+          title={loading ? <ActivityIndicator color="white" /> : "Continue"}
         />
       </View>
     </SafeAreaView>

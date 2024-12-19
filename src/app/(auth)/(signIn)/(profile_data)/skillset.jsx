@@ -13,6 +13,8 @@ import { Ionicons } from "@expo/vector-icons";
 
 const skillset = () => {
   const [selectedTags, setSelectedTags] = useState([""]);
+    const [loading, setLoading] = useState(false);
+  
 
   const tags = [
     "Web Developer",
@@ -65,7 +67,9 @@ const skillset = () => {
             >
               <Text
                 className={`text-md  ${
-                  selectedTags.includes(tag) ? "text-[#2983DC] font-medium" : "text-gray-600"
+                  selectedTags.includes(tag)
+                    ? "text-[#2983DC] font-medium"
+                    : "text-gray-600"
                 }`}
               >
                 {tag}

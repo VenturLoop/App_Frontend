@@ -13,6 +13,7 @@ import Slider from "@react-native-community/slider";
 import { Ionicons } from "@expo/vector-icons";
 import ReferalModel from "../../../../components/models/ReferalModel";
 import ReferalPriceModel from "../../../../components/models/ReferalPriceModel";
+import { Toast } from "react-native-toast-notifications";
 
 // Reusable Slider Component
 const EquitySlider = ({ label, value, onValueChange, disabled }) => {
@@ -45,10 +46,14 @@ const EquityExpectation = () => {
   const [selectedOption, setSelectedOption] = useState("");
   const [equityRange, setEquityRange] = useState({ min: 0, max: 0 }); // Combined state
   const [isModalVisible, setModalVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleModalVisibility = () => setModalVisible(!isModalVisible);
 
-  const handleNextButtonPress = () => setModalVisible(true);
+  const handleNextButtonPress = () => {
+    setModalVisible(true);
+    // Toast.show("Account Created Successfully", { type: "success" });
+  };
 
   const isCustomOption =
     selectedOption === "offer" || selectedOption === "accept";
@@ -130,7 +135,9 @@ const EquityExpectation = () => {
       <View className="footer px-5 w-full">
         <CustomeButton
           onButtonPress={handleNextButtonPress}
-          title="Let’s Jump In!"
+          title={
+            loading ? <ActivityIndicator color="white" /> : "Let’s Jump In!"
+          }
         />
       </View>
 
