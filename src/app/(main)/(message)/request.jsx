@@ -12,6 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import imagePath from "../../../constants/imagePath";
 import UserModel from "../../../components/models/UserModel";
+import { Toast } from "react-native-toast-notifications";
 
 const Request = ({ route }) => {
   const user = route?.params?.user || {
@@ -47,23 +48,38 @@ const Request = ({ route }) => {
     scrollViewRef.current?.scrollToEnd({ animated: true });
   }, [messages]);
 
-  // Approve message request
-  const handleApproveRequest = () => {
+  // Add a system message to the chat
+  const addSystemMessage = (text) => {
     setMessages((prev) => [
       ...prev,
-      {
-        id: Date.now(),
-        text: messageRequest.message,
-        isSentByMe: false,
-        time: messageRequest.sentAt,
-      },
+      { id: Date.now(), text, isSentByMe: false, time: "Now", isSystem: true },
     ]);
+  };
+
+  // Approve message request
+  const handleApproveRequest = () => {
     setMessageRequest({ ...messageRequest, status: "approved" });
+    Toast.show("Message request approved", { type: "success" });
   };
 
   // Decline message request
   const handleDeclineRequest = () => {
     setMessageRequest({ ...messageRequest, status: "declined" });
+    Toast.show("Message request declined", { type: "danger" });
+  };
+
+  // Block the user
+  const handleBlockUser = () => {
+    setMessageRequest({ ...messageRequest, status: "blocked" });
+    // addSystemMessage(`${messageRequest.sender} has been blocked.`);
+    Toast.show("User blocked", { type: "danger" });
+  };
+
+  // Unblock the user
+  const handleUnblockUser = () => {
+    setMessageRequest({ ...messageRequest, status: "approved" });
+    // addSystemMessage(`${messageRequest.sender} has been unblocked.`);
+    Toast.show("User unblocked", { type: "success" });
   };
 
   // Send a new message
@@ -75,6 +91,13 @@ const Request = ({ route }) => {
       ]);
       setInputMessage("");
     }
+    if (messageRequest.status === "pending") {
+      handleApproveRequest();
+    }
+  };
+
+  const handleBlockUserSendMessage = () => {
+    Toast.show("User is blocked, you can't send messages", { type: "error" });
   };
 
   return (
@@ -109,7 +132,7 @@ const Request = ({ route }) => {
       {/* Chat Body */}
       <View className="flex-1 px-3 py-3">
         <ScrollView
-          ref={scrollViewRef} // Attach the ref to the ScrollView
+          ref={scrollViewRef}
           className="flex-1"
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 20 }}
@@ -127,12 +150,18 @@ const Request = ({ route }) => {
                 className={`px-4 py-3.5 rounded-2xl ${
                   message.isSentByMe
                     ? "bg-[#2983DC] rounded-br-none"
+                    : message.isSystem
+                    ? "bg-gray-300"
                     : "bg-gray-100 border border-[#2983DC] rounded-bl-none"
                 }`}
               >
                 <Text
                   className={`text-base font-medium ${
-                    message.isSentByMe ? "text-white" : "text-slate-700"
+                    message.isSentByMe
+                      ? "text-white"
+                      : message.isSystem
+                      ? "text-black"
+                      : "text-slate-700"
                   }`}
                 >
                   {message.text}
@@ -169,6 +198,24 @@ const Request = ({ route }) => {
             </View>
           </View>
         )}
+        {messageRequest.status === "blocked" && (
+          <View className="bg-[#2983DC1C] rounded-lg gap-2 p-5 items-center">
+            <Text className="font-semibold text-center mb-3">
+              <Text className="text-lg font-bold">{messageRequest.sender}</Text>{" "}
+              is blocked
+            </Text>
+            <View className="flex-row items-center justify-center gap-5">
+              <TouchableOpacity
+                className="bg-[#2983DC] px-5 py-2 rounded-lg"
+                onPress={handleUnblockUser}
+              >
+                <Text className="text-white text-lg font-semibold">
+                  Unblock
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
 
         <View className="flex-row border border-gray-400 rounded-full items-center px-4 py-2">
           <TextInput
@@ -176,10 +223,17 @@ const Request = ({ route }) => {
             placeholder="Your Message"
             value={inputMessage}
             onChangeText={setInputMessage}
-            onSubmitEditing={handleSendMessage} // Allows 'Enter' key on keyboard to send message
+            onSubmitEditing={handleSendMessage}
           />
-          <TouchableOpacity onPress={handleSendMessage}>
-            {/* <Text className="text-[#2983DC] text-lg font-semibold">Send</Text> */}
+          <TouchableOpacity
+            // disabled={messageRequest.status === "blocked"}
+            onPress={
+              messageRequest.status === "blocked"
+                ? handleBlockUserSendMessage
+                : handleSendMessage
+            }
+            className="disabled:opacity-50"
+          >
             <Ionicons name="send" size={28} color="#2983DC" />
           </TouchableOpacity>
         </View>
@@ -189,6 +243,7 @@ const Request = ({ route }) => {
       <UserModel
         isModalVisible={isSideModel}
         handleModalVisibility={() => setIsSideModel(!isSideModel)}
+        handleBlockFunction={handleBlockUser}
       />
     </SafeAreaView>
   );

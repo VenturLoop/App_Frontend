@@ -6,6 +6,8 @@ import {
   TextInput,
   Image,
   Platform,
+  SafeAreaView,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState } from "react";
 import EditLayout from "../../../components/ModelLayoul/EditLayout";
@@ -14,6 +16,7 @@ import imagePath from "../../../constants/imagePath";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { router } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
+import { Toast } from "react-native-toast-notifications";
 
 const EditProfile = () => {
   const [birthdate, setBirthdate] = useState("");
@@ -36,6 +39,7 @@ const EditProfile = () => {
     priorStartupExperience: [],
     equityExpectation: "",
   });
+  const [isLoading, setisLoading] = useState(false);
 
   // Handle text input changes
   const handleInputChange = (id, newValue) => {
@@ -49,7 +53,7 @@ const EditProfile = () => {
   const handleNavigation = (route) => {
     setTimeout(() => {
       router.navigate(route);
-    }, 10); // Wait for modal close animation before routing
+    }, 500); // Wait for modal close animation before routing
   };
 
   const handleDateSelect = (event, date) => {
@@ -103,29 +107,53 @@ const EditProfile = () => {
     }
   };
 
+  const handleSave = () => {
+    setisLoading(true);
+    setTimeout(() => {
+      setisLoading(false);
+      router.navigate("/(main)/(tabs)/profile");
+      Toast.show("Profile updated successfully", { type: "success" });
+    }, 2000);
+  };
+
   return (
-    <EditLayout
-      // continueRoute="/(tabs)/profile"
-      title="Edit Profile"
-      secondTitle="Save"
-    >
+    <SafeAreaView className="flex-1  bg-white ">
+      {/* Header */}
+      <View className="header flex-row px-5  justify-between border-b border-gray-300 py-4 w-full items-center">
+        <View className="flex-row items-center gap-3">
+          <TouchableOpacity onPress={() => router.back()}>
+            <Ionicons name="arrow-back-outline" size={25} color="black" />
+          </TouchableOpacity>
+          <Text className="text-xl font-semibold">Edit Profile</Text>
+        </View>
+
+        <TouchableOpacity onPress={handleSave}>
+          {isLoading ? (
+            <ActivityIndicator color="#2983DC" />
+          ) : (
+            <Text className="text-center text-xl text-[#2983DC] font-medium">
+              Save
+            </Text>
+          )}
+        </TouchableOpacity>
+      </View>
       {/* Form Section */}
       <ScrollView
         showsVerticalScrollIndicator={false}
-        className="bg-gray-100  gap-4 flex-1"
+        className="bg-white py-3   gap-4 flex-1"
         // contentContainerStyle={{ paddingBottom: 20, paddingHorizontal: 16 }}
       >
-        <View className="flex-1 px-4 gap-8 bg-white items-center w-full ">
+        <View className="flex-1 px-4 gap-8  bg-white items-center w-full ">
           {/* Header Section */}
           <View className="bg-[#FFE1E1] px-4  rounded-2xl py-4 w-full ">
-            <View className=" flex flex-row gap-2 items-center  ">
+            <View className=" flex flex-row gap-1.5 items-center  ">
               <Ionicons name="warning" size={26} color="#E31A31" />
-              <Text className=" font-semibold">
+              <Text className=" font-semibold ">
                 A complete profile is required to send or accept connection
                 invite
               </Text>
             </View>
-            <View className="flex flex-col gap-1.5 mt-2 px-3  p-4 rounded-md">
+            <View className="flex flex-col gap-1.5 mt-4 px-3  rounded-md">
               <View className="flex flex-row items-start">
                 <Text className="text-gray-600 mr-3">•</Text>
                 <Text className="text-gray-600">Profile Photo is required</Text>
@@ -150,9 +178,9 @@ const EditProfile = () => {
               onPress={() => {
                 router.push("/editStatus");
               }}
-              className="border-y-[0.5px] pr-3  font-semibold border-gray-300 py-4 flex flex-row justify-between items-center"
+              className="border-y-[0.5px] px-3  font-semibold border-gray-300 py-4 flex flex-row justify-between items-center"
             >
-              <Text className="text-gray-500 font-semibold">
+              <Text className="text-gray-500  font-semibold">
                 Looking for Co-founder
               </Text>
               <Ionicons
@@ -392,7 +420,7 @@ const EditProfile = () => {
                 </TouchableOpacity>
               </View>
               {/* Education bar */}
-              <View className="flex flex-row border-y-[0.5px] py-4 border-gray-300">
+              <View className="flex flex-row border-y-[0.5px] py-4 px-1 border-gray-300">
                 <View className="bg-blue-50 w-16 h-16 rounded-xl flex items-center justify-center shadow-sm">
                   <Ionicons name="school-outline" size={28} color="#2983DC" />
                 </View>
@@ -463,7 +491,7 @@ const EditProfile = () => {
           </View>
         </View>
       </ScrollView>
-    </EditLayout>
+    </SafeAreaView>
   );
 };
 

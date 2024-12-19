@@ -8,17 +8,17 @@ import {
   Animated,
   Image,
   TextInput,
+  ActivityIndicator,
 } from "react-native";
 import { router } from "expo-router";
 import imagePath from "../../constants/imagePath";
+import { Toast } from "react-native-toast-notifications";
 
-const ReferalPriceModel = ({
-  isModalVisible,
-  handleModalVisibility,
-  nextPageRoute,
-}) => {
+const ReferalPriceModel = ({ isModalVisible, handleModalVisibility }) => {
   // const [isLoadi, setisLoadi] = useState(second)
   const [referal, setReferal] = useState(""); // Store referral code input
+  const [isLoading1, setisLoading1] = useState(false);
+  const [isLoading2, setisLoading2] = useState(false);
   const translateY = React.useRef(new Animated.Value(300)).current; // Initial offset (off-screen)
 
   useEffect(() => {
@@ -46,6 +46,24 @@ const ReferalPriceModel = ({
         router.push(route);
       }, 100); // Wait for modal close animation before routing
     }
+  };
+
+  const handleDontHaveReferal = () => {
+    setisLoading1(true);
+    setTimeout(() => {
+      handleModalVisibility();
+      router.navigate("/(main)/(tabs)");
+      Toast.show("Account Created Successfully", { type: "success" });
+    }, 3000);
+  };
+
+  const handleContinueReferal = () => {
+    setisLoading2(true);
+    setTimeout(() => {
+      handleModalVisibility();
+      router.navigate("/(main)/(tabs)");
+      Toast.show("Account Created Successfully", { type: "success" });
+    }, 3000);
   };
 
   return (
@@ -82,29 +100,33 @@ const ReferalPriceModel = ({
           <View className="flex-row justify-between gap-3 w-full mt-6 space-x-4">
             {/* "Don't Have" Button */}
             <TouchableOpacity
-              onPress={() => {
-                handleNavigation(nextPageRoute);
-              }}
+              onPress={handleDontHaveReferal}
               className="flex-1 border w-1/3 border-gray-100 rounded-lg py-3"
             >
-              <Text className="text-center text-lg  text-black font-medium">
-                Don't have
-              </Text>
+              {isLoading1 ? (
+                <ActivityIndicator color="black" />
+              ) : (
+                <Text className="text-center text-lg  text-black font-medium">
+                  Don't have
+                </Text>
+              )}
             </TouchableOpacity>
 
             {/* Continue Button */}
             <TouchableOpacity
-              onPress={() => {
-                handleNavigation(nextPageRoute);
-              }} // Call handleContinue function
-              className={`flex-1 w-2/3 rounded-lg py-3 ${
+              onPress={handleContinueReferal} // Call handleContinue function
+              className={`flex-1 w-2/3 items-center  rounded-lg py-3 ${
                 referal === "" ? "bg-blue-300  " : "bg-[#2983DC]"
               }`} // Disable button if no referral code
               disabled={referal === ""} // Disable the button if referral is empty
             >
-              <Text className="text-center text-lg text-white font-medium">
-                Continue
-              </Text>
+              {isLoading2 ? (
+                <ActivityIndicator color="white" />
+              ) : (
+                <Text className="text-center text-lg text-white font-medium">
+                  Continue
+                </Text>
+              )}
             </TouchableOpacity>
           </View>
         </Animated.View>

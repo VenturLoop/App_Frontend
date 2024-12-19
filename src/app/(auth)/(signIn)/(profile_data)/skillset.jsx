@@ -13,8 +13,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 const skillset = () => {
   const [selectedTags, setSelectedTags] = useState([""]);
-    const [loading, setLoading] = useState(false);
-  
+  const [loading, setLoading] = useState(false);
 
   const tags = [
     "Web Developer",
@@ -83,7 +82,7 @@ const skillset = () => {
           onButtonPress={() => {
             router.navigate("/your_intrest");
           }}
-          title="Continue"
+          title={loading ? <ActivityIndicator color="white" /> : "Continue"}
         />
       </View>
     </SafeAreaView>

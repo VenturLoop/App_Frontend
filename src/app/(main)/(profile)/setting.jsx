@@ -15,23 +15,48 @@ import imagePath from "../../../constants/imagePath";
 import { router } from "expo-router";
 import DeleteModel from "../../../components/models/DeleteModel";
 import LogoutModel from "../../../components/models/LogoutModel";
-import { Toast } from "react-native-toast-notifications";
+import { Toast, useToast } from "react-native-toast-notifications";
 
 const setting = () => {
   const [isEnabled, setIsEnabled] = useState(false);
   const [deleteModel, setDeleteModel] = useState(false);
   const [logoutModel, setLogoutModel] = useState(false);
   const [isNotiEnabled, setIsNotiEnabled] = useState(true);
+  const [isPushNotificationEnabled, setIsPushNotificationEnabled] =
+    useState(true);
+  const toast = useToast();
 
-  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+  const toggleSwitch = () => {
+    setIsEnabled((previousState) => !previousState);
+    toast.show(`Profile ${!isEnabled ? "Freezed" : "Unfreezed"}`, {
+      type: !isEnabled ? "error" : "success",
+    });
+  };
 
-  const toggleNotiSwitch = () =>
+  const toggleNotiSwitch = () => {
     setIsNotiEnabled((previousState) => !previousState);
+    toast.show(
+      `Push notifications ${!isNotiEnabled ? "enabled" : "disabled"}`,
+      {
+        type: isNotiEnabled ? "error" : "success",
+      }
+    );
+  };
 
   const handleNavigation = (route) => {
     setTimeout(() => {
       router.navigate(route);
     }, 10); // Wait for modal close animation before routing
+  };
+
+  const handleToggleFreeze = () => {
+    setIsEnabled((previousState) => !previousState);
+    toast.show(
+      `Profile ${
+        !isPushNotificationEnabled ? "Unreezed" : "Freezed"
+      } successfully`,
+      { type: "error" }
+    );
   };
 
   const handlePress1 = () => {
@@ -196,7 +221,7 @@ const setting = () => {
                 </Text>
                 <View className="gap-3 ">
                   {/* Choose sector */}
-                  <TouchableOpacity className="  border-y-[0.5px] py-3 justify-between items-center pr-2 flex flex-row border-gray-300">
+                  <View className="  border-y-[0.5px] py-3 justify-between items-center pr-2 flex flex-row border-gray-300">
                     <View className="gap-1">
                       <Text className="text-gray-500 font-semibold">
                         Push Notification
@@ -210,10 +235,10 @@ const setting = () => {
                       trackColor={{ false: "#6F6F76", true: "#6CD86B" }}
                       thumbColor={isNotiEnabled ? "#FFFFFF" : "#f4f3f4"}
                       ios_backgroundColor="#3e3e3e"
-                      onValueChange={toggleNotiSwitch}
                       value={isNotiEnabled}
+                      onValueChange={toggleNotiSwitch}
                     />
-                  </TouchableOpacity>
+                  </View>
                 </View>
               </View>
 

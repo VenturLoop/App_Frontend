@@ -8,12 +8,14 @@ import {
   Platform,
   KeyboardAvoidingView,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import EditLayout from "../../../../components/ModelLayoul/EditLayout";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import imagePath from "../../../../constants/imagePath";
 import CustomeButton from "../../../../components/buttons/CustomeButton";
 import { router } from "expo-router";
+import { Toast } from "react-native-toast-notifications";
 
 const FormInput = ({
   label,
@@ -52,13 +54,15 @@ const CircularCheckbox = ({ isChecked, onPress }) => (
 
 const Education = () => {
   const [formData, setFormData] = useState({
-    project_name: "",
-    company_name: "",
+    degree: "",
+    institution: "",
+    field_of_study: "",
     isCurrentlyStudying: false,
     startDate: null,
     endDate: null,
     description: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const [showDatePicker, setShowDatePicker] = useState({
     type: "",
@@ -81,6 +85,37 @@ const Education = () => {
     setShowDatePicker({ type: "", visible: false });
   };
 
+  const handleSaveDetails = () => {
+    const {
+      degree,
+      institution,
+      startDate,
+      endDate,
+      isCurrentlyStudying,
+      field_of_study,
+    } = formData;
+
+    if (
+      !degree ||
+      !field_of_study ||
+      !institution ||
+      !startDate ||
+      // !endDate ||
+      !isCurrentlyStudying
+    ) {
+      Toast.show("Please fill in all the details.", { type: "danger" });
+      return;
+    }
+
+    // Save details logic here
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      Toast.show("Education added successfully!", { type: "success" });
+      router.push("/edit_profile");
+    }, 2000);
+  };
+
   return (
     <EditLayout title="My Education">
       <KeyboardAvoidingView
@@ -93,26 +128,26 @@ const Education = () => {
             // paddingBottom: 100,
             gap: 15,
           }}
-          className="bg-white p-6"
+          className="bg-white py-4 px-3"
           keyboardShouldPersistTaps="handled"
         >
           {/* Title/Position Input */}
           <FormInput
             placeholder="Degree"
-            value={formData.project_name}
-            onChangeText={(text) => handleInputChange("project_name", text)}
+            value={formData.degree}
+            onChangeText={(text) => handleInputChange("degree", text)}
           />
 
           {/* School/College Input */}
           <FormInput
             placeholder="School/College"
-            value={formData.company_name}
-            onChangeText={(text) => handleInputChange("company_name", text)}
+            value={formData.institution}
+            onChangeText={(text) => handleInputChange("institution", text)}
           />
           <FormInput
             placeholder="Field of Study"
-            value={formData.company_name}
-            onChangeText={(text) => handleInputChange("company_name", text)}
+            value={formData.field_of_study}
+            onChangeText={(text) => handleInputChange("field_of_study", text)}
           />
 
           {/* Currently Studying Checkbox */}
@@ -209,8 +244,8 @@ const Education = () => {
           {/* Footer with Save Button */}
 
           <CustomeButton
-            onButtonPress={()=>{router.back()}}
-            title="Save"
+            onButtonPress={handleSaveDetails}
+            title={loading ? <ActivityIndicator color="white" /> : "Save"}
           />
         </ScrollView>
       </KeyboardAvoidingView>

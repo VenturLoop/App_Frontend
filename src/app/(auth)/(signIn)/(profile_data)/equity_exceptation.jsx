@@ -4,6 +4,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState } from "react";
 import CustomeButton from "../../../../components/buttons/CustomeButton";
@@ -11,7 +12,6 @@ import imagePath from "../../../../constants/imagePath";
 import { router } from "expo-router";
 import Slider from "@react-native-community/slider";
 import { Ionicons } from "@expo/vector-icons";
-import ReferalModel from "../../../../components/models/ReferalModel";
 import ReferalPriceModel from "../../../../components/models/ReferalPriceModel";
 import { Toast } from "react-native-toast-notifications";
 
@@ -65,6 +65,8 @@ const EquityExpectation = () => {
       [key]: value,
     }));
   };
+
+
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -145,7 +147,6 @@ const EquityExpectation = () => {
       <ReferalPriceModel
         isModalVisible={isModalVisible}
         handleModalVisibility={handleModalVisibility}
-        nextPageRoute="/(main)/(tabs)"
       />
     </SafeAreaView>
   );

@@ -19,6 +19,7 @@ import imagePath from "../../../constants/imagePath";
 import CustomeButton from "../../../components/buttons/CustomeButton";
 import { Ionicons } from "@expo/vector-icons";
 import * as Location from "expo-location";
+import { Toast } from "react-native-toast-notifications";
 
 const AddBasicDetails = () => {
   const [birthdate, setBirthdate] = useState("");
@@ -89,12 +90,17 @@ const AddBasicDetails = () => {
 
   const handleSaveDetails = () => {
     if (birthdate === "" || location === "") {
-      toast.show("Please fill in all the details.", { type: "danger" });
+      Toast.show("Please fill in all the details.", { type: "danger" });
       return;
     }
 
-    // Save details logic here
-    toast.show("Details saved successfully!", { type: "success" });
+    setLoading(true);
+    setTimeout(() => {
+      // Save details logic here
+      setLoading(false);
+      Toast.show("Details saved successfully!", { type: "success" });
+      router.push("/(profile_data)");
+    }, 2000);
   };
 
   return (
@@ -197,9 +203,7 @@ const AddBasicDetails = () => {
             <CustomeButton
               title={loading ? <ActivityIndicator color="white" /> : "Continue"}
               style="my-2"
-              onButtonPress={() => {
-                router.push("/(profile_data)");
-              }}
+              onButtonPress={handleSaveDetails}
             />
           </View>
         </ScrollView>

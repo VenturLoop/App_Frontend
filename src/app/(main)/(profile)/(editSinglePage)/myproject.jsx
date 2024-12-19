@@ -8,11 +8,13 @@ import {
   Platform,
   KeyboardAvoidingView,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import EditLayout from "../../../../components/ModelLayoul/EditLayout";
 import imagePath from "../../../../constants/imagePath";
 import CustomeButton from "../../../../components/buttons/CustomeButton";
 import { router } from "expo-router";
+import { Toast } from "react-native-toast-notifications";
 
 const FormInput = ({
   label,
@@ -42,20 +44,32 @@ const MyProject = () => {
     project_name: "",
     project_link: "",
   });
+  const [loading, setLoading] = useState(false);
 
   // Handle Text Input Changes
   const handleInputChange = (name, value) => {
     setFormData({ ...formData, [name]: value });
   };
 
+  const handleSaveDetails = () => {
+    const { project_name, project_link } = formData;
+
+    if (!project_name || !project_link) {
+      Toast.show("Please fill in all the details.", { type: "danger" });
+      return;
+    }
+
+    // Save details logic here
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      Toast.show("Project added successfully!", { type: "success" });
+      router.push("/edit_profile");
+    }, 2000);
+  };
+
   return (
-    <EditLayout
-      title="My Project"
-      saveButtonFunction={() => {
-        router.back();
-      }}
-      saveButtonTitle="Save"
-    >
+    <EditLayout title="My Project">
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         className="flex-1"
@@ -63,9 +77,10 @@ const MyProject = () => {
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
-            gap: 15,
+            gap: 20,
+            justifyContent: "space-between",
           }}
-          className="bg-white p-6"
+          className=" py-6 px-3"
           keyboardShouldPersistTaps="handled"
         >
           {/* Project Title Input */}
@@ -82,6 +97,12 @@ const MyProject = () => {
             onChangeText={(text) => handleInputChange("project_link", text)}
           />
         </ScrollView>
+        <View className="">
+          <CustomeButton
+            onButtonPress={handleSaveDetails}
+            title={loading ? <ActivityIndicator color="white" /> : "Save"}
+          />
+        </View>
       </KeyboardAvoidingView>
     </EditLayout>
   );

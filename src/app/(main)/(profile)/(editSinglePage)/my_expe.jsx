@@ -8,11 +8,14 @@ import {
   Platform,
   KeyboardAvoidingView,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import EditLayout from "../../../../components/ModelLayoul/EditLayout";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import imagePath from "../../../../constants/imagePath";
 import CustomeButton from "../../../../components/buttons/CustomeButton";
+import { Toast } from "react-native-toast-notifications";
+import { router } from "expo-router";
 
 const FormInput = ({
   label,
@@ -63,6 +66,7 @@ const MyExperience = () => {
     type: "",
     visible: false,
   });
+  const [loading, setLoading] = useState(false);
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -79,6 +83,30 @@ const MyExperience = () => {
     setShowDatePicker({ type: "", visible: false });
   };
 
+  const handleSaveDetails = () => {
+    const { project_name, company_name, startDate, isCurrentlyStudying } =
+      formData;
+
+    if (
+      !project_name ||
+      !company_name ||
+      !startDate ||
+      // !endDate ||
+      !isCurrentlyStudying
+    ) {
+      Toast.show("Please fill in all the details.", { type: "danger" });
+      return;
+    }
+
+    // Save details logic here
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      Toast.show("Experience added successfully!", { type: "success" });
+      router.push("/edit_profile");
+    }, 2000);
+  };
+
   return (
     <EditLayout title="My Experience">
       <KeyboardAvoidingView
@@ -91,7 +119,7 @@ const MyExperience = () => {
             gap: 20,
             justifyContent: "space-between",
           }}
-          className="bg-white p-6"
+          className="bg-white py-6 px-3"
           keyboardShouldPersistTaps="handled"
         >
           <View className="gap-7  flex-1">
@@ -201,10 +229,8 @@ const MyExperience = () => {
           {/* Footer with Save Button */}
           <View className="">
             <CustomeButton
-              title="Save"
-              onButtonPress={() => {
-                router.back();
-              }}
+              onButtonPress={handleSaveDetails}
+              title={loading ? <ActivityIndicator color="white" /> : "Save"}
             />
           </View>
         </ScrollView>

@@ -12,6 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import UserModel from "../../../components/models/UserModel";
 import imagePath from "../../../constants/imagePath";
+import { Toast } from "react-native-toast-notifications";
 
 // Utility function to generate the current time in HH:MM AM/PM format
 const getCurrentTime = () =>
@@ -27,6 +28,7 @@ const Chat = ({ route }) => {
 
   const [isSideModel, setIsSideModel] = useState(false);
   const [inputMessage, setInputMessage] = useState(""); // Message input state
+  const [isBlocked, setIsBlocked] = useState(false); // Block state
 
   // Preloaded chat messages
   const [messages, setMessages] = useState([
@@ -66,7 +68,7 @@ const Chat = ({ route }) => {
 
   // Function to handle sending a message
   const handleSendMessage = () => {
-    if (inputMessage.trim()) {
+    if (!isBlocked && inputMessage.trim()) {
       const newMessage = {
         id: Date.now(),
         text: inputMessage,
@@ -79,9 +81,22 @@ const Chat = ({ route }) => {
     }
   };
 
-  const handleUserBlock=()=>{
-    // route back
-  }
+  // Handle block and unblock
+  const handleBlockUser = () => {
+    setIsBlocked(true);
+    Toast.show("User has been blocked.", { type: "danger" });
+    // setMessages((prevMessages) => [...prevMessages, systemMessage]);
+  };
+
+  const handleUnblockUser = () => {
+    setIsBlocked(false);
+    Toast.show("User has been unblocked.", { type: "success" });
+    // setMessages((prevMessages) => [...prevMessages, systemMessage]);
+  };
+
+  const handleBlockUserToastMessage = () => {
+    Toast.show("User is blocked, you can't send messages", { type: "error" });
+  };
 
   return (
     <>
@@ -168,6 +183,25 @@ const Chat = ({ route }) => {
         </ScrollView>
 
         {/* Footer */}
+        {isBlocked && (
+          <View className="bg-[#2983DC1C] rounded-lg gap-2 p-5 items-center">
+            <Text className="font-semibold text-center mb-3">
+              <Text className="text-lg font-bold">{user.name}</Text> is blocked
+            </Text>
+            <View className="flex-row items-center justify-center gap-5">
+              <TouchableOpacity
+                className="bg-[#2983DC] px-5 py-2 rounded-lg"
+                onPress={handleUnblockUser}
+              >
+                <Text className="text-white text-lg font-semibold">
+                  Unblock
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+
+        {/* Footer */}
         <View className="footer my-4 px-5">
           <View className="flex-row border border-gray-400 rounded-full w-full justify-between py-2 px-4 items-center">
             <TextInput
@@ -176,9 +210,15 @@ const Chat = ({ route }) => {
               value={inputMessage}
               onChangeText={setInputMessage}
               onSubmitEditing={handleSendMessage} // Send message on Enter
-              blurOnSubmit={false} // Keeps the keyboard open
+              // blurOnSubmit={false} // Keeps the keyboard open
             />
-            <TouchableOpacity onPress={handleSendMessage} className="ml-2">
+            <TouchableOpacity
+              // disabled={isBlocked}
+              onPress={
+                isBlocked ? handleBlockUserToastMessage : handleSendMessage
+              }
+              className="ml-2 disabled:opacity-50"
+            >
               {/* <Text className="text-[#2983DC] font-semibold text-lg">Send</Text> */}
               <Ionicons name="send" size={28} color="#2983DC" />
             </TouchableOpacity>
@@ -190,6 +230,7 @@ const Chat = ({ route }) => {
       <UserModel
         isModalVisible={isSideModel}
         handleModalVisibility={() => setIsSideModel(!isSideModel)}
+        handleBlockFunction={handleBlockUser}
       />
     </>
   );

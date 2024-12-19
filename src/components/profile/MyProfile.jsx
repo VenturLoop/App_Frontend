@@ -48,7 +48,7 @@ const MyProfile = () => {
     <>
       <View
         // style={{ paddingBottom: 80, gap: 20, paddingHorizontal: 10 }}
-        className="flex-1 bg-[#F0F6FB] w-full px-1 pl-0.5 py-3  h-screen gap-7 items-center"
+        className="flex-1 bg-[#F0F6FB] w-full px-1 pl-0.5 py-3  h-screen gap-10 items-center"
       >
         {/* user Info view */}
         <View className="   w-full px-2.5 gap-5">
@@ -86,9 +86,6 @@ const MyProfile = () => {
         </View>
         {/* Collection View */}
         <View className="w-full px-2.5 ">
-          <Text className="text-sm font-medium">
-            <Text className="font-semibold text-lg">500</Text> Connections
-          </Text>
           <View className="flex-row items-center my-4">
             <View className="flex-1 h-0.5 bg-[#2983DC]" />
           </View>

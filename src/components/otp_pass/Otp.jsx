@@ -82,7 +82,7 @@ const Otp = () => {
   };
 
   return (
-    <SafeAreaView className="py-6 px-8 bg-white h-screen pt-10 flex justify-between gap-5 flex-col">
+    <SafeAreaView className="py-6 px-4 bg-white h-screen pt-10 flex justify-between gap-5 flex-col">
       {/* Header Section */}
       <View className="header flex flex-col my-6 items-center justify-center gap-4">
         <Image className="w-16" source={imagePath.otpImage} />
@@ -110,7 +110,7 @@ const Otp = () => {
       </View>
 
       {/* Footer Section */}
-      <View className="footer  flex">
+      <View className="footer w-full  flex">
         <CustomeButton
           title={isLoading ? <ActivityIndicator color="white" /> : "Verify"}
           style="mb-1"
