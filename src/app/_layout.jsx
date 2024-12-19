@@ -6,16 +6,58 @@ import { Provider, useSelector, useDispatch } from "react-redux";
 import store from "../redux/store";
 import { setLogin } from "../redux/slices/userSlice";
 import * as SecureStore from "expo-secure-store";
+import { ToastProvider } from "react-native-toast-notifications";
+import { Ionicons } from "@expo/vector-icons";
+import { Text, View } from "react-native";
+import CustomToast from "../components/ToastMessage/CustomToast";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   return (
-    <Provider store={store}>
-      <AppInitializer />
-    </Provider>
+    <ToastProvider
+      placement="top" // Position of the toast (top, bottom, etc.)
+      duration={2000} // Toast duration in milliseconds
+      animationType="slide-in" // Slide-in animation for better visuals
+      renderToast={(toastOptions) => <CustomToast {...toastOptions} />}
+    >
+      <Provider store={store}>
+        <AppInitializer />
+      </Provider>
+    </ToastProvider>
   );
 }
+
+// const CustomToast = ({ message, type }) => {
+//   return (
+//     <View
+//       style={{
+//         backgroundColor:
+//           type === "success"
+//             ? "#28a745"
+//             : type === "danger"
+//             ? "#dc3545"
+//             : "#ffc107",
+//         padding: 10,
+//         borderRadius: 8,
+//         flexDirection: "row",
+//         alignItems: "center",
+//         justifyContent: "center",
+//       }}
+//     >
+//       <Ionicons
+//         name={
+//           type === "success"
+//             ? "checkmark-circle-outline"
+//             : "close-circle-outline"
+//         }
+//         size={22}
+//         color="#fff"
+//       />
+//       <Text style={{ color: "#fff", marginLeft: 8 }}>{message}</Text>
+//     </View>
+//   );
+// };
 
 // Component to initialize the app
 function AppInitializer() {

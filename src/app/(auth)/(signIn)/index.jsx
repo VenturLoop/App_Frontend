@@ -69,11 +69,11 @@ const Index = () => {
 
       try {
         // Wait for the Redux dispatch to complete
-        await dispatch(updateUser({ field: "name", value: formData.name }));
-        await dispatch(updateUser({ field: "email", value: formData.email }));
+        // await dispatch(updateUser({ field: "name", value: formData.name }));
+        // await dispatch(updateUser({ field: "email", value: formData.email }));
 
         // After dispatch completes, navigate
-        handleNavigation("/createPass");
+        handleNavigation("/otp");
       } catch (error) {
         setErrorMessage("Something went wrong. Please try again.");
       } finally {

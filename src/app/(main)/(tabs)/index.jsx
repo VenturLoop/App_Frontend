@@ -18,6 +18,8 @@ import UserInviteModel from "../../../components/models/UserInviteModel";
 import { router, useFocusEffect } from "expo-router";
 import SingleSubFeature from "../../../components/models/SingleSubFeature";
 import { useSelector } from "react-redux";
+import Toast from "react-native-toast-notifications";
+import { useToast } from "react-native-toast-notifications";
 
 // Sample Data for multiple users
 const users = [
@@ -254,13 +256,49 @@ const ProfilePage = () => {
   const { isPremium, sendMessage, planNumber } = useSelector(
     (state) => state.subscription
   );
+  const toast = useToast();
   const scrollViewRef = useRef(null); // Reference to ScrollView
   const [translateX] = useState(new Animated.Value(0)); // Animation value
 
+  const showToast = () => {
+    toast.show("This style ensures the toast .", {
+      type: "danger",
+    });
+  };
+
   const handle4thButtonPress = () => {
     if (attempts4th > 0) {
+      toast.show("Connection requested ", {
+        type: "info",
+      });
       setAttempts4th(attempts4th - 1); // Decrease attempt count on press
-      handleNextUser();
+      // handleNextUser();
+      const nextIndex = (currentUserIndex + 1) % users.length;
+
+      setCurrentUserIndex(nextIndex);
+      // Animate the current user off-screen to the left with easing
+      Animated.timing(translateX, {
+        toValue: -400, // Move off-screen to the left
+        duration: 500, // Smooth and consistent duration
+        easing: Easing.out(Easing.quad), // Smooth easing function
+        useNativeDriver: true,
+      }).start(() => {
+        // Update the user index immediately after the first animation
+
+        // Reset position off-screen to the right
+        translateX.setValue(200);
+
+        // Scroll to the top of the new user's content
+        scrollViewRef.current?.scrollTo({ y: 0, animated: false }); // No delay for immediate reset
+
+        // Animate the new user into view from the right with easing
+        Animated.timing(translateX, {
+          toValue: 0, // Bring to the center
+          duration: 300, // Matching duration for balance
+          easing: Easing.out(Easing.quad), // Smooth easing function
+          useNativeDriver: true,
+        }).start();
+      });
     } else {
       setisForthPremiumModel(true);
     }
@@ -286,6 +324,9 @@ const ProfilePage = () => {
   const currentUser = users[currentUserIndex];
 
   const handleNextUser = () => {
+    toast.show("Profile Skipped", {
+      type: "danger",
+    });
     const nextIndex = (currentUserIndex + 1) % users.length;
 
     setCurrentUserIndex(nextIndex);
@@ -314,7 +355,7 @@ const ProfilePage = () => {
     });
   };
 
-  const handleBookmarkButtonPress = () => {
+  const handleBookmarkButtonPress = async () => {
     // if (attempts3th > 0) {
     //   setAttempts4th(attempts4th - 1); // Decrease attempt count on press
     //   handleNextUser();
@@ -322,11 +363,17 @@ const ProfilePage = () => {
     //   setisForthPremiumModel(true);
     // }
 
-    setAttempts3th(attempts3th + 1); // Decrease attempt count on press
-    handleNextUser();
+    // setAttempts3th(attempts3th + 1); // Decrease attempt count on press
+    await toast.show("Profile Saved", {
+      type: "warning",
+    });
+    // handleNextUser();
   };
 
   const handlePreviousUser = () => {
+    toast.show("Profile Reveresed", {
+      type: "save",
+    });
     const prevIndex = (currentUserIndex - 1 + users.length) % users.length; // Ensure it wraps around correctly
     setCurrentUserIndex(prevIndex);
 
@@ -714,7 +761,7 @@ const ProfilePage = () => {
             <Ionicons size={28} name="person-add-outline" color="#27C2BF" />
 
             {/* Attempts counter */}
-            {attempts4th >= 0 && (
+            {attempts4th >= 0 && !isPremium && (
               <View className="absolute top-[-5px] right-[-5px] bg-[#2983DC] w-8 h-8 rounded-full items-center justify-center border-2 border-white shadow-xl">
                 <Text className="text-white font-semibold text-sm">
                   {attempts4th}
@@ -740,11 +787,12 @@ const ProfilePage = () => {
             )}
           </TouchableOpacity>
         </View>
+        {/* <Toast /> */}
       </SafeAreaView>
       <UserModel
         isModalVisible={isHomeModel}
         handleModalVisibility={() => {
-          setisHomeModel(!isHomeModel);
+          setisHomeModel(false);
         }}
       />
       <SubscriptionModel
@@ -766,7 +814,7 @@ const ProfilePage = () => {
       <UserInviteModel
         isModalVisible={isIncompleteProfileModel}
         handleModalVisibility={() => {
-          setisIncompleteProfileModel(!isIncompleteProfileModel);
+          setisIncompleteProfileModel(false);
         }}
       />
     </>

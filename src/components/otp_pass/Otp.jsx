@@ -86,7 +86,7 @@ const Otp = () => {
         {isLoading ? (
           <ActivityIndicator size="large" color="#2983DC" />
         ) : (
-          <CustomeButton title="Verify" onButtonPress={verifyOtp} />
+          <CustomeButton title="Verify" onButtonPress={()=>{router.push("/createPass")}} />
         )}
         <View>
           <Text className="text-center">

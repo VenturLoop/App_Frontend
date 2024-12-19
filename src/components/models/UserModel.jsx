@@ -9,6 +9,7 @@ import {
   Share,
 } from "react-native";
 import { router } from "expo-router";
+import { Toast } from "react-native-toast-notifications";
 
 const UserModel = ({ isModalVisible, handleModalVisibility }) => {
   const translateY = React.useRef(new Animated.Value(300)).current; // Initial offset (off-screen)
@@ -40,7 +41,22 @@ const UserModel = ({ isModalVisible, handleModalVisibility }) => {
     }
   };
 
+  const handleBlockUser = () => {
+    handleModalVisibility();
+    Toast.show("User blocked successfully", {
+      type: "danger",
+    });
+  };
+
+  const handleReportUser = () => {
+    handleModalVisibility();
+    Toast.show(" User reported successfully", {
+      type: "danger",
+    });
+  };
+
   const shareProfile = async () => {
+
     try {
       await Share.share({
         message: "Check out this profile! [Insert Profile Link Here]", // Customize the message with the profile link
@@ -69,7 +85,7 @@ const UserModel = ({ isModalVisible, handleModalVisibility }) => {
         >
           {/* Block User Button */}
           <TouchableOpacity
-            // onPress={() => handleNavigation("/setting")}
+            onPress={handleBlockUser}
             className="w-full border border-gray-300 rounded-xl py-4 my-2 "
           >
             <Text className="text-center text-gray-800 text-lg font-semibold">
@@ -79,7 +95,7 @@ const UserModel = ({ isModalVisible, handleModalVisibility }) => {
 
           {/* Report User Button */}
           <TouchableOpacity
-            //   onPress={() => handleNavigation("/report")}
+            onPress={handleReportUser}
             className="w-full border border-red-500 rounded-xl py-4 my-2 "
           >
             <Text className="text-center text-red-600 text-lg font-semibold">

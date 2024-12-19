@@ -17,6 +17,7 @@ import imagePath from "../../../constants/imagePath";
 import SingleSubFeature from "../../../components/models/SingleSubFeature";
 import { useDispatch, useSelector } from "react-redux";
 import { setSendMessage } from "../../../redux/slices/subscriptionSlice";
+import { Toast } from "react-native-toast-notifications";
 
 const MessageInvite = ({ route }) => {
   const user = route?.params?.user || {
@@ -49,6 +50,9 @@ const MessageInvite = ({ route }) => {
     if (sendMessage > 0) {
       // Dispatch a numeric value to update sendMessage
       dispatch(setSendMessage(sendMessage - 1)); // Decrease remaining messages
+      Toast.show("Message Send", {
+        type: "success",
+      });
       router.back();
       setInputMessage(""); // Clear input field
     } else {
@@ -135,9 +139,10 @@ const MessageInvite = ({ route }) => {
                     // autoFocus={true} // Keep focus on the input field
                   />
                   <TouchableOpacity onPress={handleSendMessage}>
-                    <Text className="text-xl font-semibold ml-4 text-[#2983DC]">
+                    {/* <Text className="text-xl font-semibold ml-4 text-[#2983DC]">
                       Send
-                    </Text>
+                    </Text> */}
+                    <Ionicons name="send" size={25} color="#2983DC" />
                   </TouchableOpacity>
                 </View>
               </View>

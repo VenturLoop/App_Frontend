@@ -193,7 +193,9 @@ const CreatePass = () => {
           <CustomeButton
             title={loading ? <ActivityIndicator color="white" /> : "Continue"}
             style="my-4"
-            onButtonPress={handleCreatePassword}
+            onButtonPress={() => {
+              router.push("/add_basic_details");
+            }}
           />
         </View>
       </KeyboardAvoidingView>

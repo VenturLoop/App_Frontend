@@ -6,6 +6,7 @@ import CustomeButton from "../../../components/buttons/CustomeButton";
 import { router } from "expo-router";
 import SubscriptionModel from "../../../components/models/SubscriptionModel";
 import { useSelector, useDispatch } from "react-redux";
+import { Toast } from "react-native-toast-notifications";
 
 const edit_preferance = () => {
   const [userRole, setuserRole] = useState("co-founder");
@@ -19,6 +20,13 @@ const edit_preferance = () => {
     setTimeout(() => {
       router.navigate(route);
     }, 10); // Wait for modal close animation before routing
+  };
+
+  const handleSaveButton = () => {
+    Toast.show("Preferance added successfully", {
+      type: "success",
+    });
+    router.back();
   };
 
   return (
@@ -320,9 +328,7 @@ const edit_preferance = () => {
 
           {/* Continue Button */}
           <TouchableOpacity
-            onPress={() => {
-              router.back();
-            }} // Call handleContinue function
+            onPress={handleSaveButton} // Call handleContinue function
             className={`flex-1 w-2/3 rounded-lg py-3  bg-[#2983DC]
               `} // Disable button if no referral code
           >

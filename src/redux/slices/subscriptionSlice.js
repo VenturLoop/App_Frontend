@@ -13,7 +13,7 @@ const subscriptionSlice = createSlice({
       state.planNumber = action.payload; // Set the selected plan number
 
       // Increment sendMessage by 10 when user becomes premium
-      state.sendMessage += 10;
+      state.sendMessage += 7;
     },
     resetSubscription: (state) => {
       state.isPremium = false;
