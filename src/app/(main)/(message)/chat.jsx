@@ -79,6 +79,10 @@ const Chat = ({ route }) => {
     }
   };
 
+  const handleUserBlock=()=>{
+    // route back
+  }
+
   return (
     <>
       <SafeAreaView className="flex-1 bg-white">

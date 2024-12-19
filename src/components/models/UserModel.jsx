@@ -11,7 +11,12 @@ import {
 import { router } from "expo-router";
 import { Toast } from "react-native-toast-notifications";
 
-const UserModel = ({ isModalVisible, handleModalVisibility }) => {
+const UserModel = ({
+  isModalVisible,
+  handleModalVisibility,
+  handleReportFunction,
+  handleBlockFunction,
+}) => {
   const translateY = React.useRef(new Animated.Value(300)).current; // Initial offset (off-screen)
 
   useEffect(() => {
@@ -46,6 +51,9 @@ const UserModel = ({ isModalVisible, handleModalVisibility }) => {
     Toast.show("User blocked successfully", {
       type: "danger",
     });
+    if (handleBlockFunction) {
+      handleBlockFunction();
+    }
   };
 
   const handleReportUser = () => {
@@ -53,10 +61,12 @@ const UserModel = ({ isModalVisible, handleModalVisibility }) => {
     Toast.show(" User reported successfully", {
       type: "danger",
     });
+    if (handleReportFunction) {
+      handleReportFunction();
+    }
   };
 
   const shareProfile = async () => {
-
     try {
       await Share.share({
         message: "Check out this profile! [Insert Profile Link Here]", // Customize the message with the profile link

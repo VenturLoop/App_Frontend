@@ -16,40 +16,39 @@ import { useSelector } from "react-redux";
 import imagePath from "../../constants/imagePath";
 import CustomeButton from "../buttons/CustomeButton";
 import { Ionicons } from "@expo/vector-icons"; // For password visibility toggle icon
+import { Toast, useToast } from "react-native-toast-notifications";
 
 const CreatePass = () => {
   const [newPassword, setNewPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
-  const [newPasswordError, setNewPasswordError] = useState("");
-  const [repeatPasswordError, setRepeatPasswordError] = useState("");
+
   const [loading, setLoading] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
 
   // Retrieve name and email from Redux
   const { name, email } = useSelector((state) => state.user);
+  const toast = useToast();
 
   const validatePasswords = () => {
     let isValid = true;
 
-    if (!/^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/.test(email.trim())) {
-      setRepeatPasswordError("Invalid email format.");
-      isValid = false;
-    }
-
     if (newPassword.length < 6) {
-      setNewPasswordError("Password must be at least 6 characters long.");
+      toast.show("Password must be at least 6 characters long.", {
+        type: "danger",
+      });
       isValid = false;
     }
 
-    if (!name.trim()) {
-      setRepeatPasswordError("Name cannot be empty.");
+    if (newPassword !== repeatPassword) {
+      toast.show("Passwords do not match.", {
+        type: "danger",
+      });
       isValid = false;
     }
 
     return isValid;
   };
-
   const handleCreatePassword = async () => {
     if (!validatePasswords()) return;
 
@@ -90,13 +89,24 @@ const CreatePass = () => {
       if (response.ok) {
         router.push("/otp"); // Navigate to the OTP page
       } else {
-        setRepeatPasswordError(result.message || "Failed to create password.");
+        Toast.show("Failed to create password.", {
+          type: "error",
+        });
       }
     } catch (error) {
-      setRepeatPasswordError("Something went wrong. Please try again.");
+      toast.show("Something went wrong. Please try again.", { type: "error" });
     } finally {
       setLoading(false);
     }
+  };
+
+  const dummyPass = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      router.push("/add_basic_details");
+      Toast.show("Password created successfully!", { type: "success" });
+    }, 2000);
   };
 
   return (
@@ -148,11 +158,6 @@ const CreatePass = () => {
                     />
                   </TouchableOpacity>
                 </View>
-                {newPasswordError ? (
-                  <Text className="text-red-500 text-sm mt-1">
-                    {newPasswordError}
-                  </Text>
-                ) : null}
               </View>
 
               {/* Repeat Password Input */}
@@ -178,23 +183,20 @@ const CreatePass = () => {
                     />
                   </TouchableOpacity>
                 </View>
-                {repeatPasswordError ? (
-                  <Text className="text-red-500 text-sm mt-1">
-                    {repeatPasswordError}
-                  </Text>
-                ) : null}
               </View>
             </View>
           </View>
         </ScrollView>
 
         {/* Footer Section */}
-        <View className="footer px-8 mb-10">
+        <View className="footer px-4 mb-4">
           <CustomeButton
             title={loading ? <ActivityIndicator color="white" /> : "Continue"}
             style="my-4"
             onButtonPress={() => {
-              router.push("/add_basic_details");
+              // handleCreatePassword();
+              dummyPass();
+              // router.push("/add_basic_details");
             }}
           />
         </View>

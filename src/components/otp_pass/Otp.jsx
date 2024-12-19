@@ -5,16 +5,29 @@ import {
   Image,
   ActivityIndicator,
   Alert,
+  TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, router } from "expo-router";
 import OTPInput from "@codsod/react-native-otp-input";
 import CustomeButton from "../buttons/CustomeButton";
 import imagePath from "../../constants/imagePath";
+import { Toast } from "react-native-toast-notifications";
 
 const Otp = () => {
   const [otp, setOTP] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [timer, setTimer] = useState(20); // Initial timer value
+
+  useEffect(() => {
+    if (timer > 0) {
+      const interval = setInterval(() => {
+        setTimer((prevTimer) => prevTimer - 1);
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, [timer]);
 
   const verifyOtp = async () => {
     if (otp.length !== 6) {
@@ -39,18 +52,33 @@ const Otp = () => {
       setIsLoading(false); // Hide loader
 
       if (response.ok) {
-        Alert.alert("Success", "OTP verified successfully!");
-        router.push("/add_basic_detail");
+        Toast.show("OTP verified successfully!", { type: "success" });
+        router.push("/createPass"); // Navigate to the create password page
       } else {
-        Alert.alert(
-          "Error",
-          result.message || "Invalid OTP. Please try again."
-        );
+        Toast.show("Invalid OTP. Please try again.", {
+          type: "error",
+        });
       }
     } catch (error) {
       setIsLoading(false); // Hide loader
-      Alert.alert("Error", "Something went wrong. Please try again later.");
+      Toast.show("Something went wrong. Please try again later.", {
+        type: "error",
+      });
     }
+  };
+
+  const dumiVerify = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+      router.push("/createPass");
+      Toast.show("OTP verified successfully!", { type: "success" });
+    }, 2000);
+  };
+
+  const handleResentOtp = () => {
+    Toast.show("OTP has been resent to your email.", { type: "success" });
+    setTimer(20); // Reset the timer
   };
 
   return (
@@ -82,19 +110,29 @@ const Otp = () => {
       </View>
 
       {/* Footer Section */}
-      <View className="footer flex">
+      <View className="footer  flex">
         {isLoading ? (
           <ActivityIndicator size="large" color="#2983DC" />
         ) : (
-          <CustomeButton title="Verify" onButtonPress={()=>{router.push("/createPass")}} />
+          <CustomeButton
+            title="Verify"
+            style="mb-1"
+            onButtonPress={dumiVerify}
+          />
         )}
-        <View>
-          <Text className="text-center">
-            Didn’t get OTP?{" "}
-            <Link className="font-semibold text-lg text-[#2983DC]" href={"/"}>
-              Resend OTP
-            </Link>
-          </Text>
+        <View className="flex-row justify-center items-center gap-2 mt-4">
+          <Text className="text-center">Didn’t get OTP? </Text>
+          {timer > 0 ? (
+            <Text className="font-semibold text-center text-lg text-gray-500">
+              Resend OTP in {timer}s
+            </Text>
+          ) : (
+            <TouchableOpacity onPress={handleResentOtp}>
+              <Text className="font-semibold text-center text-lg text-[#2983DC]">
+                Resend OTP
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     </SafeAreaView>

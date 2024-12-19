@@ -27,7 +27,6 @@ const MessageInvite = ({ route }) => {
   };
 
   const [singleSubFeature, setSingleSubFeature] = useState(false);
-  const [messagesLeft, setMessagesLeft] = useState(3); // Track remaining messages
   const [inputMessage, setInputMessage] = useState(""); // Message input state
   const [confirmationMessage, setConfirmationMessage] = useState(""); // To display success or error message
   const { isPremium, sendMessage } = useSelector((state) => state.subscription);

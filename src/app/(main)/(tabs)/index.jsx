@@ -260,73 +260,7 @@ const ProfilePage = () => {
   const scrollViewRef = useRef(null); // Reference to ScrollView
   const [translateX] = useState(new Animated.Value(0)); // Animation value
 
-  const showToast = () => {
-    toast.show("This style ensures the toast .", {
-      type: "danger",
-    });
-  };
-
-  const handle4thButtonPress = () => {
-    if (attempts4th > 0) {
-      toast.show("Connection requested ", {
-        type: "info",
-      });
-      setAttempts4th(attempts4th - 1); // Decrease attempt count on press
-      // handleNextUser();
-      const nextIndex = (currentUserIndex + 1) % users.length;
-
-      setCurrentUserIndex(nextIndex);
-      // Animate the current user off-screen to the left with easing
-      Animated.timing(translateX, {
-        toValue: -400, // Move off-screen to the left
-        duration: 500, // Smooth and consistent duration
-        easing: Easing.out(Easing.quad), // Smooth easing function
-        useNativeDriver: true,
-      }).start(() => {
-        // Update the user index immediately after the first animation
-
-        // Reset position off-screen to the right
-        translateX.setValue(200);
-
-        // Scroll to the top of the new user's content
-        scrollViewRef.current?.scrollTo({ y: 0, animated: false }); // No delay for immediate reset
-
-        // Animate the new user into view from the right with easing
-        Animated.timing(translateX, {
-          toValue: 0, // Bring to the center
-          duration: 300, // Matching duration for balance
-          easing: Easing.out(Easing.quad), // Smooth easing function
-          useNativeDriver: true,
-        }).start();
-      });
-    } else {
-      setisForthPremiumModel(true);
-    }
-  };
-
-  // Reset scroll position when the page is focused
-  useFocusEffect(
-    React.useCallback(() => {
-      scrollViewRef.current?.scrollTo({ y: 0, animated: false });
-    }, [])
-  );
-
-  const handle5thButtonPress = async () => {
-    if (sendMessage > 0) {
-      await router.push("/message_invite");
-      // setAttempts5th(sendMessage - 1); // Decrease attempt count on press
-      // handleNextUser();
-    } else {
-      setisFifthPremiumModel(true);
-    }
-  };
-
-  const currentUser = users[currentUserIndex];
-
-  const handleNextUser = () => {
-    toast.show("Profile Skipped", {
-      type: "danger",
-    });
+  const nextProfile = () => {
     const nextIndex = (currentUserIndex + 1) % users.length;
 
     setCurrentUserIndex(nextIndex);
@@ -355,19 +289,54 @@ const ProfilePage = () => {
     });
   };
 
-  const handleBookmarkButtonPress = async () => {
-    // if (attempts3th > 0) {
-    //   setAttempts4th(attempts4th - 1); // Decrease attempt count on press
-    //   handleNextUser();
-    // } else {
-    //   setisForthPremiumModel(true);
-    // }
+  const handle4thButtonPress = () => {
+    if (attempts4th > 0) {
+      toast.show("Connection requested ", {
+        type: "info",
+      });
+      setAttempts4th(attempts4th - 1); // Decrease attempt count on press
+      setTimeout(() => {
+        nextProfile();
+      }, [1000]);
+    } else {
+      setisForthPremiumModel(true);
+    }
+  };
 
-    // setAttempts3th(attempts3th + 1); // Decrease attempt count on press
-    await toast.show("Profile Saved", {
+  // Reset scroll position when the page is focused
+  useFocusEffect(
+    React.useCallback(() => {
+      scrollViewRef.current?.scrollTo({ y: 0, animated: false });
+    }, [])
+  );
+
+  const handle5thButtonPress = async () => {
+    if (sendMessage > 0) {
+      await router.push("/message_invite");
+      // setAttempts5th(sendMessage - 1); // Decrease attempt count on press
+      // handleNextUser();
+    } else {
+      setisFifthPremiumModel(true);
+    }
+  };
+
+  const currentUser = users[currentUserIndex];
+
+  const handleNextUser = () => {
+    toast.show("Profile Skipped", {
+      type: "danger",
+    });
+    nextProfile();
+  };
+
+  const handleBookmarkButtonPress = async () => {
+    toast.show("Profile Saved", {
       type: "warning",
     });
-    // handleNextUser();
+
+    setTimeout(() => {
+      nextProfile();
+    }, [1000]);
   };
 
   const handlePreviousUser = () => {
@@ -400,6 +369,18 @@ const ProfilePage = () => {
         useNativeDriver: true,
       }).start();
     });
+  };
+
+  const handleBlock = () => {
+    setTimeout(() => {
+      nextProfile();
+    }, 500);
+  };
+
+  const handleReport = () => {
+    setTimeout(() => {
+      nextProfile();
+    }, 500);
   };
 
   return (
@@ -794,6 +775,8 @@ const ProfilePage = () => {
         handleModalVisibility={() => {
           setisHomeModel(false);
         }}
+        handleBlockFunction={handleBlock}
+        handleReportFunction={handleReport}
       />
       <SubscriptionModel
         isModalVisible={isPremiumModel}

@@ -17,11 +17,29 @@ const CustomToast = ({ message, type = "default", onDismiss = () => {} }) => {
       iconBackground: "bg-red-100",
       iconColor: "text-red-500",
     },
+    delete: {
+      background: "bg-red-50",
+      border: "border-red-500",
+      iconBackground: "bg-red-100",
+      iconColor: "text-red-500",
+    },
+    logout: {
+      background: "bg-red-50",
+      border: "border-red-500",
+      iconBackground: "bg-red-100",
+      iconColor: "text-red-500",
+    },
     warning: {
       background: "bg-yellow-50",
       border: "border-yellow-500",
       iconBackground: "bg-yellow-100",
       iconColor: "text-yellow-500",
+    },
+    error: {
+      background: "bg-orange-50",
+      border: "border-orange-500",
+      iconBackground: "bg-orange-100",
+      iconColor: "text-orange-500",
     },
     save: {
       background: "bg-yellow-50",
@@ -50,11 +68,17 @@ const CustomToast = ({ message, type = "default", onDismiss = () => {} }) => {
       ? "checkmark-circle-outline"
       : type === "danger"
       ? "close-circle-outline"
+      : type === "delete"
+      ? "trash-outline"
       : type === "save"
       ? "refresh"
+      : type === "logout"
+      ? "log-out-outline"
       : type === "warning"
       ? "bookmark-outline"
       : type === "info"
+      ? "information-circle-outline"
+      : type === "error"
       ? "information-circle-outline"
       : "information-circle-outline"; // Default icon
 

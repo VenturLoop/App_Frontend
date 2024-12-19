@@ -5,7 +5,7 @@ const initialState = {
   email: "",
   password: "",
   isPremium: false,
-  isLogin: true,
+  isLogin: false,
   token: "", // Store login token
   userId: "", // Store unique user ID
 };

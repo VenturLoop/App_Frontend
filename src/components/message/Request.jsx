@@ -5,6 +5,7 @@ import imagePath from "../../constants/imagePath";
 import { router } from "expo-router";
 import DeleteModel from "../models/DeleteModel";
 import { Ionicons } from "@expo/vector-icons";
+import { Toast } from "react-native-toast-notifications";
 
 const initialRequests = [
   {
@@ -47,6 +48,15 @@ const Request = () => {
     });
   };
 
+  const handleDelete = () => {
+    setisDeleteModel(false);
+    setSelectedRequests([]);
+    Toast.show("Deleted Successfully", {
+      type: "delete",
+    });
+    // handleNavigation("/");
+  };
+
   return (
     <>
       {selectedRequests.length > 0 && (
@@ -77,7 +87,7 @@ const Request = () => {
                 }}
                 onLongPress={() => handleLongPress(item.id)}
                 className={`flex-row items-center pb-7 p-4 border-b-[0.5px] ${
-                  selectedRequests.includes(item.id) ? "bg-gray-50" : "bg-white"
+                  selectedRequests.includes(item.id) ? "bg-blue-50" : "bg-white"
                 } border-gray-300 mb-3`}
               >
                 <Image
@@ -107,6 +117,7 @@ const Request = () => {
         handleModalVisibility={() => {
           setisDeleteModel(false);
         }}
+        handleDeleteButton={handleDelete}
       />
     </>
   );

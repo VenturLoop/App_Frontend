@@ -15,6 +15,7 @@ import imagePath from "../../../constants/imagePath";
 import { router } from "expo-router";
 import DeleteModel from "../../../components/models/DeleteModel";
 import LogoutModel from "../../../components/models/LogoutModel";
+import { Toast } from "react-native-toast-notifications";
 
 const setting = () => {
   const [isEnabled, setIsEnabled] = useState(false);
@@ -52,6 +53,21 @@ const setting = () => {
     Linking.openURL(url).catch((err) =>
       console.error("Failed to open URL:", err)
     );
+  };
+
+  const handleDeleteAccount = () => {
+    setDeleteModel(false);
+    Toast.show("Account deleted successfully", {
+      type: "delete",
+    });
+    router.push("/(signIn)");
+  };
+  const handleLogout = () => {
+    setLogoutModel(false);
+    Toast.show("Logout successfully", {
+      type: "logout",
+    });
+    router.push("/login");
   };
 
   return (
@@ -302,12 +318,14 @@ const setting = () => {
         handleModalVisibility={() => {
           setDeleteModel(false);
         }}
+        handleDeleteButton={handleDeleteAccount}
       />
       <LogoutModel
         isModalVisible={logoutModel}
         handleModalVisibility={() => {
           setLogoutModel(false);
         }}
+        handleLogoutfunction={handleLogout}
       />
     </>
   );

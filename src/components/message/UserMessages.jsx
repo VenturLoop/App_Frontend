@@ -13,6 +13,7 @@ import { Ionicons } from "@expo/vector-icons";
 import imagePath from "../../constants/imagePath";
 import DeleteModel from "../models/DeleteModel";
 import { router, useNavigation } from "expo-router";
+import { Toast } from "react-native-toast-notifications";
 
 const initialMessages = [
   {
@@ -168,6 +169,19 @@ const UserMessages = () => {
     setSelectedMessages([]);
   };
 
+  const deleteMessage = () => {
+    setisDeleteModel(true);
+  };
+
+  const handleDelete = () => {
+    setisDeleteModel(false);
+    setSelectedMessages([]);
+    Toast.show("Deleted Successfully", {
+      type: "delete",
+    });
+    // handleNavigation("/");
+  };
+
   return (
     <TouchableWithoutFeedback onPress={handleOutsidePress}>
       <View className="flex-1">
@@ -176,7 +190,7 @@ const UserMessages = () => {
             <Text className="text-lg font-bold">
               {selectedMessages.length} Selected
             </Text>
-            <TouchableOpacity onPress={() => setisDeleteModel(true)}>
+            <TouchableOpacity onPress={deleteMessage}>
               <Ionicons name="trash-outline" color="red" size={23} />
             </TouchableOpacity>
           </View>
@@ -234,6 +248,7 @@ const UserMessages = () => {
         <DeleteModel
           isModalVisible={isDeleteModel}
           handleModalVisibility={() => setisDeleteModel(false)}
+          handleDeleteButton={handleDelete}
         />
       </View>
     </TouchableWithoutFeedback>

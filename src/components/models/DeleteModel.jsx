@@ -10,8 +10,13 @@ import {
 } from "react-native";
 import { router } from "expo-router";
 import imagePath from "../../constants/imagePath";
+import { Toast } from "react-native-toast-notifications";
 
-const DeleteModel = ({ isModalVisible, handleModalVisibility }) => {
+const DeleteModel = ({
+  isModalVisible,
+  handleModalVisibility,
+  handleDeleteButton,
+}) => {
   const translateY = React.useRef(new Animated.Value(300)).current; // Initial offset (off-screen)
 
   useEffect(() => {
@@ -39,6 +44,14 @@ const DeleteModel = ({ isModalVisible, handleModalVisibility }) => {
         router.push(route);
       }, 100); // Wait for modal close animation before routing
     }
+  };
+
+  const handleDelete = () => {
+    handleModalVisibility();
+    Toast.show("Deleted Successfully", {
+      type: "success",
+    });
+    // handleNavigation("/");
   };
 
   return (
@@ -79,9 +92,7 @@ const DeleteModel = ({ isModalVisible, handleModalVisibility }) => {
 
             {/* Continue Button */}
             <TouchableOpacity
-              // onPress={() => {
-              //   handleNavigation("/subscription_page");
-              // }} // Call handleContinue function
+              onPress={handleDeleteButton} // Call handleContinue function
               className={`flex-1 w-2/3 rounded-lg py-3 
                          bg-[#2983DC]
                        `} // Disable button if no referral code

@@ -92,6 +92,7 @@ const AddBasicDetails = () => {
         className="flex-1 px-6 py-5"
       >
         <FlatList
+          showsVerticalScrollIndicator={false}
           data={[{ type: "header" }, { type: "body" }, { type: "footer" }]}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => {
@@ -116,11 +117,13 @@ const AddBasicDetails = () => {
                   <View className="gap-6">
                     {/* Email Input */}
                     <View className="gap-4 w-full">
-                      <Text className="font-semibold text-lg">Email</Text>
+                      <Text className="font-semibold text-lg">
+                        Phone Number
+                      </Text>
                       <TextInput
-                        placeholder="you@example.com"
+                        placeholder="Enter phone number"
                         className="bg-[#2982dc14] w-full placeholder:text-[#7C8BA0] px-6 py-5 rounded-lg p-2"
-                        keyboardType="email-address"
+                        keyboardType="numeric"
                       />
                     </View>
 

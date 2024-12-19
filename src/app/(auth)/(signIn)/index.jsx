@@ -17,6 +17,7 @@ import { Link, router } from "expo-router";
 import Checkbox from "expo-checkbox";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUser } from "../../../redux/slices/userSlice";
+import { Toast } from "react-native-toast-notifications";
 
 const Index = () => {
   const [isChecked, setChecked] = useState(false);
@@ -44,19 +45,19 @@ const Index = () => {
     const { name, email } = formData;
 
     if (!name || !email) {
-      setErrorMessage("Please fill in all fields.");
+      Toast.show("Please fill in all fields.", { type: "error" });
       return false;
     }
 
     if (!/\S+@\S+\.\S+/.test(email)) {
-      setErrorMessage("Please enter a valid email address.");
+      Toast.show("Please enter a valid email address.", { type: "error" });
       return false;
     }
 
     if (!isChecked) {
-      setErrorMessage(
-        "You must agree to the Terms of Service and Privacy Policy."
-      );
+      Toast.show("You must agree to the Terms of Service and Privacy Policy.", {
+        type: "error",
+      });
       return false;
     }
 
@@ -74,6 +75,9 @@ const Index = () => {
 
         // After dispatch completes, navigate
         handleNavigation("/otp");
+        Toast.show("OTP sent successfully", {
+          type: "success",
+        });
       } catch (error) {
         setErrorMessage("Something went wrong. Please try again.");
       } finally {
@@ -90,11 +94,12 @@ const Index = () => {
       >
         <ScrollView
           showsVerticalScrollIndicator={false}
+          // extraScrollHeight={100}
           contentContainerStyle={{
             flexGrow: 1,
-            justifyContent: "space-between",
+            gap: 50,
           }}
-          className="px-8 py-6"
+          className="px-8 flex-1 py-6"
         >
           {/* Header Section */}
           <View className="header flex flex-col items-center justify-center gap-4 mt-6">
@@ -141,9 +146,9 @@ const Index = () => {
               className="bg-[#2982dc14] w-full placeholder:font-medium px-6 py-5 rounded-lg text-gray-500"
               keyboardType="email-address"
             />
-            {errorMessage ? (
+            {/* {errorMessage ? (
               <Text className="text-red-500 text-sm">{errorMessage}</Text>
-            ) : null}
+            ) : null} */}
             <View className="flex flex-row gap-3 px-2 mt-4 justify-center">
               <Checkbox
                 value={isChecked}

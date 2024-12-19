@@ -3,6 +3,7 @@ import { View, Text, FlatList, Image, TouchableOpacity } from "react-native";
 import imagePath from "../../constants/imagePath";
 import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import DeleteModel from "../../components/models/DeleteModel";
+import { Toast } from "react-native-toast-notifications";
 
 const messages = [
   {
@@ -18,7 +19,12 @@ const messages = [
 
 const Saved = () => {
   const [isdeleteModel, setisDeleteModel] = useState(false);
-
+  const handleDelete = () => {
+    setisDeleteModel(false);
+    Toast.show("Deleted Successfully", {
+      type: "delete",
+    });
+  };
   return (
     <>
       {messages.length > 0 ? (
@@ -112,15 +118,16 @@ const Saved = () => {
           <DeleteModel
             isModalVisible={isdeleteModel}
             handleModalVisibility={() => {
-              setisDeleteModel(!isdeleteModel);
+              setisDeleteModel(false);
             }}
+            handleDeleteButton={handleDelete}
           />
         </View>
       ) : (
         <View className="flex-1 items-center justify-center">
           <Image source={imagePath.NoSaved} />
           <Text className="font-semibold text-lg text-gray-500 ">
-          You haven’t saved any profile yet ! 
+            You haven’t saved any profile yet !
           </Text>
         </View>
       )}

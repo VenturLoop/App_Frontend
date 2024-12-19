@@ -12,7 +12,11 @@ import { router } from "expo-router";
 import imagePath from "../../constants/imagePath";
 import { Ionicons } from "@expo/vector-icons";
 
-const LogoutModel = ({ isModalVisible, handleModalVisibility }) => {
+const LogoutModel = ({
+  isModalVisible,
+  handleModalVisibility,
+  handleLogoutfunction,
+}) => {
   const translateY = React.useRef(new Animated.Value(300)).current; // Initial offset (off-screen)
 
   useEffect(() => {
@@ -80,9 +84,7 @@ const LogoutModel = ({ isModalVisible, handleModalVisibility }) => {
 
             {/* Continue Button */}
             <TouchableOpacity
-              onPress={() => {
-                handleNavigation("/login");
-              }} // Call handleContinue function
+              onPress={handleLogoutfunction} // Call handleContinue function
               className={`flex-1 w-2/3 rounded-lg py-3 
                          bg-[#2983DC]
                        `} // Disable button if no referral code

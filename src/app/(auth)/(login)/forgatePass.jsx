@@ -10,10 +10,25 @@ import React, { useState } from "react";
 import { Link, router } from "expo-router";
 import imagePath from "../../../constants/imagePath";
 import CustomeButton from "../../../components/buttons/CustomeButton";
+import {  useToast } from "react-native-toast-notifications";
 
 const forgatePass = () => {
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const toast = useToast();
+
+  const handleSendOtp = async () => {
+    setLoading(true);
+
+    // Simulate API call to send OTP
+    setTimeout(() => {
+      setLoading(false);
+      toast.show("OTP sent successfully", { type: "success" });
+      router.navigate("/forgateOtp");
+    }, 2000);
+  };
+
   return (
-    
     <SafeAreaView className="py-6 px-8 bg-white h-screen pt-10 flex justify-between gap-5 flex-col ">
       <View className="header flex flex-col my-6 items-center justify-center gap-4 ">
         <Image className="w-auto" source={imagePath.forgatePass} />
@@ -37,9 +52,7 @@ const forgatePass = () => {
         <CustomeButton
           title="Continue"
           style="my-6"
-          onButtonPress={() => {
-            router.navigate("/forgateOtp");
-          }}
+          onButtonPress={handleForfateEmail}
         />
         <TouchableOpacity
           onPress={() => {

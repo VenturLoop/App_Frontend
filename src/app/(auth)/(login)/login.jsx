@@ -8,30 +8,52 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  ToastAndroid,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState } from "react";
 import { Link, router } from "expo-router";
 import imagePath from "../../../constants/imagePath";
 import CustomeButton from "../../../components/buttons/CustomeButton";
 import TextBox from "react-native-password-eye";
-import PageLoading from "../../../components/loading/PageLoading";
+import { Toast } from "react-native-toast-notifications";
 
 const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleLogin = () => {
-    setIsLoading(true);
+  // const showToast = (message) => {
+  //   ToastAndroid.show(message, ToastAndroid.SHORT);
+  // };
 
-    // Simulate a small delay for loading to complete
-    setTimeout(async () => {
-      await router.push("/(main)/(tabs)"); // Navigate after the timeout
-      setIsLoading(false);
-    }, 1000); // Shortened the delay to make the navigation smoother
+  const isValidEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
   };
 
-  if (isLoading) {
-    return <PageLoading />; // Show the loading screen while the transition happens
-  }
+  const handleLogin = () => {
+    if (!email) {
+      Toast.show("Please enter your email address.", { type: "error" });
+      return;
+    }
+    if (!isValidEmail(email)) {
+      Toast.show("Please enter a valid email address.", { type: "error" });
+      return;
+    }
+    if (!password) {
+      Toast.show("Please enter your password.", { type: "error" });
+      return;
+    }
+
+    setIsLoading(true);
+
+    setTimeout(async () => {
+      Toast.show("Login successful!", { type: "success" });
+      await router.push("/(main)/(tabs)"); // Navigate to the main page
+      setIsLoading(false);
+    }, 1000); // Shortened the delay for smooth navigation
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -44,6 +66,7 @@ const Login = () => {
           contentContainerStyle={{
             flexGrow: 1,
             justifyContent: "space-between",
+            gap: 70,
           }}
           className="px-8 py-6"
         >
@@ -83,19 +106,22 @@ const Login = () => {
               <View className="flex-1 h-px bg-gray-300" />
             </View>
 
-            {/* Phone Number Input */}
+            {/* Email Input */}
             <TextInput
               placeholder="Email Address"
               className="bg-[#2982dc23] w-full px-6 py-5 placeholder:opacity-70 rounded-lg text-gray-600"
-              keyboardType="numeric"
+              keyboardType="email-address"
+              value={email}
+              onChangeText={setEmail}
             />
 
             {/* Password Input */}
             <TextBox
-              className="bg-[#2982dc14]  w-full placeholder:font-medium px-6    rounded-lg text-gray-500 p-2"
-              onChangeText={(text) => console.log("onChangeText: ", text)}
+              className="bg-[#2982dc14] w-full placeholder:font-medium px-6 rounded-lg text-gray-500 p-2"
+              onChangeText={setPassword}
               secureTextEntry={true}
               placeholder="Password"
+              value={password}
             />
 
             {/* Forgot Password Link */}
@@ -108,13 +134,14 @@ const Login = () => {
           </View>
 
           {/* Footer Section */}
-          <View className="footer  mb-0 bottom-0">
+          <View className="footer mb-0 bottom-0">
             <CustomeButton
-              title="Continue"
+              title={
+                isLoading ? <ActivityIndicator color="#fff" /> : "Continue"
+              }
               style="my-3"
-              onButtonPress={() => {
-                handleLogin();
-              }}
+              disabled={isLoading}
+              onButtonPress={handleLogin}
             />
 
             <View className="mt-4">

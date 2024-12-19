@@ -57,6 +57,7 @@
     "react-native-deck-swiper": "^2.0.17",
     "react-native-gesture-handler": "~2.20.2",
     "react-native-get-location": "^5.0.0",
+    "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-maps": "1.18.0",
     "react-native-otp-inputs": "^7.4.0",
     "react-native-password-eye": "^1.0.5",
