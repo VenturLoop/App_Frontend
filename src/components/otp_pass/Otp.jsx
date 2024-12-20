@@ -4,81 +4,107 @@ import {
   SafeAreaView,
   Image,
   ActivityIndicator,
-  Alert,
   TouchableOpacity,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Link, router } from "expo-router";
+import { useSelector } from "react-redux";
 import OTPInput from "@codsod/react-native-otp-input";
 import CustomeButton from "../buttons/CustomeButton";
 import imagePath from "../../constants/imagePath";
 import { Toast } from "react-native-toast-notifications";
+import { useRouter } from "expo-router";
 
 const Otp = () => {
-  const [otp, setOTP] = useState("");
+  const [verificationCode, setVerificationCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [timer, setTimer] = useState(20); // Initial timer value
+  const { email } = useSelector((state) => state.user);
+  const router = useRouter();
 
+  // Timer Logic
   useEffect(() => {
     if (timer > 0) {
       const interval = setInterval(() => {
         setTimer((prevTimer) => prevTimer - 1);
       }, 1000);
 
-      return () => clearInterval(interval);
+      return () => clearInterval(interval); // Cleanup interval on unmount
     }
   }, [timer]);
 
+  // Verify OTP
   const verifyOtp = async () => {
-    if (otp.length !== 6) {
-      Alert.alert("Invalid OTP", "Please enter a 6-digit OTP.");
+    if (verificationCode.length !== 6) {
+      Toast.show("Please enter a valid 6-digit OTP.", { type: "error" });
       return;
     }
 
-    setIsLoading(true); // Show loader
+    setIsLoading(true);
     try {
       const response = await fetch(
-        "https://verturloop-server-v01.onrender.com/auth/verify-otp",
+        "https://backend-v2-osaw.onrender.com/auth/send-otp",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ otp }),
+          body: JSON.stringify({ email, verificationCode }),
         }
       );
-
+      console.log(verificationCode);
       const result = await response.json();
-      setIsLoading(false); // Hide loader
+      console.log(result);
 
-      if (response.ok) {
-        Toast.show("OTP verified successfully!", { type: "success" });
-        router.push("/createPass"); // Navigate to the create password page
+      if (response.ok && result.success) {
+        Toast.show(result.message, { type: "success" });
+        router.push("/createPass"); // Navigate to the next page
       } else {
-        Toast.show("Invalid OTP. Please try again.", {
+        Toast.show(result.message || "Invalid OTP. Please try again.", {
           type: "error",
         });
       }
     } catch (error) {
-      setIsLoading(false); // Hide loader
-      Toast.show("Something went wrong. Please try again later.", {
+      Toast.show("Failed to verify OTP. Please try again later.", {
         type: "error",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const dumiVerify = () => {
+  // Resend OTP
+  const handleResendOtp = async () => {
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      router.push("/createPass");
-      Toast.show("OTP verified successfully!", { type: "success" });
-    }, 2000);
-  };
+    try {
+      const response = await fetch(
+        "https://backend-v2-osaw.onrender.com/auth/resend-otp",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+        }
+      );
 
-  const handleResentOtp = () => {
-    Toast.show("OTP has been resent to your email.", { type: "success" });
-    setTimer(20); // Reset the timer
+      const result = await response.json();
+      console.log(result);
+
+      if (response.ok && result.success) {
+        Toast.show("OTP has been resent to your email.", { type: "success" });
+        setTimer(20); // Reset the timer
+      } else {
+        Toast.show(result.message || "Failed to resend OTP.", {
+          type: "error",
+        });
+      }
+    } catch (error) {
+      Toast.show("Failed to resend OTP. Please try again later.", {
+        type: "error",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -90,7 +116,7 @@ const Otp = () => {
           Enter OTP
         </Text>
         <Text className="text-center text-[#61677D]">
-          Enter the OTP sent to your Email for secure verification!
+          Enter the OTP sent to your email for secure verification!
         </Text>
       </View>
 
@@ -102,19 +128,19 @@ const Otp = () => {
             borderColor: "#2983DC",
             borderRadius: 10,
             backgroundColor: "#EAF3FC",
-            opacity: 20,
           }}
           length={6}
-          onOtpComplete={(txt) => setOTP(txt)}
+          onOtpComplete={setVerificationCode}
         />
       </View>
 
       {/* Footer Section */}
-      <View className="footer w-full  flex">
+      <View className="footer w-full flex">
         <CustomeButton
           title={isLoading ? <ActivityIndicator color="white" /> : "Verify"}
           style="mb-1"
-          onButtonPress={dumiVerify}
+          onButtonPress={!isLoading ? verifyOtp : null}
+          disabled={isLoading}
         />
 
         <View className="flex-row justify-center items-center gap-2 mt-4">
@@ -124,7 +150,7 @@ const Otp = () => {
               Resend OTP in {timer}s
             </Text>
           ) : (
-            <TouchableOpacity onPress={handleResentOtp}>
+            <TouchableOpacity onPress={!isLoading ? handleResendOtp : null}>
               <Text className="font-semibold text-center text-lg text-[#2983DC]">
                 Resend OTP
               </Text>

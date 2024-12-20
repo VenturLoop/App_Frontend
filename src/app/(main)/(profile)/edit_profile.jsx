@@ -288,6 +288,8 @@ const EditProfile = () => {
                 <TextInput
                   placeholder="Change location "
                   className="bg-[#2982dc14] w-full placeholder:text-[#7C8BA0] px-6 py-4 rounded-lg p-2"
+                  readOnly
+                  value="Chor Bazar, Delhi, India"
                   keyboardType="email-address"
                 />
               </View>

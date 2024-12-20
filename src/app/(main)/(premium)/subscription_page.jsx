@@ -12,12 +12,15 @@ import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import imagePath from "../../../constants/imagePath";
 import HelpModel from "../../../components/models/HelpModel";
+import { Toast } from "react-native-toast-notifications";
 
 const plans = [
   {
     title: "Starter",
     duration: "1 Week",
-    price: "₹100.00",
+    price: "100.00",
+    originalPrice: "200.00",
+
     weeklyRate: "₹100/Week",
     features: [
       { feature: "Daily recommendation", free: "20", business: "Unlimited" },
@@ -32,7 +35,9 @@ const plans = [
   {
     title: "Recommended",
     duration: "1 Month",
-    price: "₹200.00",
+    price: "200.00",
+    originalPrice: "500.00",
+
     weeklyRate: "₹50/Week",
     features: [
       { feature: "Daily recommendation", free: "20", business: "Unlimited" },
@@ -47,7 +52,8 @@ const plans = [
   {
     title: "Super Saver",
     duration: "3 Months",
-    price: "₹500.00",
+    price: "500.00",
+    originalPrice: "1000.00",
     weeklyRate: "₹41/Week",
     features: [
       { feature: "Daily recommendation", free: "20", business: "Unlimited" },
@@ -84,6 +90,7 @@ const SubscriptionPage = () => {
   const handleSubscribe = () => {
     const selectedIndex = plans.indexOf(selectedPlan); // Find index of selected plan
     if (selectedIndex !== -1) {
+      Toast.show("Subscription Successful", { type: "success" });
       dispatch(setPremium(selectedIndex)); // Set premium and plan number in Redux
       router.push("/(tabs)"); // Navigate to main page
     }
@@ -91,9 +98,9 @@ const SubscriptionPage = () => {
 
   return (
     <>
-      <SafeAreaView className="flex-1 bg-white ">
+      <SafeAreaView className="flex-1  justify-between  bg-white ">
         {/* Header */}
-        <View className="header flex-row px-5  justify-between border-b border-gray-300 py-4 w-full items-center">
+        <View className="header flex-row px-5  justify-between border-b border-gray-300 py-5 w-full items-center">
           <View className="flex-row items-center gap-3">
             <TouchableOpacity onPress={() => router.back()}>
               <Ionicons name="arrow-back-outline" size={25} color="black" />
@@ -164,12 +171,15 @@ const SubscriptionPage = () => {
                         {plan.title}
                       </Text>
                     </View>
-                    <View className="bg-[#F0F6FB] py-4 px-3 flex items-center">
+                    <View className="bg-[#F0F6FB] py-2 px-3 flex items-center">
                       <Text className="text-gray-600 font-medium text-sm">
                         {plan.duration}
                       </Text>
                       <Text className="text-black font-bold text-lg mt-1">
-                        {plan.price}
+                        ₹{plan.price}
+                      </Text>
+                      <Text className="text-gray-500 line-through text-sm mt-1">
+                        ₹{plan.originalPrice}
                       </Text>
                       <Text className="text-gray-500 font-semibold text-sm mt-1">
                         {plan.weeklyRate}
@@ -227,15 +237,13 @@ const SubscriptionPage = () => {
               </Text>
             )}
           </View>
-
-          {/* Footer Section */}
-          <View className="footer w-full">
-            <CustomeButton
-              background={isPremium}
-              onButtonPress={handleSubscribe}
-              title="Subscribe"
-            />
-          </View>
+        </View>
+        <View className="footer px-4 w-full">
+          <CustomeButton
+            background={isPremium}
+            onButtonPress={handleSubscribe}
+            title="Subscribe"
+          />
         </View>
       </SafeAreaView>
       <HelpModel

@@ -39,7 +39,7 @@ const skillset = () => {
   };
   return (
     <SafeAreaView className="flex-1 bg-white  h-screen items-center justify-between">
-      <View className="header flex-row px-5 justify-between border-gray-500 border-b-[0.5px] py-4 w-full  items-center">
+      <View className="header flex-row px-5 justify-between border-gray-300 border-b-[0.5px] py-5 w-full  items-center">
         <View className="flex-row items-center justify-center gap-3">
           <TouchableOpacity
             onPress={() => {

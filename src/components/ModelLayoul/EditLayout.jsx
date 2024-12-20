@@ -19,7 +19,7 @@ const EditLayout = ({
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaView className="flex-1 bg-white ">
         {/* Header */}
-        <View className="header flex-row px-5  justify-between border-b border-gray-300 py-4 w-full items-center">
+        <View className="header flex-row px-5  justify-between border-b border-gray-300 py-5 w-full items-center">
           <View className="flex-row items-center gap-3">
             <TouchableOpacity onPress={() => router.back()}>
               <Ionicons name="arrow-back-outline" size={25} color="black" />

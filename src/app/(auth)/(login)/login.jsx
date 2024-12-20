@@ -8,31 +8,37 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-  ToastAndroid,
   ActivityIndicator,
 } from "react-native";
 import React, { useState } from "react";
-import { Link, router } from "expo-router";
+import { Link, useRouter } from "expo-router";
+import { useDispatch } from "react-redux";
+import { setLogin } from "../../../redux/slices/userSlice"; // Adjust import path as needed
 import imagePath from "../../../constants/imagePath";
 import CustomeButton from "../../../components/buttons/CustomeButton";
 import TextBox from "react-native-password-eye";
 import { Toast } from "react-native-toast-notifications";
 
 const Login = () => {
+  const router = useRouter();
+  const dispatch = useDispatch();
+
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  // const showToast = (message) => {
-  //   ToastAndroid.show(message, ToastAndroid.SHORT);
-  // };
 
   const isValidEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
-  const handleLogin = () => {
+  const handleNavigation = (route) => {
+    setTimeout(() => {
+      router.push(route);
+    }, 100); // Add a small delay of 100ms
+  };
+
+  const handleLogin = async () => {
     if (!email) {
       Toast.show("Please enter your email address.", { type: "error" });
       return;
@@ -48,11 +54,36 @@ const Login = () => {
 
     setIsLoading(true);
 
-    setTimeout(async () => {
-      Toast.show("Login successful!", { type: "success" });
-      await router.push("/(main)/(tabs)"); // Navigate to the main page
+    try {
+      const response = await fetch(
+        "https://backend-v2-osaw.onrender.com/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+        }
+      );
+
+      const result = await response.json();
+
+      if (result.success) {
+        // Update Redux state with login info
+        dispatch(setLogin({ isLogin: true, loginToken: result.token }));
+        // Navigate to the home page or dashboard
+        handleNavigation("/(tabs)");
+        Toast.show("Login successful!", { type: "success" });
+      } else {
+        Toast.show(result.message, { type: "error" });
+      }
+    } catch (error) {
+      Toast.show("Something went wrong. Please try again.", {
+        type: "error",
+      });
+    } finally {
       setIsLoading(false);
-    }, 1000); // Shortened the delay for smooth navigation
+    }
   };
 
   return (
@@ -81,12 +112,10 @@ const Login = () => {
             </Text>
           </View>
 
-          {/* Login Options */}
-          <View className="flex justify-center gap-4 items-center">
+          {/* Login Inputs */}
+          <View className="flex flex-col gap-4">
             <TouchableOpacity
-              onPress={() => {
-                router.push("/(main)");
-              }}
+              onPress={() => handleNavigation("/(profile_data)")}
               className="border border-[#2983DC] rounded-xl w-full justify-center py-4 px-6 flex-row items-center"
             >
               <Image
@@ -94,19 +123,15 @@ const Login = () => {
                 resizeMode="contain"
                 source={imagePath.google}
               />
-              <Text className="text-[#61677D] text-xl font-medium ">
-                Google
-              </Text>
+              <Text className="text-[#61677D] font-medium text-lg">Google</Text>
             </TouchableOpacity>
-
-            {/* Divider */}
             <View className="flex-row items-center my-4">
               <View className="flex-1 h-px bg-gray-300" />
-              <Text className="mx-2 text-lg font-medium text-gray-400">Or</Text>
+              <Text className="mx-2 text-lg font-semibold text-gray-400">
+                Or
+              </Text>
               <View className="flex-1 h-px bg-gray-300" />
             </View>
-
-            {/* Email Input */}
             <TextInput
               placeholder="Email Address"
               className="bg-[#2982dc23] w-full px-6 py-5 placeholder:opacity-70 rounded-lg text-gray-600"
@@ -118,10 +143,10 @@ const Login = () => {
             {/* Password Input */}
             <TextBox
               className="bg-[#2982dc14] w-full placeholder:font-medium px-6 rounded-lg text-gray-500 p-2"
-              onChangeText={setPassword}
               secureTextEntry={true}
               placeholder="Password"
               value={password}
+              onChangeText={setPassword}
             />
 
             {/* Forgot Password Link */}

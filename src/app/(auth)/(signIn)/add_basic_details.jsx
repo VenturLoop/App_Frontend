@@ -20,6 +20,7 @@ import CustomeButton from "../../../components/buttons/CustomeButton";
 import { Ionicons } from "@expo/vector-icons";
 import * as Location from "expo-location";
 import { Toast } from "react-native-toast-notifications";
+import { useSelector } from "react-redux";
 
 const AddBasicDetails = () => {
   const [birthdate, setBirthdate] = useState("");
@@ -29,6 +30,8 @@ const AddBasicDetails = () => {
   const [showCityPicker, setShowCityPicker] = useState(false);
   const [loadingLocation, setLoadingLocation] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const { signupToken } = useSelector((state) => state.user);
 
   const getCurrentLocation = async () => {
     setLoadingLocation(true);
@@ -102,6 +105,8 @@ const AddBasicDetails = () => {
       router.push("/(profile_data)");
     }, 2000);
   };
+
+  console.log("signupToken : " + signupToken);
 
   return (
     <SafeAreaView className="flex-1 bg-white">

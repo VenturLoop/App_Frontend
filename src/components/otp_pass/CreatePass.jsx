@@ -12,7 +12,8 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { router } from "expo-router";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setSignup } from "../../redux/slices/userSlice";
 import imagePath from "../../constants/imagePath";
 import CustomeButton from "../buttons/CustomeButton";
 import { Ionicons } from "@expo/vector-icons"; // For password visibility toggle icon
@@ -29,6 +30,13 @@ const CreatePass = () => {
   // Retrieve name and email from Redux
   const { name, email } = useSelector((state) => state.user);
   const toast = useToast();
+  const dispatch = useDispatch();
+
+  const handleNavigation = (route) => {
+    setTimeout(() => {
+      router.push(route);
+    }, 100); // Add a small delay of 100ms
+  };
 
   const validatePasswords = () => {
     let isValid = true;
@@ -54,31 +62,18 @@ const CreatePass = () => {
 
     setLoading(true);
 
-    // Trim values to remove leading/trailing spaces
-    const trimmedName = name.trim();
-    const trimmedEmail = email.trim();
-    const trimmedPassword = newPassword.trim();
-
-    console.log("Name: " + trimmedName, "Type:", typeof trimmedName);
-    console.log("Email: " + trimmedEmail, "Type:", typeof trimmedEmail);
-    console.log(
-      "Password: " + trimmedPassword,
-      "Type:",
-      typeof trimmedPassword
-    );
-
     try {
       const response = await fetch(
-        "https://verturloop-server-v01.onrender.com/auth/signup",
+        "https://backend-v2-osaw.onrender.com/auth/signup",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            name: trimmedName,
-            email: trimmedEmail,
-            password: trimmedPassword,
+            name: name,
+            email: email,
+            password: newPassword,
           }),
         }
       );
@@ -86,8 +81,10 @@ const CreatePass = () => {
       const result = await response.json();
       console.log(result);
 
-      if (response.ok) {
-        router.push("/add_basic_details"); // Navigate to the add basic setail page page
+      if (result.success) {
+        dispatch(setSignup({ isSignup: true, signupToken: result.jwtToken }));
+        Toast.show("Password created successfully!", { type: "success" });
+        handleNavigation("/add_basic_details");
       } else {
         Toast.show("Failed to create password.", {
           type: "error",
@@ -193,11 +190,7 @@ const CreatePass = () => {
           <CustomeButton
             title={loading ? <ActivityIndicator color="white" /> : "Continue"}
             style="my-4"
-            onButtonPress={() => {
-              // handleCreatePassword();
-              dummyPass();
-              // router.push("/add_basic_details");
-            }}
+            onButtonPress={handleCreatePassword}
           />
         </View>
       </KeyboardAvoidingView>

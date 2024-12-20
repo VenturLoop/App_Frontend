@@ -7,13 +7,10 @@ import CustomeButton from "../../../../../components/buttons/CustomeButton";
 
 const UserExpectation = () => {
   const [selectedOption, setSelectedOption] = useState("");
-  const [equityRange, setEquityRange] = useState({ min: 0, max: 0 }); // Combined state
-  const [localEquityRange, setLocalEquityRange] = useState({ min: 0, max: 0 }); // Immediate slider updates
-  const [minimum, setminimum] = useState(0);
+  const [equityRange, setEquityRange] = useState({ min: 0, max: 100 });
 
   const handleNextButtonPress = () => {
     // Save the changes or move to the next step
-    setEquityRange(localEquityRange);
     router.back();
   };
 
@@ -22,114 +19,46 @@ const UserExpectation = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      {/* Header Section */}
-      <View className="header flex-row px-5 justify-between border-b-[0.5px] py-4 items-center">
-        <View className="flex-row items-center gap-3">
-          <TouchableOpacity onPress={() => router.back()}>
-            <Ionicons name="arrow-back-outline" size={25} color="black" />
-          </TouchableOpacity>
-          <Text className="text-xl font-semibold">Equity Expectation</Text>
+      <View className="flex-1 justify-center items-center px-8 py-5">
+        <Text className="text-2xl font-bold mb-4">User Expectation</Text>
+
+        {/* Slider Section */}
+        <View className="w-full mb-4">
+          <Text className="text-lg mb-2">Equity Range</Text>
+          <View className="flex-row justify-between mb-2">
+            <Text>{equityRange.min}%</Text>
+            <Text>{equityRange.max}%</Text>
+          </View>
+          <Slider
+            style={{ width: "100%", height: 40 }}
+            minimumValue={0}
+            maximumValue={100}
+            step={1}
+            value={equityRange.min}
+            onValueChange={(value) =>
+              setEquityRange({ ...equityRange, min: value })
+            }
+            minimumTrackTintColor="#2983DC"
+            maximumTrackTintColor="#000000"
+          />
+          <Slider
+            style={{ width: "100%", height: 40 }}
+            minimumValue={0}
+            maximumValue={100}
+            step={1}
+            value={equityRange.max}
+            onValueChange={(value) =>
+              setEquityRange({ ...equityRange, max: value })
+            }
+            minimumTrackTintColor="#2983DC"
+            maximumTrackTintColor="#000000"
+          />
         </View>
-      </View>
 
-      {/* Body Section */}
-      <View className="px-6 py-8 w-full flex-1">
-        {/* Option Selection */}
-        {["negotiable", "equal", "accept", "offer"].map((option) => (
-          <TouchableOpacity
-            key={option}
-            className="flex-row items-center mb-4"
-            onPress={() => setSelectedOption(option)}
-          >
-            <View
-              className={`h-5 w-5 rounded-full border-2 ${
-                selectedOption === option
-                  ? "border-[#2983DC]"
-                  : "border-gray-400"
-              } flex items-center justify-center`}
-            >
-              {selectedOption === option && (
-                <View className="h-2.5 w-2.5 rounded-full bg-[#2983DC]" />
-              )}
-            </View>
-            <Text className="ml-2 py-1 text-lg text-gray-700 capitalize">
-              {option === "negotiable"
-                ? "Fully Negotiable"
-                : option === "equal"
-                ? "Equal Split"
-                : option === "accept"
-                ? "Willing to accept a specific equity range"
-                : "Willing to offer a specific equity range"}
-            </Text>
-          </TouchableOpacity>
-        ))}
-
-        {/* Render Sliders Conditionally */}
-        {isCustomOption && (
-          <>
-            <View className="my-4">
-              <Text
-                className={`text-base font-medium mb-2 ${
-                  !isCustomOption ? "opacity-50" : "text-gray-950"
-                }`}
-              >
-                Minimum Equity
-              </Text>
-              <Slider
-                minimumValue={0}
-                maximumValue={100}
-                step={1}
-                value={minimum}
-                onValueChange={(value) => setminimum(value)}
-                disabled={!isCustomOption}
-                minimumTrackTintColor={!isCustomOption ? "#E2E8F0" : "#007BFF"}
-                maximumTrackTintColor="#E2E8F0"
-                thumbTintColor={!isCustomOption ? "#E2E8F0" : "#007BFF"}
-              />
-              <Text className="text-base text-gray-700 mt-2">{minimum}%</Text>
-            </View>
-            <EquitySlider
-              label="Maximum Equity"
-              value={localEquityRange.max}
-              onValueChange={(value) => handleSliderChange("max", value)}
-              disabled={!isCustomOption}
-            />
-          </>
-        )}
-      </View>
-
-      {/* Footer Section */}
-      <View className="footer px-5 w-full">
-        <CustomeButton onButtonPress={handleNextButtonPress} title="Save" />
+        {/* Next Button */}
+        <CustomeButton title="Next" onButtonPress={handleNextButtonPress} />
       </View>
     </SafeAreaView>
-  );
-};
-
-// Reusable Slider Component
-const EquitySlider = ({ label, value, onValueChange, disabled }) => {
-  return (
-    <View className="my-4">
-      <Text
-        className={`text-base font-medium mb-2 ${
-          disabled ? "opacity-50" : "text-gray-950"
-        }`}
-      >
-        {label}
-      </Text>
-      <Slider
-        minimumValue={1}
-        maximumValue={100}
-        step={1}
-        value={value}
-        onValueChange={onValueChange}
-        disabled={disabled}
-        minimumTrackTintColor={disabled ? "#E2E8F0" : "#007BFF"}
-        maximumTrackTintColor="#E2E8F0"
-        thumbTintColor={disabled ? "#E2E8F0" : "#007BFF"}
-      />
-      <Text className="text-base text-gray-700 mt-2">{value}%</Text>
-    </View>
   );
 };
 

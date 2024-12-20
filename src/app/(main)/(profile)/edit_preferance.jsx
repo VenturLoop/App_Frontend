@@ -34,7 +34,7 @@ const edit_preferance = () => {
       <EditLayout
         continueRoute="/(tabs)/profile"
         title="Edit Preferance"
-        secondTitle="Clear all"
+        // secondTitle="Clear all"
       >
         {/* Form Section */}
         <View

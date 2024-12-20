@@ -67,21 +67,40 @@ const Index = () => {
   const handleContinue = async () => {
     if (validateForm()) {
       setLoading(true); // Start the loading state
-
       try {
-        // Wait for the Redux dispatch to complete
-        // await dispatch(updateUser({ field: "name", value: formData.name }));
-        // await dispatch(updateUser({ field: "email", value: formData.email }));
+        const response = await fetch(
+          "https://backend-v2-osaw.onrender.com/auth/verify-email",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: formData.name,
+              email: formData.email,
+            }),
+          }
+        );
 
-        // After dispatch completes, navigate
-        handleNavigation("/otp");
-        Toast.show("OTP sent successfully", {
-          type: "success",
-        });
+        const result = await response.json();
+        console.log(result);
+
+        if (result.success) {
+          handleNavigation("/(signIn)/otp");
+          dispatch(updateUser({ field: "name", value: formData.name }));
+          dispatch(updateUser({ field: "email", value: formData.email }));
+          Toast.show(result.message, { type: "success" });
+        } else {
+          Toast.show(result.message, {
+            type: "error",
+          });
+        }
       } catch (error) {
-        setErrorMessage("Something went wrong. Please try again.");
+        Toast.show("Something went wrong. Please try again.", {
+          type: "error",
+        });
       } finally {
-        setLoading(false); // Stop the loading state
+        setLoading(false);
       }
     }
   };
@@ -178,15 +197,12 @@ const Index = () => {
 
           {/* Footer Section */}
           <View className="footer mt-4">
-            {loading ? (
-              <ActivityIndicator size="large" color="#2983DC" /> // Loader shown while saving data
-            ) : (
-              <CustomeButton
-                title="Continue"
-                style="my-3"
-                onButtonPress={handleContinue}
-              />
-            )}
+            <CustomeButton
+              title={loading ? <ActivityIndicator color="white" /> : "Continue"}
+              style="my-3"
+              onButtonPress={handleContinue}
+            />
+
             <View className="mt-4">
               <Text className="text-center">
                 Do you have an account?{" "}
