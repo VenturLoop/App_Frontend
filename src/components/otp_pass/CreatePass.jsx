@@ -97,15 +97,6 @@ const CreatePass = () => {
     }
   };
 
-  const dummyPass = () => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      router.push("/add_basic_details");
-      Toast.show("Password created successfully!", { type: "success" });
-    }, 2000);
-  };
-
   return (
     <SafeAreaView className="flex-1 bg-white">
       <KeyboardAvoidingView

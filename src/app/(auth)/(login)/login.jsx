@@ -18,6 +18,7 @@ import imagePath from "../../../constants/imagePath";
 import CustomeButton from "../../../components/buttons/CustomeButton";
 import TextBox from "react-native-password-eye";
 import { Toast } from "react-native-toast-notifications";
+import { Ionicons } from "@expo/vector-icons";
 
 const Login = () => {
   const router = useRouter();
@@ -26,6 +27,7 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setshowPassword] = useState(false);
 
   const isValidEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -97,9 +99,9 @@ const Login = () => {
           contentContainerStyle={{
             flexGrow: 1,
             justifyContent: "space-between",
-            gap: 70,
+            gap: 50,
           }}
-          className="px-8 py-6"
+          className="px-8 flex-1 py-6"
         >
           {/* Header Section */}
           <View className="header flex flex-col items-center justify-center gap-4 mt-6">
@@ -115,7 +117,7 @@ const Login = () => {
           {/* Login Inputs */}
           <View className="flex flex-col gap-4">
             <TouchableOpacity
-              onPress={() => handleNavigation("/(profile_data)")}
+              // onPress={() => handleNavigation("/(profile_data)")}
               className="border border-[#2983DC] rounded-xl w-full justify-center py-4 px-6 flex-row items-center"
             >
               <Image
@@ -134,20 +136,34 @@ const Login = () => {
             </View>
             <TextInput
               placeholder="Email Address"
-              className="bg-[#2982dc23] w-full px-6 py-5 placeholder:opacity-70 rounded-lg text-gray-600"
+              className="bg-[#2982dc14] w-full px-6 py-5  font-medium text-lg rounded-lg text-slate-700"
+              underlineColorAndroid={"transparent"}
               keyboardType="email-address"
               value={email}
               onChangeText={setEmail}
             />
 
             {/* Password Input */}
-            <TextBox
-              className="bg-[#2982dc14] w-full placeholder:font-medium px-6 rounded-lg text-gray-500 p-2"
-              secureTextEntry={true}
-              placeholder="Password"
-              value={password}
-              onChangeText={setPassword}
-            />
+            <View className="flex items-center justify-between ">
+              <TextInput
+                className="bg-[#2982dc14] text-lg w-full placeholder:font-medium px-6 py-5 rounded-lg text-slate-700"
+                onChangeText={(text) => setPassword(text)}
+                secureTextEntry={!showPassword}
+                placeholder="Password"
+                underlineColorAndroid={"transparent"}
+                value={password}
+              />
+              <TouchableOpacity
+                className="absolute right-4 py-1 px-3 top-4"
+                onPress={() => setshowPassword(!showPassword)}
+              >
+                <Ionicons
+                  name={showPassword ? "eye-off-outline" : "eye-outline"}
+                  size={23}
+                  color="#2983DC"
+                />
+              </TouchableOpacity>
+            </View>
 
             {/* Forgot Password Link */}
             <Link
