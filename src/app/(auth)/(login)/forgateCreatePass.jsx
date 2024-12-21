@@ -19,6 +19,7 @@ import { Ionicons } from "@expo/vector-icons"; // For password visibility toggle
 import { Toast, useToast } from "react-native-toast-notifications";
 import CustomeButton from "../../../components/buttons/CustomeButton";
 import imagePath from "../../../constants/imagePath";
+import { ConfirmPassword } from "../../../api/profile";
 
 const CreatePass = () => {
   const [newPassword, setNewPassword] = useState("");
@@ -29,7 +30,7 @@ const CreatePass = () => {
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
 
   // Retrieve name and email from Redux
-  const { name, email } = useSelector((state) => state.user);
+  const { forgateMail } = useSelector((state) => state.user);
   const toast = useToast();
 
   const validatePasswords = () => {
@@ -51,66 +52,31 @@ const CreatePass = () => {
 
     return isValid;
   };
+
   const handleCreatePassword = async () => {
     if (!validatePasswords()) return;
-
     setLoading(true);
-
-    // Trim values to remove leading/trailing spaces
-    const trimmedName = name.trim();
-    const trimmedEmail = email.trim();
-    const trimmedPassword = newPassword.trim();
-
-    console.log("Name: " + trimmedName, "Type:", typeof trimmedName);
-    console.log("Email: " + trimmedEmail, "Type:", typeof trimmedEmail);
-    console.log(
-      "Password: " + trimmedPassword,
-      "Type:",
-      typeof trimmedPassword
-    );
+    console.log(newPassword)
 
     try {
-      const response = await fetch(
-        "https://verturloop-server-v01.onrender.com/auth/signup",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: trimmedName,
-            email: trimmedEmail,
-            password: trimmedPassword,
-          }),
-        }
-      );
-
-      const result = await response.json();
+      const result = await ConfirmPassword(forgateMail, newPassword );
       console.log(result);
 
-      if (response.ok) {
-        router.push("/login"); // Navigate to the OTP page
+      if (result.success) {
+        Toast.show(result.message, { type: "success" });
+        router.push("/login"); // Navigate to the login page
       } else {
-        Toast.show("Failed to create password.", {
+        Toast.show(result.message, {
           type: "error",
         });
       }
     } catch (error) {
-      toast.show("Something went wrong. Please try again.", { type: "error" });
+      Toast.show("Failed to verify OTP. Please try again later.", {
+        type: "error",
+      });
     } finally {
       setLoading(false);
     }
-  };
-
-  const dummyPass = () => {
-    if (!validatePasswords()) return;
-    
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      router.push("/login");
-      Toast.show("Password reset successfully!", { type: "success" });
-    }, 2000);
   };
 
   return (
@@ -197,11 +163,7 @@ const CreatePass = () => {
           <CustomeButton
             title={loading ? <ActivityIndicator color="white" /> : "Continue"}
             style="my-4"
-            onButtonPress={() => {
-              // handleCreatePassword();
-              dummyPass();
-              // router.push("/add_basic_details");
-            }}
+            onButtonPress={handleCreatePassword}
           />
         </View>
       </KeyboardAvoidingView>

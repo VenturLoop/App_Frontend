@@ -10,6 +10,7 @@ const initialState = {
   isSignup: false, // Track signup status
   signupToken: "", // Store signup token
   referalCode: "", // Store referal Code
+  forgateMail: "", // Store for forgate male
 };
 
 const userSlice = createSlice({

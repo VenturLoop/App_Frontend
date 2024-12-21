@@ -11,21 +11,57 @@ import React, { useState } from "react";
 import { Link, router } from "expo-router";
 import imagePath from "../../../constants/imagePath";
 import CustomeButton from "../../../components/buttons/CustomeButton";
-import { useToast } from "react-native-toast-notifications";
+import { Toast, useToast } from "react-native-toast-notifications";
+import { ForgotPassword } from "../../../api/profile";
+import { updateUser } from "../../../redux/slices/userSlice";
+import { useDispatch } from "react-redux";
 
 const forgatePass = () => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const toast = useToast();
+  const dispatch = useDispatch();
+
+
+  const isValidEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const handleNavigation = (route) => {
+    setTimeout(() => {
+      router.push(route);
+    }, 100); // Add a small delay of 100ms
+  };
 
   const handleForfateEmail = async () => {
+    if (!email) {
+      Toast.show("Please enter your email address.", { type: "error" });
+      return;
+    }
+    if (!isValidEmail(email)) {
+      Toast.show("Please enter a valid email address.", { type: "error" });
+      return;
+    }
     setLoading(true);
-    // Simulate API call to send OTP
-    setTimeout(() => {
+    try {
+      const result = await ForgotPassword(email);
+      console.log(result);
+
+      if (result.success) {
+        dispatch(updateUser({ field: "forgateMail", value: email }));
+        handleNavigation("/forgateOtp");
+        Toast.show(result.message, { type: "success" });
+      } else {
+        Toast.show(result.message, { type: "error" });
+      }
+    } catch (error) {
+      Toast.show("Something went wrong. Please try again.", {
+        type: "error",
+      });
+    } finally {
       setLoading(false);
-      toast.show("OTP sent successfully", { type: "success" });
-      router.navigate("/forgateOtp");
-    }, 2000);
+    }
   };
 
   return (

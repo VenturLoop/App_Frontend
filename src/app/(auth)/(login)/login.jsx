@@ -61,7 +61,7 @@ const Login = () => {
     try {
       const result = await userLogin(email, password);
 
-      if (result.success) {
+      if (result.success) { 
         // Update Redux state with login info
         dispatch(setLogin({ isLogin: true, loginToken: result.token }));
         // Navigate to the home page or dashboard

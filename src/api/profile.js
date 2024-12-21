@@ -128,7 +128,7 @@ export const ForgotPassword = async (email) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email }),
       }
     );
     const data = await res.json();
@@ -139,7 +139,7 @@ export const ForgotPassword = async (email) => {
 };
 
 // 7 Confirm Password
-export const ConfirmPassword = async (email, newpassword) => {
+export const ConfirmPassword = async (email, newPassword) => {
   try {
     const res = await fetch(
       "https://backend-v2-osaw.onrender.com/auth/confirm",
@@ -148,10 +148,11 @@ export const ConfirmPassword = async (email, newpassword) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, newpassword }),
+        body: JSON.stringify({ email: email, newPassword: newPassword }),
       }
     );
     const data = await res.json();
+    console.log(data);
     return data;
   } catch (error) {
     console.log("Error while updating Item: " + error);
@@ -159,7 +160,7 @@ export const ConfirmPassword = async (email, newpassword) => {
 };
 
 // 8 Referal Code Check
-export const referalCodeCkeck = async (referralCode) => {
+export const referalCodeCheck = async (referralCode) => {
   try {
     const res = await fetch(
       "https://backend-v2-osaw.onrender.com/auth/referal",
