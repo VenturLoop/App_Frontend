@@ -18,6 +18,7 @@ import Checkbox from "expo-checkbox";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUser } from "../../../redux/slices/userSlice";
 import { Toast } from "react-native-toast-notifications";
+import { signInwithEmail } from "../../../api/profile";
 
 const Index = () => {
   const [isChecked, setChecked] = useState(false);
@@ -70,30 +71,15 @@ const Index = () => {
     if (validateForm()) {
       setLoading(true); // Start the loading state
       try {
-        const response = await fetch(
-          "https://backend-v2-osaw.onrender.com/auth/verify-email",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              name: formData.name,
-              email: formData.email,
-            }),
-          }
-        );
+        const res = await signInwithEmail(formData);
 
-        const result = await response.json();
-        console.log(result);
-
-        if (result.success) {
+        if (res.success) {
           handleNavigation("/(signIn)/otp");
           dispatch(updateUser({ field: "name", value: formData.name }));
           dispatch(updateUser({ field: "email", value: formData.email }));
-          Toast.show(result.message, { type: "success" });
+          Toast.show(res.message, { type: "success" });
         } else {
-          Toast.show(result.message, {
+          Toast.show(res.message, {
             type: "error",
           });
         }
@@ -108,7 +94,6 @@ const Index = () => {
   };
 
   // console.log(userInfo?.name);
-
 
   return (
     <SafeAreaView className="flex-1 bg-white">

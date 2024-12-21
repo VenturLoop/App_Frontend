@@ -1,16 +1,16 @@
-import Cookies from "js-cookie";
-
-export const createUser = async (formData) => {
+export const signInwithEmail = async (formData) => {
   try {
     const res = await fetch(
-      "https://ventureloop-server.onrender.com/api/profiles",
+      "https://backend-v2-osaw.onrender.com/auth/verify-email",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${Cookies.get("token")}`,
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+        }),
       }
     );
 
@@ -22,15 +22,62 @@ export const createUser = async (formData) => {
   }
 };
 
-export const getUserData = async (id) => {
+export const SentOPT = async (email , verificationCode) => {
   try {
     const res = await fetch(
-      `https://ventureloop-server.onrender.com/api/profiles/${id}`,
+      "https://backend-v2-osaw.onrender.com/auth/send-otp",
       {
-        method: "GET",
+        method: "POST",
         headers: {
-          Authorization: `Bearer ${Cookies.get("token")}`,
+          "Content-Type": "application/json",
         },
+        body: JSON.stringify({ email, verificationCode }),
+      }
+    );
+
+    const data = await res.json();
+
+    return data;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const ResentOPT = async (email) => {
+  try {
+    const res = await fetch(
+      "https://backend-v2-osaw.onrender.com/auth/resend-otp",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      }
+    );
+
+    const data = await res.json();
+
+    return data;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const createPass = async (name, email, newPassword) => {
+  try {
+    const res = await fetch(
+      "https://backend-v2-osaw.onrender.com/auth/signup",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: name,
+          email: email,
+          password: newPassword,
+        }),
       }
     );
 

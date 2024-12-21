@@ -13,6 +13,7 @@ import imagePath from "../../constants/imagePath";
 import { Toast } from "react-native-toast-notifications";
 import { useRouter } from "expo-router";
 import { OtpInput } from "react-native-otp-entry";
+import { ResentOPT, SentOPT } from "../../api/profile";
 
 const Otp = () => {
   const [verificationCode, setVerificationCode] = useState("");
@@ -41,25 +42,13 @@ const Otp = () => {
 
     setIsLoading(true);
     try {
-      const response = await fetch(
-        "https://backend-v2-osaw.onrender.com/auth/send-otp",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email, verificationCode }),
-        }
-      );
-      console.log(verificationCode);
-      const result = await response.json();
-      console.log(result);
+      const result = await SentOPT(email, verificationCode);
 
-      if (response.ok && result.success) {
+      if (result.success) {
         Toast.show(result.message, { type: "success" });
         router.push("/createPass"); // Navigate to the next page
       } else {
-        Toast.show(result.message || "Invalid OTP. Please try again.", {
+        Toast.show("Invalid OTP. Please try again.", {
           type: "error",
         });
       }
@@ -76,25 +65,13 @@ const Otp = () => {
   const handleResendOtp = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(
-        "https://backend-v2-osaw.onrender.com/auth/resend-otp",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email }),
-        }
-      );
+      const res = await ResentOPT(email);
 
-      const result = await response.json();
-      console.log(result);
-
-      if (response.ok && result.success) {
+      if (res.success) {
         Toast.show("OTP has been resent to your email.", { type: "success" });
         setTimer(20); // Reset the timer
       } else {
-        Toast.show(result.message || "Failed to resend OTP.", {
+        Toast.show(res.message || "Failed to resend OTP.", {
           type: "error",
         });
       }

@@ -18,6 +18,7 @@ import imagePath from "../../constants/imagePath";
 import CustomeButton from "../buttons/CustomeButton";
 import { Ionicons } from "@expo/vector-icons"; // For password visibility toggle icon
 import { Toast, useToast } from "react-native-toast-notifications";
+import { createPass } from "../../api/profile";
 
 const CreatePass = () => {
   const [newPassword, setNewPassword] = useState("");
@@ -63,23 +64,7 @@ const CreatePass = () => {
     setLoading(true);
 
     try {
-      const response = await fetch(
-        "https://backend-v2-osaw.onrender.com/auth/signup",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: name,
-            email: email,
-            password: newPassword,
-          }),
-        }
-      );
-
-      const result = await response.json();
-      console.log(result);
+      const result = await createPass(name, email, newPassword);
 
       if (result.success) {
         dispatch(setSignup({ isSignup: true, signupToken: result.jwtToken }));
