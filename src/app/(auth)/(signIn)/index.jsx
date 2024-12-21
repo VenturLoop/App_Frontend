@@ -32,7 +32,7 @@ const Index = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleNavigation = (route) => {
-    setTimeout(() => {
+    setTimeout(() => { 
       router.push(route);
     }, 100); // Add a small delay of 100ms
   };
@@ -72,6 +72,7 @@ const Index = () => {
       setLoading(true); // Start the loading state
       try {
         const res = await signInwithEmail(formData);
+        console.log(res);
 
         if (res.success) {
           handleNavigation("/(signIn)/otp");
@@ -123,8 +124,8 @@ const Index = () => {
           </View>
 
           {/* Form Section */}
-          <View className="flex flex-col gap-4">
-            <TouchableOpacity
+          <View className="flex-1 gap-4">
+            {/* <TouchableOpacity
               // onPress={() => promptAsync()}
               className="border border-[#2983DC] rounded-xl w-full justify-center py-4 px-6 flex-row items-center"
             >
@@ -135,14 +136,13 @@ const Index = () => {
               />
               <Text className="text-[#61677D] font-medium text-lg">Google</Text>
             </TouchableOpacity>
-            {/* <Auth /> */}
             <View className="flex-row items-center my-4">
               <View className="flex-1 h-px bg-gray-300" />
               <Text className="mx-2 text-lg font-semibold text-gray-400">
                 Or
               </Text>
               <View className="flex-1 h-px bg-gray-300" />
-            </View>
+            </View> */}
             <TextInput
               placeholder="Name"
               value={formData.name}
@@ -159,13 +159,13 @@ const Index = () => {
             {/* {errorMessage ? (
               <Text className="text-red-500 text-sm">{errorMessage}</Text>
             ) : null} */}
-            <View className="flex flex-row gap-3 px-2 mt-4 justify-center">
+            <View className="flex flex-row items-center gap-3 px-2 mt-4 justify-center">
               <Checkbox
                 value={isChecked}
                 onValueChange={setChecked}
                 color={isChecked ? "#2983DC" : undefined}
               />
-              <Text>
+              <Text className="text-sm">
                 I agree to the{" "}
                 <Link
                   className="font-semibold text-[#2983DC]"

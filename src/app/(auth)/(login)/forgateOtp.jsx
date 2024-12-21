@@ -133,7 +133,9 @@ const ForgateOtp = () => {
           <CustomeButton
             title="Verify"
             style="mb-3"
-            onButtonPress={verifyOtp}
+            onButtonPress={()=>{
+              router.push("/forgateCreatePass")
+            }}
           />
         )}
         <View className="flex-row items-center gap-2">

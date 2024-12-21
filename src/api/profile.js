@@ -1,3 +1,4 @@
+//1 Sent otp to email address
 export const signInwithEmail = async (formData) => {
   try {
     const res = await fetch(
@@ -22,7 +23,8 @@ export const signInwithEmail = async (formData) => {
   }
 };
 
-export const SentOPT = async (email , verificationCode) => {
+// 2 Verify OTP
+export const SentOPT = async (email, verificationCode) => {
   try {
     const res = await fetch(
       "https://backend-v2-osaw.onrender.com/auth/send-otp",
@@ -43,10 +45,11 @@ export const SentOPT = async (email , verificationCode) => {
   }
 };
 
+// 3 Resent Verify OTP
 export const ResentOPT = async (email) => {
   try {
     const res = await fetch(
-      "https://backend-v2-osaw.onrender.com/auth/resend-otp",
+      "https://backend-v2-osaw.onrender.com/auth/resend",
       {
         method: "POST",
         headers: {
@@ -64,7 +67,14 @@ export const ResentOPT = async (email) => {
   }
 };
 
-export const createPass = async (name, email, newPassword) => {
+// 4 Sign Up
+export const createAccount = async (
+  name,
+  email,
+  password,
+  birthday,
+  location
+) => {
   try {
     const res = await fetch(
       "https://backend-v2-osaw.onrender.com/auth/signup",
@@ -76,7 +86,9 @@ export const createPass = async (name, email, newPassword) => {
         body: JSON.stringify({
           name: name,
           email: email,
-          password: newPassword,
+          password: password,
+          birthday: birthday,
+          location: location,
         }),
       }
     );
@@ -89,17 +101,34 @@ export const createPass = async (name, email, newPassword) => {
   }
 };
 
-export const updateUserInfo = async (formData) => {
+// 5 login with email and password
+export const userLogin = async (email, password) => {
+  try {
+    const res = await fetch("https://backend-v2-osaw.onrender.com/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.log("Error while updating Item: " + error);
+  }
+};
+
+// 6 Forgot Password
+export const ForgotPassword = async (email) => {
   try {
     const res = await fetch(
-      "https://ventureloop-server.onrender.com/api/profiles/${id}",
+      "https://backend-v2-osaw.onrender.com/auth/forgot",
       {
-        method: "PATCH",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${Cookies.get("token")}`,
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ email, password }),
       }
     );
     const data = await res.json();
@@ -109,21 +138,42 @@ export const updateUserInfo = async (formData) => {
   }
 };
 
-export const deleteUser = async (id) => {
+// 7 Confirm Password
+export const ConfirmPassword = async (email, newpassword) => {
   try {
     const res = await fetch(
-      `https://ventureloop-server.onrender.com/api/profiles/${id}`,
+      "https://backend-v2-osaw.onrender.com/auth/confirm",
       {
-        method: "DELETE",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${Cookies.get("token")}`,
         },
+        body: JSON.stringify({ email, newpassword }),
       }
     );
     const data = await res.json();
     return data;
   } catch (error) {
-    console.log("Error while deleting item:", error);
+    console.log("Error while updating Item: " + error);
+  }
+};
+
+// 8 Referal Code Check
+export const referalCodeCkeck = async (referralCode) => {
+  try {
+    const res = await fetch(
+      "https://backend-v2-osaw.onrender.com/auth/referal",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ referralCode }),
+      }
+    );
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.log("Error while updating Item: " + error);
   }
 };

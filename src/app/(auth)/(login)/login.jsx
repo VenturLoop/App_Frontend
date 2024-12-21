@@ -19,6 +19,7 @@ import CustomeButton from "../../../components/buttons/CustomeButton";
 import TextBox from "react-native-password-eye";
 import { Toast } from "react-native-toast-notifications";
 import { Ionicons } from "@expo/vector-icons";
+import { userLogin } from "../../../api/profile";
 // import Auth from "../../../components/auth/Auth";
 
 const Login = () => {
@@ -58,18 +59,7 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(
-        "https://backend-v2-osaw.onrender.com/auth/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email, password }),
-        }
-      );
-
-      const result = await response.json();
+      const result = await userLogin(email, password);
 
       if (result.success) {
         // Update Redux state with login info
@@ -116,10 +106,10 @@ const Login = () => {
           </View>
 
           {/* Login Inputs */}
-          <View className="flex flex-col gap-4">
+          <View className=" justify-start flex-1 gap-4">
             {/* <Auth/> */}
 
-            <TouchableOpacity
+            {/* <TouchableOpacity
               // onPress={() => handleNavigation("/(profile_data)")}
               className="border border-[#2983DC] rounded-xl w-full justify-center py-4 px-6 flex-row items-center"
             >
@@ -136,7 +126,7 @@ const Login = () => {
                 Or
               </Text>
               <View className="flex-1 h-px bg-gray-300" />
-            </View>
+            </View> */}
             <TextInput
               placeholder="Email Address"
               className="bg-[#2982dc14] w-full px-6 py-5  font-medium text-lg rounded-lg text-slate-700"

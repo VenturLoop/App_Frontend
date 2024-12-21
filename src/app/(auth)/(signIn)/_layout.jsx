@@ -5,6 +5,8 @@ export default function SignInLayout() {
   // Access SignUpToken from Redux state
   const { isSignup } = useSelector((state) => state.user);
 
+  console.log(isSignup);
+
   // if (isSignup) {
   //   return <Redirect href={"/(profile)"} />;
   // }
@@ -36,9 +38,9 @@ export default function SignInLayout() {
         <Stack.Screen name="add_basic_details" />
         <Stack.Screen name="createPass" />
         <Stack.Screen name="otp" />
-        <Stack.Screen name="(profile)" />
+        {/* <Stack.Screen name="(profile)" /> */}
       </Stack>
-      {/* {isSignup ? <Redirect href={"/(profile)"} /> : null} */}
+      {isSignup ? <Redirect href={"/(profile_data)"} /> : null}
     </>
   );
 }

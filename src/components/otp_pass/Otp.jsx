@@ -43,6 +43,8 @@ const Otp = () => {
     setIsLoading(true);
     try {
       const result = await SentOPT(email, verificationCode);
+      console.log(result);
+
 
       if (result.success) {
         Toast.show(result.message, { type: "success" });

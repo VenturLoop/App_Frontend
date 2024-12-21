@@ -13,12 +13,11 @@ import {
 import React, { useState } from "react";
 import { router } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
-import { setSignup } from "../../redux/slices/userSlice";
+import { updateUser } from "../../redux/slices/userSlice";
 import imagePath from "../../constants/imagePath";
 import CustomeButton from "../buttons/CustomeButton";
 import { Ionicons } from "@expo/vector-icons"; // For password visibility toggle icon
 import { Toast, useToast } from "react-native-toast-notifications";
-import { createPass } from "../../api/profile";
 
 const CreatePass = () => {
   const [newPassword, setNewPassword] = useState("");
@@ -29,8 +28,6 @@ const CreatePass = () => {
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
 
   // Retrieve name and email from Redux
-  const { name, email } = useSelector((state) => state.user);
-  const toast = useToast();
   const dispatch = useDispatch();
 
   const handleNavigation = (route) => {
@@ -43,14 +40,14 @@ const CreatePass = () => {
     let isValid = true;
 
     if (newPassword.length < 6) {
-      toast.show("Password must be at least 6 characters long.", {
+      Toast.show("Password must be at least 6 characters long.", {
         type: "danger",
       });
       isValid = false;
     }
 
     if (newPassword !== repeatPassword) {
-      toast.show("Passwords do not match.", {
+      Toast.show("Passwords do not match.", {
         type: "danger",
       });
       isValid = false;
@@ -60,24 +57,20 @@ const CreatePass = () => {
   };
   const handleCreatePassword = async () => {
     if (!validatePasswords()) return;
-
     setLoading(true);
 
-    try {
-      const result = await createPass(name, email, newPassword);
+    console.log(newPassword)
 
-      if (result.success) {
-        dispatch(setSignup({ isSignup: true, signupToken: result.jwtToken }));
-        Toast.show("Password created successfully!", { type: "success" });
-        handleNavigation("/add_basic_details");
-      } else {
-        Toast.show("Failed to create password.", {
-          type: "error",
-        });
-      }
-    } catch (error) {
-      toast.show("Something went wrong. Please try again.", { type: "error" });
-    } finally {
+    if (newPassword !== "") {
+      console.log("Email is present");
+      dispatch(updateUser({ field: "password", value: newPassword }));
+      Toast.show("Password created successfully!", { type: "success" });
+      handleNavigation("/add_basic_details");
+      setLoading(false);
+    } else {
+      Toast.show("Failed to create password.", {
+        type: "error",
+      });
       setLoading(false);
     }
   };

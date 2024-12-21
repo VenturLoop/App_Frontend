@@ -20,7 +20,9 @@ import CustomeButton from "../../../components/buttons/CustomeButton";
 import { Ionicons } from "@expo/vector-icons";
 import * as Location from "expo-location";
 import { Toast } from "react-native-toast-notifications";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { createAccount } from "../../../api/profile";
+import { setSignup, updateUser } from "../../../redux/slices/userSlice";
 
 const AddBasicDetails = () => {
   const [birthdate, setBirthdate] = useState("");
@@ -31,7 +33,9 @@ const AddBasicDetails = () => {
   const [loadingLocation, setLoadingLocation] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const { signupToken } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
+  const { name, email, password } = useSelector((state) => state.user);
 
   const getCurrentLocation = async () => {
     setLoadingLocation(true);
@@ -91,22 +95,50 @@ const AddBasicDetails = () => {
     setShowDatePicker(false);
   };
 
-  const handleSaveDetails = () => {
-    if (birthdate === "" || location === "") {
-      Toast.show("Please fill in all the details.", { type: "danger" });
+  const handleSignup = async () => {
+    if (!birthdate || !location || location.toLowerCase().includes("unknown")) {
+      Toast.show("Please provide a valid location and birthdate.", {
+        type: "danger",
+      });
+      return;
+    }
+    if (!name || !email || !password) {
+      Toast.show("Please complete all required fields before proceeding.", {
+        type: "danger",
+      });
       return;
     }
 
-    setLoading(true);
-    setTimeout(() => {
-      // Save details logic here
-      setLoading(false);
-      Toast.show("Details saved successfully!", { type: "success" });
-      router.push("/(profile_data)");
-    }, 2000);
+    setLoading(true); // Start loading state
+
+    try {
+      const result = await createAccount(
+        name,
+        email,
+        password,
+        birthdate,
+        location
+      );
+
+      if (result?.success) {
+        dispatch(setSignup({ isSignup: true, signupToken: result.jwtToken }));
+        dispatch(
+          updateUser({ field: "referalCode", value: result.referralCode })
+        );
+        Toast.show("Details added successfully", { type: "success" });
+        router.push("/(profile_data)");
+      } else {
+        Toast.show(result?.message || "Please try again.", { type: "error" });
+      }
+    } catch (error) {
+      console.error("Error during signup:", error); // Log detailed error
+      Toast.show("Please try again later.", { type: "error" });
+    } finally {
+      setLoading(false); // Stop loading state
+    }
   };
 
-  console.log("signupToken : " + signupToken);
+  // console.log("signupToken : " + signupToken);
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -208,7 +240,7 @@ const AddBasicDetails = () => {
             <CustomeButton
               title={loading ? <ActivityIndicator color="white" /> : "Continue"}
               style="my-2"
-              onButtonPress={handleSaveDetails}
+              onButtonPress={handleSignup}
             />
           </View>
         </ScrollView>

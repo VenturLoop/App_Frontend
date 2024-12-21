@@ -5,10 +5,18 @@ import imagePath from "../../../../constants/imagePath";
 import CustomeButton from "../../../../components/buttons/CustomeButton";
 import { Sen_700Bold } from "@expo-google-fonts/sen";
 import { router } from "expo-router";
+import { useSelector } from "react-redux";
 
 const index = () => {
-    const [loading, setLoading] = useState(false);
-  
+  const [loading, setLoading] = useState(false);
+  const { referalCode, signupToken, isSignup } = useSelector(
+    (state) => state.user
+  );
+
+  console.log("referalCode", referalCode);
+  console.log("signupToken", signupToken);
+  console.log("isSignup", isSignup);
+
   return (
     <SafeAreaView className="flex-1  bg-white" edges={["left", "right"]}>
       <ImageBackground
@@ -28,7 +36,7 @@ const index = () => {
         <CustomeButton
           title={loading ? <ActivityIndicator color="white" /> : "Continue"}
           onButtonPress={() => {
-            router  .navigate("/what_your_status");
+            router.navigate("/what_your_status");
           }}
         />
       </ImageBackground>

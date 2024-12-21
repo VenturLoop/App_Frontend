@@ -4,11 +4,12 @@ const initialState = {
   name: "",
   email: "",
   password: "",
-  isPremium: false, 
+  isPremium: false,
   isLogin: false,
   loginToken: "", // Store login token
-  isSignup: true, // Track signup status
+  isSignup: false, // Track signup status
   signupToken: "", // Store signup token
+  referalCode: "", // Store referal Code
 };
 
 const userSlice = createSlice({
