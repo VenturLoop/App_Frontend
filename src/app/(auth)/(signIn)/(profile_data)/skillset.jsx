@@ -28,6 +28,10 @@ const skillset = () => {
     "Legal",
     "UI/UX Design",
     "Product Design",
+    "DevOps",
+    "Internet of Things",
+    "Hardware",
+    
   ];
 
   const toggleTag = (tag) => {

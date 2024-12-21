@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -7,26 +8,22 @@ import {
   Alert,
   TouchableOpacity,
 } from "react-native";
-import React, { useEffect, useState } from "react";
-import { Link, router } from "expo-router";
-import OTPInput from "@codsod/react-native-otp-input";
-// import CustomeButton from "../buttons/CustomeButton";
-// import imagePath from "../../constants/imagePath";
+import { router } from "expo-router";
 import { Toast } from "react-native-toast-notifications";
 import imagePath from "../../../constants/imagePath";
 import CustomeButton from "../../../components/buttons/CustomeButton";
+import { OtpInput } from "react-native-otp-entry";
 
-const forgateOtp = () => {
+const ForgateOtp = () => {
   const [otp, setOTP] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [timer, setTimer] = useState(20); // Initial timer value
+  const [timer, setTimer] = useState(20);
 
   useEffect(() => {
     if (timer > 0) {
       const interval = setInterval(() => {
         setTimer((prevTimer) => prevTimer - 1);
       }, 1000);
-
       return () => clearInterval(interval);
     }
   }, [timer]);
@@ -37,7 +34,7 @@ const forgateOtp = () => {
       return;
     }
 
-    setIsLoading(true); // Show loader
+    setIsLoading(true);
     try {
       const response = await fetch(
         "https://verturloop-server-v01.onrender.com/auth/verify-otp",
@@ -51,86 +48,103 @@ const forgateOtp = () => {
       );
 
       const result = await response.json();
-      setIsLoading(false); // Hide loader
+      setIsLoading(false);
 
       if (response.ok) {
         Toast.show("OTP verified successfully!", { type: "success" });
-        router.push("/forgateCreatePass"); // Navigate to the create password page
+        router.push("/forgateCreatePass");
       } else {
-        Toast.show("Invalid OTP. Please try again.", {
-          type: "error",
-        });
+        Toast.show("Invalid OTP. Please try again.", { type: "error" });
       }
     } catch (error) {
-      setIsLoading(false); // Hide loader
+      setIsLoading(false);
       Toast.show("Something went wrong. Please try again later.", {
         type: "error",
       });
     }
   };
 
-  const dumiVerify = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      router.push("/forgateCreatePass");
-      Toast.show("OTP verified successfully!", { type: "success" });
-    }, 2000);
-  };
-
   const handleResentOtp = () => {
     Toast.show("OTP has been resent to your email.", { type: "success" });
-    setTimer(20); // Reset the timer
+    setTimer(20);
   };
 
   return (
-    <SafeAreaView className="py-6 px-8 bg-white h-screen pt-10 flex justify-between gap-5 flex-col">
+    <SafeAreaView className="flex-1 gap-16 justify-between bg-white p-8">
       {/* Header Section */}
-      <View className="header flex flex-col my-6 items-center justify-center gap-4">
-        <Image className="w-16" source={imagePath.otpImage} />
-        <Text className="text-black text-center mt-4 font-bold text-3xl">
+      <View className="flex items-center mb-10">
+        <Image source={imagePath.otpImage} className="w-16 mb-4" />
+        <Text className="text-black text-center font-bold text-3xl mb-2">
           Enter OTP
         </Text>
-        <Text className="text-center text-[#61677D]">
+        <Text className="text-[#61677D] text-center">
           Enter the OTP sent to your Email for secure verification!
         </Text>
       </View>
 
       {/* OTP Input Section */}
-      <View className="flex justify-start mb-10 px-10 h-64 items-center">
-        <OTPInput
-          style={{ gap: 1 }}
-          inputStyle={{
-            borderColor: "#2983DC",
-            borderRadius: 10,
-            backgroundColor: "#EAF3FC",
-            opacity: 20,
-          }}
-          length={6}
-          onOtpComplete={(txt) => setOTP(txt)}
-        />
+      <View className="flex-1 ">
+        <View className="flex justify-center mb-12 px-10">
+          <OtpInput
+            numberOfDigits={6}
+            onTextChange={(text) => setOTP(text)} // Store OTP
+            theme={{
+              containerStyle: {
+                justifyContent: "center",
+                alignItems: "center",
+              },
+              pinCodeContainerStyle: {
+                borderColor: "#2983DC",
+                borderWidth: 1,
+                borderRadius: 10,
+                backgroundColor: "#EAF3FC",
+                // width: 50,
+                // height: 50,
+                justifyContent: "center",
+                alignItems: "center",
+                marginRight: 10,
+              },
+              pinCodeTextStyle: {
+                fontSize: 20,
+                fontWeight: "bold",
+                color: "#000",
+              },
+              focusedPinCodeContainerStyle: {
+                borderColor: "#2983DC",
+                borderWidth: 2,
+                backgroundColor: "#fff",
+              },
+              // filledPinCodeContainerStyle: {
+              //   backgroundColor: "#2983DC",
+              // },
+              placeholderTextStyle: {
+                fontSize: 20,
+              },
+            }}
+          />
+        </View>
       </View>
 
       {/* Footer Section */}
-      <View className="footer  flex">
+      <View className="flex items-center">
         {isLoading ? (
           <ActivityIndicator size="large" color="#2983DC" />
         ) : (
           <CustomeButton
             title="Verify"
-            style="mb-1"
-            onButtonPress={dumiVerify}
+            style="mb-3"
+            onButtonPress={verifyOtp}
           />
         )}
-        <View className="flex-row justify-center items-center gap-2 mt-4">
+        <View className="flex-row items-center gap-2">
           <Text className="text-center">Didn’t get OTP? </Text>
           {timer > 0 ? (
-            <Text className="font-semibold text-center text-lg text-gray-500">
+            <Text className="text-gray-500 text-lg">
               Resend OTP in {timer}s
             </Text>
           ) : (
             <TouchableOpacity onPress={handleResentOtp}>
-              <Text className="font-semibold text-center text-lg text-[#2983DC]">
+              <Text className="font-semibold text-lg text-[#2983DC]">
                 Resend OTP
               </Text>
             </TouchableOpacity>
@@ -141,4 +155,4 @@ const forgateOtp = () => {
   );
 };
 
-export default forgateOtp;
+export default ForgateOtp;

@@ -4,10 +4,10 @@ const initialState = {
   name: "",
   email: "",
   password: "",
-  isPremium: false,
+  isPremium: false, 
   isLogin: false,
   loginToken: "", // Store login token
-  isSignup: false, // Track signup status
+  isSignup: true, // Track signup status
   signupToken: "", // Store signup token
 };
 

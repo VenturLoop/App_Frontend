@@ -8,11 +8,11 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import OTPInput from "@codsod/react-native-otp-input";
 import CustomeButton from "../buttons/CustomeButton";
 import imagePath from "../../constants/imagePath";
 import { Toast } from "react-native-toast-notifications";
 import { useRouter } from "expo-router";
+import { OtpInput } from "react-native-otp-entry";
 
 const Otp = () => {
   const [verificationCode, setVerificationCode] = useState("");
@@ -122,15 +122,42 @@ const Otp = () => {
 
       {/* OTP Input Section */}
       <View className="flex justify-start mb-10 px-10 h-64 items-center">
-        <OTPInput
-          style={{ gap: 1 }}
-          inputStyle={{
-            borderColor: "#2983DC",
-            borderRadius: 10,
-            backgroundColor: "#EAF3FC",
+        <OtpInput
+          numberOfDigits={6}
+          onTextChange={(text) => setVerificationCode(text)} // Store OTP
+          theme={{
+            containerStyle: {
+              justifyContent: "center",
+              alignItems: "center",
+            },
+            pinCodeContainerStyle: {
+              borderColor: "#2983DC",
+              borderWidth: 1,
+              borderRadius: 10,
+              backgroundColor: "#EAF3FC",
+              // width: 50,
+              // height: 50,
+              justifyContent: "center",
+              alignItems: "center",
+              marginRight: 10,
+            },
+            pinCodeTextStyle: {
+              fontSize: 20,
+              fontWeight: "bold",
+              color: "#000",
+            },
+            focusedPinCodeContainerStyle: {
+              borderColor: "#2983DC",
+              borderWidth: 2,
+              backgroundColor: "#fff",
+            },
+            // filledPinCodeContainerStyle: {
+            //   backgroundColor: "#2983DC",
+            // },
+            placeholderTextStyle: {
+              fontSize: 20,
+            },
           }}
-          length={6}
-          onOtpComplete={setVerificationCode}
         />
       </View>
 

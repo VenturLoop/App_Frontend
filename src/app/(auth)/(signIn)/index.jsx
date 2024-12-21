@@ -10,7 +10,7 @@ import {
   Platform,
   ActivityIndicator, // Importing the loader
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import imagePath from "../../../constants/imagePath";
 import CustomeButton from "../../../components/buttons/CustomeButton";
 import { Link, router } from "expo-router";
@@ -40,6 +40,8 @@ const Index = () => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     setErrorMessage(""); // Clear error message when user starts typing
   };
+
+  console.log(formData);
 
   const validateForm = () => {
     const { name, email } = formData;
@@ -105,6 +107,9 @@ const Index = () => {
     }
   };
 
+  // console.log(userInfo?.name);
+
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <KeyboardAvoidingView
@@ -135,7 +140,7 @@ const Index = () => {
           {/* Form Section */}
           <View className="flex flex-col gap-4">
             <TouchableOpacity
-              onPress={() => handleNavigation("/(profile_data)")}
+              // onPress={() => promptAsync()}
               className="border border-[#2983DC] rounded-xl w-full justify-center py-4 px-6 flex-row items-center"
             >
               <Image
@@ -145,6 +150,7 @@ const Index = () => {
               />
               <Text className="text-[#61677D] font-medium text-lg">Google</Text>
             </TouchableOpacity>
+            {/* <Auth /> */}
             <View className="flex-row items-center my-4">
               <View className="flex-1 h-px bg-gray-300" />
               <Text className="mx-2 text-lg font-semibold text-gray-400">

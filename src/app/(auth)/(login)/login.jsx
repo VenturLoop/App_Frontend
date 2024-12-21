@@ -19,6 +19,7 @@ import CustomeButton from "../../../components/buttons/CustomeButton";
 import TextBox from "react-native-password-eye";
 import { Toast } from "react-native-toast-notifications";
 import { Ionicons } from "@expo/vector-icons";
+// import Auth from "../../../components/auth/Auth";
 
 const Login = () => {
   const router = useRouter();
@@ -116,6 +117,8 @@ const Login = () => {
 
           {/* Login Inputs */}
           <View className="flex flex-col gap-4">
+            {/* <Auth/> */}
+
             <TouchableOpacity
               // onPress={() => handleNavigation("/(profile_data)")}
               className="border border-[#2983DC] rounded-xl w-full justify-center py-4 px-6 flex-row items-center"
