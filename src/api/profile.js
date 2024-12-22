@@ -179,3 +179,122 @@ export const referalCodeCheck = async (referralCode) => {
   }
 };
 
+// 9 Delete User
+export const DeleteUserAccount = async (userId) => {
+  try {
+    const res = await fetch(
+      "https://backend-v2-osaw.onrender.com/auth/delete",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId }),
+      }
+    );
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.log("Error while updating Item: " + error);
+  }
+};
+
+// 10
+export const submitProfileApi = async ({
+  userId,
+  skillSet,
+  industries,
+  priorStartupExperience,
+  commitmentLevel,
+  equityExpectation,
+  status,
+}) => {
+  console.log("Data being sent to the backend:", {
+    userId,
+    skillSet,
+    industries,
+    priorStartupExperience,
+    commitmentLevel,
+    equityExpectation,
+    status,
+  });
+
+  try {
+    const res = await fetch(
+      `https://backend-v2-osaw.onrender.com/auth/user/${userId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          skillSet,
+          industries,
+          priorStartupExperience,
+          commitmentLevel,
+          equityExpectation,
+          status,
+        }),
+      }
+    );
+
+    if (!res.ok) {
+      // Log the response from the backend to get error details
+      const errorData = await res.json();
+      console.error("Backend error:", errorData.message);
+      throw new Error(`Error saving user profile: ${errorData.message}`);
+    }
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Error during API call:", error);
+    throw error;
+  }
+};
+
+// 11 Get user profile data from server
+export const getUserDataProfile = async (userId) => {
+  try {
+    const res = await fetch(
+      `https://backend-v2-osaw.onrender.com/api/user/${userId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId }),
+      }
+    );
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.log("Error while updating Item: " + error);
+  }
+};
+
+// 12 Update user when edit profile save button is clicked
+export const UpdateUserProfileInEditProfile = async (profileData) => {
+  try {
+    const res = await fetch(
+      `https://backend-v2-osaw.onrender.com/api/user/${profileData.userId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(profileData),
+      }
+    );
+
+    if (res.ok) {
+      const data = await res.json();
+      return data;
+    } else {
+      throw new Error("Error saving user profile");
+    }
+  } catch (error) {
+    console.error("Error during API call:", error);
+    throw error;
+  }
+};

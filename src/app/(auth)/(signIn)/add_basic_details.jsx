@@ -23,7 +23,12 @@ import * as Location from "expo-location";
 import { Toast } from "react-native-toast-notifications";
 import { useDispatch, useSelector } from "react-redux";
 import { createAccount } from "../../../api/profile";
-import { setSignup, updateUser } from "../../../redux/slices/userSlice";
+import {
+  setSignup,
+  setUser,
+  updateUser,
+} from "../../../redux/slices/userSlice";
+import * as SecureStore from "expo-secure-store";
 
 const AddBasicDetails = () => {
   const [birthdate, setBirthdate] = useState("");
@@ -140,11 +145,16 @@ const AddBasicDetails = () => {
         location
       );
 
+      console.log(result);
+
       if (result?.success) {
         dispatch(setSignup({ isSignup: true, signupToken: result.jwtToken }));
         dispatch(
           updateUser({ field: "referalCode", value: result.referralCode })
         );
+        dispatch(updateUser({ field: "userId", value: result.user.id }));
+        dispatch(setUser(result.user));
+        await SecureStore.setItemAsync("userSignupToken", result.jwtToken);
         Toast.show("Details added successfully", { type: "success" });
         router.push("/(profile_data)");
       } else {

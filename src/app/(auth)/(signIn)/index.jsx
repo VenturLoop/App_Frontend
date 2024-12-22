@@ -28,8 +28,10 @@ const Index = () => {
   });
   const [loading, setLoading] = useState(false); // State for loading
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user); // Get the user data from the Redux store
   const [errorMessage, setErrorMessage] = useState("");
+  const user = useSelector((state) => state.user); // Get the user data from the Redux store
+
+  console.log("User: ", user);
 
   const handleNavigation = (route) => {
     setTimeout(() => {
@@ -80,7 +82,6 @@ const Index = () => {
           dispatch(updateUser({ field: "email", value: formData.email }));
           Toast.show(res.message, { type: "success" });
         } else {
-          
           Toast.show(res.message, {
             type: "error",
           });

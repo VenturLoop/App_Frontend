@@ -4,14 +4,17 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState } from "react";
 import { router } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import CustomeButton from "../../../../components/buttons/CustomeButton";
+import { setStatus } from "../../../../redux/slices/profileSlice";
 
 const editStatus = () => {
   const [selected, setSelected] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const options = [
     { id: "co-founder", label: "Looking for a co-founder" },
@@ -19,6 +22,12 @@ const editStatus = () => {
     { id: "startups", label: "Looking for startups" },
     { id: "investors", label: "Looking for Investors" },
   ];
+
+  const handleStatusSave = () => {
+    setLoading(true);
+    dispatch(setStatus(selected));
+    setLoading(false);
+  };
   return (
     <SafeAreaView className="flex-1 bg-white  h-screen items-center justify-between">
       <View className="header flex-row px-5 justify-between border-b-[0.5px] border-gray-500 py-4 w-full  items-center">
@@ -58,12 +67,8 @@ const editStatus = () => {
         </View>
       </View>
       <View className="footer px-5 w-full">
-        <CustomeButton
-          onButtonPress={() => {
-            router.navigate("/edit_profile");
-          }}
-          title="Save"
-        />
+        <CustomeButton onButtonPress={handleStatusSave} title={loading ? <ActivityIndicator color="white" /> : "Save"}
+                />
       </View>
     </SafeAreaView>
   );

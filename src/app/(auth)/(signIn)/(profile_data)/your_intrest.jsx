@@ -14,12 +14,16 @@ import imagePath from "../../../../constants/imagePath";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { debounce } from "lodash"; // Debounce library to optimize the search input
+import { useDispatch } from "react-redux";
+import { setIndustries } from "../../../../redux/slices/profileSlice";
+import { Toast } from "react-native-toast-notifications";
 
 const YourInterest = () => {
   const [selectedTags, setSelectedTags] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredTags, setFilteredTags] = useState([]);
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
   // Sample tags
   const tags = [
@@ -113,6 +117,19 @@ const YourInterest = () => {
     }
   };
 
+  const handleSaveSkillsets = () => {
+    if (!selectedTags) {
+      Toast.show("Please Select an option", { type: "error" });
+      return;
+    }
+    setLoading(true);
+    Toast.show("Intrests Saved!", { type: "success" });
+    setLoading(true);
+    dispatch(setIndustries(selectedTags)); // Dispatch action to store skillSet in Redux
+    router.navigate("/commitment");
+    setLoading(false);
+  };
+
   // Initialize filteredTags with all tags initially
   useEffect(() => {
     setFilteredTags(tags);
@@ -174,7 +191,7 @@ const YourInterest = () => {
       </View>
       <View className="footer px-5 w-full">
         <CustomeButton
-          onButtonPress={() => router.navigate("/commitment")}
+          onButtonPress={handleSaveSkillsets}
           title={loading ? <ActivityIndicator color="white" /> : "Continue"}
         />
       </View>

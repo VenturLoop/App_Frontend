@@ -13,6 +13,10 @@ import {
 import { router } from "expo-router";
 import imagePath from "../../constants/imagePath";
 import { Toast } from "react-native-toast-notifications";
+import { referalCodeCheck } from "../../api/profile";
+import { setLogin } from "../../redux/slices/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import * as SecureStore from "expo-secure-store";
 
 const ReferalPriceModel = ({ isModalVisible, handleModalVisibility }) => {
   // const [isLoadi, setisLoadi] = useState(second)
@@ -20,6 +24,8 @@ const ReferalPriceModel = ({ isModalVisible, handleModalVisibility }) => {
   const [isLoading1, setisLoading1] = useState(false);
   const [isLoading2, setisLoading2] = useState(false);
   const translateY = React.useRef(new Animated.Value(300)).current; // Initial offset (off-screen)
+  const dispatch = useDispatch();
+  const { signupToken } = useSelector((state) => state.user);
 
   useEffect(() => {
     if (isModalVisible) {
@@ -48,22 +54,46 @@ const ReferalPriceModel = ({ isModalVisible, handleModalVisibility }) => {
     }
   };
 
-  const handleDontHaveReferal = () => {
+  // TODO Add validation for referal code that help user to put right referal
+
+  const handleDontHaveReferal = async () => {
     setisLoading1(true);
-    setTimeout(() => {
+    setTimeout(async () => {
       handleModalVisibility();
       router.navigate("/(main)/(tabs)");
+
+      // Make chenges logic for current
+      dispatch(setLogin({ isLogin: true, loginToken: signupToken }));
+      // Navigate to the home page or dashboard
+      await SecureStore.setItemAsync("userToken", signupToken);
       Toast.show("Account Created Successfully", { type: "success" });
-    }, 3000);
+    }, 2000);
   };
 
-  const handleContinueReferal = () => {
+  const handleContinueReferal = async () => {
     setisLoading2(true);
-    setTimeout(() => {
-      handleModalVisibility();
-      router.navigate("/(main)/(tabs)");
-      Toast.show("Account Created Successfully", { type: "success" });
-    }, 3000);
+    try {
+      const result = await referalCodeCheck(referal);
+      console.log(result);
+
+      if (result.success) {
+        Toast.show("Account Created Successfully", { type: "success" });
+        handleModalVisibility();
+        // Make chenges logic for current
+        dispatch(setLogin({ isLogin: true, loginToken: signupToken }));
+        // Navigate to the home page or dashboard
+        await SecureStore.setItemAsync("userToken", signupToken);
+        handleNavigation("/(main)/(tabs)");
+      } else {
+        Toast.show(result.message, { type: "error" });
+      }
+    } catch (error) {
+      Toast.show("Something went wrong. Please try again.", {
+        type: "error",
+      });
+    } finally {
+      setisLoading2(false);
+    }
   };
 
   return (

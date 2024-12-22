@@ -97,7 +97,7 @@ const setting = () => {
       await SecureStore.deleteItemAsync("userToken");
       dispatch(setLogin({ isLogin: false, loginToken: "" }));
       Toast.show("Logout Successful", {
-        type: "success",
+        type: "danger",
       });
       router.push("/login"); // Adjust for your routing library
     } catch (error) {

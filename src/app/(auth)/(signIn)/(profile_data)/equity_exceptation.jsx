@@ -1,105 +1,197 @@
+import React, { useState } from "react";
 import {
   View,
   Text,
   SafeAreaView,
   TouchableOpacity,
-  Image,
   ActivityIndicator,
 } from "react-native";
-import React, { useState } from "react";
-import CustomeButton from "../../../../components/buttons/CustomeButton";
-import imagePath from "../../../../constants/imagePath";
-import { router } from "expo-router";
 import Slider from "@react-native-community/slider";
 import { Ionicons } from "@expo/vector-icons";
+import { useDispatch, useSelector } from "react-redux";
+import CustomeButton from "../../../../components/buttons/CustomeButton";
 import ReferalPriceModel from "../../../../components/models/ReferalPriceModel";
+import { submitInCompleteProfileData } from "../../../../redux/slices/profileSlice";
+import { submitProfileApi } from "../../../../api/profile";
+import { router } from "expo-router";
 import { Toast } from "react-native-toast-notifications";
 
-// Reusable Slider Component
-const EquitySlider = ({ label, value, onValueChange, disabled }) => {
-  return (
-    <View className="my-4">
-      <Text
-        className={`text-base font-medium mb-2 ${
-          disabled ? "opacity-50" : "text-gray-950"
-        }`}
-      >
-        {label}
-      </Text>
-      <Slider
-        minimumValue={1}
-        maximumValue={100}
-        step={1}
-        value={value}
-        onValueChange={onValueChange}
-        disabled={disabled}
-        minimumTrackTintColor={disabled ? "#E2E8F0" : "#007BFF"}
-        maximumTrackTintColor="#E2E8F0"
-        thumbTintColor={disabled ? "#E2E8F0" : "#007BFF"}
-      />
-      <Text className="text-base text-gray-700 mt-2">{value}%</Text>
-    </View>
-  );
-};
+const EquitySlider = ({ label, value, onValueChange, disabled }) => (
+  <View style={{ marginVertical: 8 }}>
+    <Text
+      style={{ marginBottom: 4, fontSize: 16, opacity: disabled ? 0.5 : 1 }}
+    >
+      {label}
+    </Text>
+    <Slider
+      minimumValue={1}
+      maximumValue={100}
+      step={1}
+      value={value}
+      onValueChange={onValueChange}
+      disabled={disabled}
+      minimumTrackTintColor={disabled ? "#E2E8F0" : "#007BFF"}
+      maximumTrackTintColor="#E2E8F0"
+      thumbTintColor={disabled ? "#E2E8F0" : "#007BFF"}
+    />
+    <Text style={{ marginTop: 4, fontSize: 16 }}>{value}%</Text>
+  </View>
+);
 
-const EquityExpectation = () => {
+const equity_exceptation = () => {
   const [selectedOption, setSelectedOption] = useState("");
-  const [equityRange, setEquityRange] = useState({ min: 0, max: 0 }); // Combined state
-  const [isModalVisible, setModalVisible] = useState(false);
+  const [equityRange, setEquityRange] = useState({ min: 0, max: 0 });
   const [loading, setLoading] = useState(false);
+  const [isModalVisible, setModalVisible] = useState(false);
 
-  const handleModalVisibility = () => setModalVisible(!isModalVisible);
+  const dispatch = useDispatch();
+  const {
+    skillSet,
+    industries,
+    priorStartupExperience,
+    commitmentLevel,
+    status,
+  } = useSelector((state) => state.profile);
+  const { userId } = useSelector((state) => state.user);
+  const profile = useSelector((state) => state.profile); // Get the user data from the Redux store
 
-  const handleNextButtonPress = () => {
-    setModalVisible(true);
-    // Toast.show("Account Created Successfully", { type: "success" });
+  console.log("profile: ", profile);
+
+  const handleSaveProfile = async () => {
+    if (!selectedOption) {
+      Toast.show("Please select an option", { type: "danger" });
+      return;
+    }
+
+    if (
+      (selectedOption === "accept" || selectedOption === "offer") &&
+      (equityRange.min === 0 || equityRange.max === 0)
+    ) {
+      Toast.show("Please set a valid equity range", { type: "danger" });
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const equityExpectationData =
+        selectedOption === "accept" || selectedOption === "offer"
+          ? `${equityRange.min}-${equityRange.max}%`
+          : selectedOption === "negotiable"
+          ? "Fully Negotiable"
+          : "Equal Split";
+
+      const payload = {
+        userId,
+        skillSet,
+        industries,
+        priorStartupExperience,
+        commitmentLevel,
+        equityExpectation: equityExpectationData,
+        status,
+      };
+
+      console.log("Submitting profile with data:", payload);
+
+      const response = await submitProfileApi({
+        userId,
+        skillSet,
+        industries,
+        priorStartupExperience,
+        commitmentLevel,
+        equityExpectation: equityExpectationData,
+        status,
+      });
+
+      if (response.success) {
+        Toast.show("Data submitted successfully", { type: "success" });
+        setModalVisible(true);
+      } else {
+        Toast.show(response.message || "Failed to save profile", {
+          type: "danger",
+        });
+      }
+    } catch (error) {
+      console.error("Error saving profile:", error);
+      Toast.show("Error saving profile. Please try again later.", {
+        type: "danger",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSliderChange = (key, value) => {
+    setEquityRange((prev) => ({ ...prev, [key]: value }));
   };
 
   const isCustomOption =
     selectedOption === "offer" || selectedOption === "accept";
 
-  const handleSliderChange = (key, value) => {
-    // Updates the equity range smoothly
-    setEquityRange((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
-  };
-
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       {/* Header Section */}
-      <View className="header flex-row px-5 justify-between border-b-[0.5px] py-4 items-center">
-        <View className="flex-row items-center gap-3">
-          <TouchableOpacity onPress={() => router.back()}>
-            <Ionicons name="arrow-back-outline" size={25} color="black" />
-          </TouchableOpacity>
-          <Text className="text-xl font-semibold">Equity Expectation</Text>
-        </View>
-        <Text className="text-xl font-semibold text-[#2983DC]">6/6</Text>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: 16,
+          borderBottomWidth: 0.5,
+          borderBottomColor: "#ddd",
+        }}
+      >
+        <TouchableOpacity onPress={() => router.back()}>
+          <Ionicons name="arrow-back-outline" size={25} color="black" />
+        </TouchableOpacity>
+        <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+          Equity Expectation
+        </Text>
+        <Text style={{ fontSize: 18, color: "#2983DC" }}>6/6</Text>
       </View>
 
       {/* Body Section */}
-      <View className="px-6 py-8 w-full flex-1">
-        {/* Option Selection */}
+      <View style={{ padding: 16, flex: 1 }}>
+        {/* Options */}
         {["negotiable", "equal", "accept", "offer"].map((option) => (
           <TouchableOpacity
             key={option}
-            className="flex-row items-center mb-4"
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginBottom: 16,
+            }}
             onPress={() => setSelectedOption(option)}
           >
             <View
-              className={`h-5 w-5 rounded-full border-2 ${
-                selectedOption === option
-                  ? "border-[#2983DC]"
-                  : "border-gray-400"
-              } flex items-center justify-center`}
+              style={{
+                height: 20,
+                width: 20,
+                borderRadius: 10,
+                borderWidth: 2,
+                borderColor: selectedOption === option ? "#2983DC" : "#ccc",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
             >
               {selectedOption === option && (
-                <View className="h-2.5 w-2.5 rounded-full bg-[#2983DC]" />
+                <View
+                  style={{
+                    height: 10,
+                    width: 10,
+                    borderRadius: 5,
+                    backgroundColor: "#2983DC",
+                  }}
+                />
               )}
             </View>
-            <Text className="ml-2 py-1 text-lg text-gray-700 capitalize">
+            <Text
+              style={{
+                marginLeft: 8,
+                fontSize: 16,
+                textTransform: "capitalize",
+              }}
+            >
               {option === "negotiable"
                 ? "Fully Negotiable"
                 : option === "equal"
@@ -111,8 +203,7 @@ const EquityExpectation = () => {
           </TouchableOpacity>
         ))}
 
-        {/* Render Sliders Conditionally */}
-        {/* Render Sliders Conditionally */}
+        {/* Sliders */}
         {isCustomOption && (
           <>
             <EquitySlider
@@ -132,22 +223,22 @@ const EquityExpectation = () => {
       </View>
 
       {/* Footer Section */}
-      <View className="footer px-5 w-full">
+      <View style={{ padding: 16 }}>
         <CustomeButton
-          onButtonPress={handleNextButtonPress}
+          onButtonPress={handleSaveProfile}
           title={
             loading ? <ActivityIndicator color="white" /> : "Let’s Jump In!"
           }
         />
       </View>
 
-      {/* Modal Section */}
+      {/* Modal */}
       <ReferalPriceModel
         isModalVisible={isModalVisible}
-        handleModalVisibility={handleModalVisibility}
+        handleModalVisibility={() => setModalVisible(!isModalVisible)}
       />
     </SafeAreaView>
   );
 };
 
-export default EquityExpectation;
+export default equity_exceptation;

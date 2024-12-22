@@ -2,6 +2,7 @@ import { View, Text, Modal, TouchableOpacity, Pressable } from "react-native";
 import React from "react";
 import CustomeButton from "../buttons/CustomeButton";
 import { router } from "expo-router";
+import * as SecureStore from "expo-secure-store";
 
 const LoginSignupModel = ({ isModalVisible, handleModalVisibility }) => {
   const handleNavigation = (route) => {
@@ -11,6 +12,11 @@ const LoginSignupModel = ({ isModalVisible, handleModalVisibility }) => {
         router.push(route);
       }, 100); // Wait for modal close animation before routing
     }
+  };
+
+  const handleSignIn = async () => {
+    handleNavigation("/(signIn)");
+    // await SecureStore.deleteItemAsync("userSignupToken");
   };
 
   return (
@@ -33,7 +39,7 @@ const LoginSignupModel = ({ isModalVisible, handleModalVisibility }) => {
         <View className=" bg-white  rounded-t-3xl px-8 py-6 items-center shadow-lg">
           {/* Create Account Button */}
           <CustomeButton
-            onButtonPress={() => handleNavigation("/(signIn)")}
+            onButtonPress={handleSignIn}
             title="Create Account"
             style="my-2"
             className="w-full bg-[#2983DC] rounded-xl py-4 my-2"

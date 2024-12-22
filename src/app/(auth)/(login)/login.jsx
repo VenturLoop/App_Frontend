@@ -66,7 +66,7 @@ const Login = () => {
         dispatch(setLogin({ isLogin: true, loginToken: result.token }));
         // Navigate to the home page or dashboard
         await SecureStore.setItemAsync("userToken", result.token);
-        handleNavigation("/(tabs)");
+        handleNavigation("/(tabs)"); 
         Toast.show("Login successful!", { type: "success" });
       } else {
         Toast.show(result.message, { type: "error" });

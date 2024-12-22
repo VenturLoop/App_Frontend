@@ -13,10 +13,6 @@ const index = () => {
     (state) => state.user
   );
 
-  console.log("referalCode", referalCode);
-  console.log("signupToken", signupToken);
-  console.log("isSignup", isSignup);
-
   return (
     <SafeAreaView className="flex-1  bg-white" edges={["left", "right"]}>
       <ImageBackground

@@ -11,10 +11,18 @@ import CustomeButton from "../../../../components/buttons/CustomeButton";
 import imagePath from "../../../../constants/imagePath";
 import { router } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { setStatus } from "../../../../redux/slices/profileSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { Toast } from "react-native-toast-notifications";
 
 const what_your_status = () => {
   const [selected, setSelected] = useState("");
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+
+  const user = useSelector((state) => state.user); // Get the user data from the Redux store
+
+  console.log("User: ", user);
 
   const options = [
     { id: "co-founder", label: "Looking for a co-founder" },
@@ -22,6 +30,18 @@ const what_your_status = () => {
     { id: "startups", label: "Looking for startups" },
     { id: "investors", label: "Looking for Investors" },
   ];
+
+  const handleStatusSave = () => {
+    if (!selected) {
+      Toast.show("Please Select option", { type: "error" });
+      return
+    };
+    setLoading(true);
+    Toast.show("Status Saved!", { type: "success" });
+    dispatch(setStatus(selected));
+    router.navigate("/skillset");
+    setLoading(false);
+  };
   return (
     <SafeAreaView className="flex-1 bg-white  h-screen items-center justify-between">
       <View className="header flex-row px-5 justify-between border-b-[0.5px] border-gray-500 py-4 w-full  items-center">
@@ -63,9 +83,7 @@ const what_your_status = () => {
       </View>
       <View className="footer px-5 w-full">
         <CustomeButton
-          onButtonPress={() => {
-            router.navigate("/skillset");
-          }}
+          onButtonPress={handleStatusSave}
           title={loading ? <ActivityIndicator color="white" /> : "Continue"}
         />
       </View>

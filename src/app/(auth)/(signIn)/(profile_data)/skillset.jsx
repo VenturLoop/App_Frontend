@@ -10,11 +10,11 @@ import CustomeButton from "../../../../components/buttons/CustomeButton";
 import imagePath from "../../../../constants/imagePath";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { setSkillSet } from "../../../../redux/slices/profileSlice";
+import { useDispatch } from "react-redux";
+import { Toast } from "react-native-toast-notifications";
 
 const skillset = () => {
-  const [selectedTags, setSelectedTags] = useState([""]);
-  const [loading, setLoading] = useState(false);
-
   const tags = [
     "Web Developer",
     "App Developer",
@@ -31,8 +31,10 @@ const skillset = () => {
     "DevOps",
     "Internet of Things",
     "Hardware",
-    
   ];
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
   const toggleTag = (tag) => {
     if (selectedTags.includes(tag)) {
@@ -41,6 +43,21 @@ const skillset = () => {
       setSelectedTags([...selectedTags, tag]);
     }
   };
+
+  const handleSaveSkillsets = () => {
+    if (!selectedTags) {
+      Toast.show("Please Select an option", { type: "error" });
+      return
+    }
+    setLoading(true);
+    Toast.show("Skillset Saved!", { type: "success" });
+    setLoading(true);
+    dispatch(setSkillSet(selectedTags)); // Dispatch action to store skillSet in Redux
+    router.navigate("/your_intrest");
+
+    setLoading(false);
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-white  h-screen items-center justify-between">
       <View className="header flex-row px-5 justify-between border-gray-500 border-b-[0.5px] py-4 w-full  items-center">
@@ -83,9 +100,7 @@ const skillset = () => {
       </View>
       <View className="footer px-5 w-full">
         <CustomeButton
-          onButtonPress={() => {
-            router.navigate("/your_intrest");
-          }}
+          onButtonPress={handleSaveSkillsets}
           title={loading ? <ActivityIndicator color="white" /> : "Continue"}
         />
       </View>

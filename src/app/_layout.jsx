@@ -4,7 +4,7 @@ import "../../global.css";
 import * as SplashScreen from "expo-splash-screen";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import store from "../redux/store";
-import { setLogin } from "../redux/slices/userSlice";
+import { setLogin, setSignup } from "../redux/slices/userSlice";
 import * as SecureStore from "expo-secure-store";
 import { ToastProvider } from "react-native-toast-notifications";
 import CustomToast from "../components/ToastMessage/CustomToast";
@@ -44,6 +44,21 @@ function AppInitializer() {
 
     checkLoginStatus();
   }, [dispatch]);
+
+  // useEffect(() => {
+  //   const checkSignStatus = async () => {
+  //     try {
+  //       const token = await SecureStore.getItemAsync("userSignupToken");
+  //       dispatch(setSignup({ isSignup: !!token, token }));
+  //     } catch (error) {
+  //       console.error("Error checking login status:", error);
+  //     } finally {
+  //       SplashScreen.hideAsync();
+  //     }
+  //   };
+
+  //   checkSignStatus();
+  // }, [dispatch]);
 
   return (
     <>

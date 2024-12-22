@@ -6,53 +6,46 @@ const initialState = {
   password: "",
   isPremium: false,
   isLogin: false,
-  loginToken: "", // Store login token
-  isSignup: false, // Track signup status
-  signupToken: "", // Store signup token
-  referalCode: "", // Store referral code
-  forgateMail: "", // Store for forgot mail
+  loginToken: "",
+  isSignup: false,
+  signupToken: "", 
+  referalCode: "",
+  forgateMail: "",
+  userId: "",
+  user: null, // Add user object to initial state
 };
 
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    // Update user fields
     updateUser: (state, action) => {
       const { field, value } = action.payload;
       state[field] = value;
     },
-
-    // Reset user state to initial values
     resetUser: () => initialState,
-
-    // Update premium status
     setPremium: (state, action) => {
       state.isPremium = action.payload;
     },
-
-    // Update login status and token
     setLogin: (state, action) => {
       const { isLogin, loginToken } = action.payload;
       state.isLogin = isLogin;
       state.loginToken = loginToken || "";
     },
-
-    // Update signup status and token
     setSignup: (state, action) => {
       const { isSignup, signupToken } = action.payload;
       state.isSignup = isSignup;
       state.signupToken = signupToken || "";
     },
-
-    // Set referral code
     setReferralCode: (state, action) => {
       state.referalCode = action.payload;
     },
-
-    // Clear referral code
     clearReferralCode: (state) => {
       state.referalCode = "";
+    },
+    // New reducer to set user object
+    setUser: (state, action) => {
+      state.user = action.payload;
     },
   },
 });
@@ -65,6 +58,7 @@ export const {
   setSignup,
   setReferralCode,
   clearReferralCode,
+  setUser, // Export setUser action
 } = userSlice.actions;
 
 export default userSlice.reducer;

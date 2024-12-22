@@ -3,6 +3,8 @@ import { useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setRoute } from "../../redux/slices/routeSlice"; // Assuming a Redux slice is defined
+import { setSignup } from "@/src/redux/slices/userSlice";
+import * as SecureStore from "expo-secure-store";
 
 const AuthLayout = () => {
   const router = useRouter();
@@ -28,6 +30,21 @@ const AuthLayout = () => {
   useEffect(() => {
     saveRoute();
   }, [path, saveRoute]);
+
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      try {
+        const token = await SecureStore.getItemAsync("userSignInToken");
+        dispatch(setSignup({ isSignup: !!token, token }));
+      } catch (error) {
+        console.error("Error checking login status:", error);
+      } finally {
+        SplashScreen.hideAsync();
+      }
+    };
+
+    checkLoginStatus();
+  }, [dispatch]);
 
   // Compare Redux route with AsyncStorage route and navigate if they match
   useEffect(() => {
