@@ -90,16 +90,21 @@ const setting = () => {
     });
     router.push("/(signIn)");
   };
-  const handleLogout = () => {
-    setLogoutModel(false);
-    dispatch(setLogin({ isLogin: false, loginToken: "" }));
-    Toast.show("Logout successfully", {
-      type: "logout",
-    });
-
-    router.push("/login");
+  const handleLogout = async () => {
+    try {
+      await SecureStore.deleteItemAsync("userToken");
+      dispatch(setLogin({ isLogin: false, loginToken: "" }));
+      Toast.show("Logout Successful", {
+        type: "success",
+      });
+      router.push("/login"); // Adjust for your routing library
+    } catch (error) {
+      console.error("Error during logout:", error);
+      Toast.show("Failed to log out. Please try again.", {
+        type: "error",
+      });
+    }
   };
-
   return (
     <>
       <EditLayout title="Setting">
