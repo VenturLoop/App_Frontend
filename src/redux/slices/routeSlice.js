@@ -1,19 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
-  currentRoute: null,
-};
-
 const routeSlice = createSlice({
   name: "route",
-  initialState,
+  initialState: {
+    currentRoute: null, // Initialize with no route
+  },
   reducers: {
-    setCurrentRoute(state, action) {
-      state.currentRoute = action.payload;
+    setRoute: (state, action) => {
+      state.currentRoute = action.payload; // Update the current route
     },
   },
 });
 
-export const { setCurrentRoute } = routeSlice.actions;
+export const { setRoute } = routeSlice.actions;
 
 export default routeSlice.reducer;

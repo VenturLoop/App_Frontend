@@ -16,6 +16,8 @@ import { router } from "expo-router";
 import DeleteModel from "../../../components/models/DeleteModel";
 import LogoutModel from "../../../components/models/LogoutModel";
 import { Toast, useToast } from "react-native-toast-notifications";
+import { useDispatch } from "react-redux";
+import { setLogin } from "../../../redux/slices/userSlice";
 
 const setting = () => {
   const [isEnabled, setIsEnabled] = useState(false);
@@ -25,6 +27,7 @@ const setting = () => {
   const [isPushNotificationEnabled, setIsPushNotificationEnabled] =
     useState(true);
   const toast = useToast();
+  const dispatch = useDispatch();
 
   const toggleSwitch = () => {
     setIsEnabled((previousState) => !previousState);
@@ -89,9 +92,11 @@ const setting = () => {
   };
   const handleLogout = () => {
     setLogoutModel(false);
+    dispatch(setLogin({ isLogin: false, loginToken: "" }));
     Toast.show("Logout successfully", {
       type: "logout",
     });
+
     router.push("/login");
   };
 
