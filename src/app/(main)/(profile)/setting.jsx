@@ -18,6 +18,7 @@ import LogoutModel from "../../../components/models/LogoutModel";
 import { Toast, useToast } from "react-native-toast-notifications";
 import { useDispatch } from "react-redux";
 import { setLogin } from "../../../redux/slices/userSlice";
+import * as SecureStore from "expo-secure-store";
 
 const setting = () => {
   const [isEnabled, setIsEnabled] = useState(false);
@@ -90,6 +91,7 @@ const setting = () => {
     });
     router.push("/(signIn)");
   };
+
   const handleLogout = async () => {
     try {
       await SecureStore.deleteItemAsync("userToken");
