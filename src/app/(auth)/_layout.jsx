@@ -29,8 +29,9 @@ const AuthLayout = () => {
     const navigateToLastRoute = async () => {
       try {
         const savedRoute = await AsyncStorage.getItem("lastVisitedRoute");
-        if (savedRoute && (!isLogin || !isSignup)) {
+        if (savedRoute && !isLogin && !isSignup) {
           router.push(savedRoute);
+          console.log(savedRoute);
         }
       } catch (error) {
         console.error("Error retrieving last route:", error);
