@@ -1,14 +1,17 @@
-import { router } from "expo-router";
-import { useRef, useState } from "react";
+import { router, usePathname, useRouter } from "expo-router";
+import { useEffect, useRef, useState } from "react";
 import { Text, View, TouchableOpacity, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Swiper from "react-native-swiper";
 import CustomeButton from "../../components/buttons/CustomeButton";
 import { splashScreensWelcome } from "../../constants/splashScreen";
 import LoginSignupModel from "../../components/models/Login_Signup";
+import AuthModel from "../../components/models/AuthModel";
 
 const Onboarding = () => {
   const swiperRef = useRef(null);
+  // const path = usePathname();
+  // console.log("router", path);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isModalVisible, setModalVisible] = useState(false);
 
@@ -17,7 +20,6 @@ const Onboarding = () => {
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
-
   const handleNext = () => {
     if (isLastSlide) {
       toggleModal();
@@ -26,9 +28,28 @@ const Onboarding = () => {
     }
   };
 
+  const handleNavigation = (route) => {
+    if (isModalVisible) {
+      setModalVisible(false);
+      setTimeout(() => {
+        router.push(route);
+      }, 200); // Wait for modal close animation before routing
+    }
+  };
+
+  const handleSignUpfunction = () => {
+    handleNavigation("/(signIn)");
+  };
+
+  const handleLoginfunction = () => {
+    handleNavigation("/login");
+  };
+
   return (
     <SafeAreaView
-      className={`flex-1 h-screen ${isModalVisible ? " rounded-t-3xl  " : ""} bg-white `}
+      className={`flex-1 h-screen ${
+        isModalVisible ? " rounded-t-3xl  " : ""
+      } bg-white `}
     >
       {/* Swiper Component */}
       <Swiper
@@ -74,9 +95,13 @@ const Onboarding = () => {
       </View>
 
       {/* Login/Signup Modal */}
-      <LoginSignupModel
+      <AuthModel
         isModalVisible={isModalVisible}
-        handleModalVisibility={toggleModal}
+        handleModalVisibility={() => {
+          setModalVisible(false);
+        }}
+        handleLogin={handleLoginfunction}
+        handleSignup={handleSignUpfunction}
       />
     </SafeAreaView>
   );

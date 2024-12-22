@@ -1,8 +1,44 @@
 import { View, Text } from "react-native";
-import React from "react";
-import { Stack } from "expo-router";
+import React, { useEffect } from "react";
+import { Stack, usePathname, useRouter } from "expo-router";
+import { useSelector } from "react-redux";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AuthLayout = () => {
+  const router = useRouter();
+  const path = usePathname();
+  const { isLogin, isSignup } = useSelector((state) => state.user);
+
+  // Save the current path to AsyncStorage whenever it changes
+  useEffect(() => {
+    const saveCurrentRoute = async () => {
+      if (path) {
+        try {
+          await AsyncStorage.setItem("lastVisitedRoute", path);
+        } catch (error) {
+          console.error("Error saving route:", error);
+        }
+      }
+    };
+
+    saveCurrentRoute();
+  }, [path]);
+
+  // Retrieve the last visited route on app load and navigate
+  useEffect(() => {
+    const navigateToLastRoute = async () => {
+      try {
+        const savedRoute = await AsyncStorage.getItem("lastVisitedRoute");
+        if (savedRoute && (!isLogin || !isSignup)) {
+          router.push(savedRoute);
+        }
+      } catch (error) {
+        console.error("Error retrieving last route:", error);
+      }
+    };
+
+    navigateToLastRoute();
+  }, [isLogin, isSignup, router]);
   return (
     <Stack
       screenOptions={{

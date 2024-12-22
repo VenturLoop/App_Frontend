@@ -5,8 +5,9 @@ import {
   Image,
   ActivityIndicator,
   TouchableOpacity,
+  BackHandler,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 import CustomeButton from "../buttons/CustomeButton";
 import imagePath from "../../constants/imagePath";
@@ -14,6 +15,7 @@ import { Toast } from "react-native-toast-notifications";
 import { useRouter } from "expo-router";
 import { OtpInput } from "react-native-otp-entry";
 import { ResentOPT, SentOPT } from "../../api/profile";
+import { useFocusEffect } from "@react-navigation/native";
 
 const Otp = () => {
   const [verificationCode, setVerificationCode] = useState("");
@@ -21,6 +23,23 @@ const Otp = () => {
   const [timer, setTimer] = useState(20); // Initial timer value
   const { email } = useSelector((state) => state.user);
   const router = useRouter();
+
+  // Disable back button functionality
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        Toast.show("Back button is disabled on this screen.", {
+          type: "error",
+        });
+        return true; // Prevent default back action
+      };
+
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+
+      return () =>
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+    }, [])
+  );
 
   // Timer Logic
   useEffect(() => {
@@ -45,7 +64,6 @@ const Otp = () => {
       const result = await SentOPT(email, verificationCode);
       console.log(result);
 
-
       if (result.success) {
         Toast.show(result.message, { type: "success" });
         router.push("/createPass"); // Navigate to the next page
@@ -60,11 +78,13 @@ const Otp = () => {
       });
     } finally {
       setIsLoading(false);
+      setVerificationCode(""); // Clear the verification code
     }
   };
 
   // Resend OTP
   const handleResendOtp = async () => {
+    setVerificationCode(""); // Clear the input
     setIsLoading(true);
     try {
       const res = await ResentOPT(email);
@@ -103,7 +123,9 @@ const Otp = () => {
       <View className="flex justify-start mb-10 px-10 h-64 items-center">
         <OtpInput
           numberOfDigits={6}
+          clearInterval={true}
           onTextChange={(text) => setVerificationCode(text)} // Store OTP
+          value={verificationCode} // Bind input to state
           theme={{
             containerStyle: {
               justifyContent: "center",
@@ -114,8 +136,6 @@ const Otp = () => {
               borderWidth: 1,
               borderRadius: 10,
               backgroundColor: "#EAF3FC",
-              // width: 50,
-              // height: 50,
               justifyContent: "center",
               alignItems: "center",
               marginRight: 10,
@@ -130,9 +150,6 @@ const Otp = () => {
               borderWidth: 2,
               backgroundColor: "#fff",
             },
-            // filledPinCodeContainerStyle: {
-            //   backgroundColor: "#2983DC",
-            // },
             placeholderTextStyle: {
               fontSize: 20,
             },

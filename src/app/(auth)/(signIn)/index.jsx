@@ -32,7 +32,7 @@ const Index = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleNavigation = (route) => {
-    setTimeout(() => { 
+    setTimeout(() => {
       router.push(route);
     }, 100); // Add a small delay of 100ms
   };
@@ -80,6 +80,7 @@ const Index = () => {
           dispatch(updateUser({ field: "email", value: formData.email }));
           Toast.show(res.message, { type: "success" });
         } else {
+          
           Toast.show(res.message, {
             type: "error",
           });

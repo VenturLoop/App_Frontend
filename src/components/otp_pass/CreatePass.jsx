@@ -9,26 +9,43 @@ import {
   ActivityIndicator,
   TextInput,
   TouchableOpacity,
+  BackHandler,
 } from "react-native";
-import React, { useState } from "react";
-import { router } from "expo-router";
+import React, { useCallback, useState } from "react";
+import { router, useFocusEffect } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUser } from "../../redux/slices/userSlice";
 import imagePath from "../../constants/imagePath";
 import CustomeButton from "../buttons/CustomeButton";
 import { Ionicons } from "@expo/vector-icons"; // For password visibility toggle icon
-import { Toast, useToast } from "react-native-toast-notifications";
+import { Toast } from "react-native-toast-notifications";
 
 const CreatePass = () => {
   const [newPassword, setNewPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
-
   const [loading, setLoading] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
+  const [apiInProgress, setApiInProgress] = useState(false); // Flag for API progress
 
-  // Retrieve name and email from Redux
   const dispatch = useDispatch();
+
+  // Disable back button functionality
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        Toast.show("Back button is disable.", {
+          type: "warning",
+        });
+        return true; // Prevent default back action
+      };
+
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+
+      return () =>
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+    }, [])
+  );
 
   const handleNavigation = (route) => {
     setTimeout(() => {
@@ -55,23 +72,45 @@ const CreatePass = () => {
 
     return isValid;
   };
+
   const handleCreatePassword = async () => {
+    if (apiInProgress) {
+      Toast.show("Please wait for the current operation to complete.", {
+        type: "warning",
+      });
+      return;
+    }
+
     if (!validatePasswords()) return;
+
     setLoading(true);
+    setApiInProgress(true); // Block further API calls
 
-    console.log(newPassword)
+    try {
+      // Simulate API delay or operation
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
-    if (newPassword !== "") {
-      console.log("Email is present");
-      dispatch(updateUser({ field: "password", value: newPassword }));
-      Toast.show("Password created successfully!", { type: "success" });
-      handleNavigation("/add_basic_details");
-      setLoading(false);
-    } else {
-      Toast.show("Failed to create password.", {
+      if (newPassword !== "") {
+        // Optimistically update the UI before dispatch
+        // Toast.show("Password created successfully!", { type: "success" });
+
+        // Dispatch action without interfering with UI animations
+        setTimeout(() => {
+          dispatch(updateUser({ field: "password", value: newPassword }));
+          handleNavigation("/add_basic_details");
+        }, 100); // Minimal delay to ensure smooth transition
+      } else {
+        Toast.show("Failed to create password.", {
+          type: "error",
+        });
+      }
+    } catch (error) {
+      Toast.show("An error occurred. Please try again later.", {
         type: "error",
       });
+    } finally {
       setLoading(false);
+      setApiInProgress(false); // Allow further API calls
     }
   };
 
@@ -105,7 +144,7 @@ const CreatePass = () => {
             <View className="flex justify-start mt-10 gap-6">
               {/* New Password Input */}
               <View>
-                <View className="flex items-center  justify-between ">
+                <View className="flex items-center justify-between">
                   <TextInput
                     className="bg-[#2982dc14] text-lg w-full placeholder:font-medium px-6 py-5 rounded-lg text-gray-500"
                     onChangeText={(text) => setNewPassword(text)}
@@ -128,7 +167,7 @@ const CreatePass = () => {
 
               {/* Repeat Password Input */}
               <View>
-                <View className="flex items-center justify-between ">
+                <View className="flex items-center justify-between">
                   <TextInput
                     className="bg-[#2982dc14] text-lg w-full placeholder:font-medium px-6 py-5 rounded-lg text-gray-500"
                     onChangeText={(text) => setRepeatPassword(text)}

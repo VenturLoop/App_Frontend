@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   View,
   Text,
@@ -12,9 +12,10 @@ import {
   Button,
   ActivityIndicator,
   ScrollView,
+  BackHandler,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import imagePath from "../../../constants/imagePath";
 import CustomeButton from "../../../components/buttons/CustomeButton";
 import { Ionicons } from "@expo/vector-icons";
@@ -36,6 +37,25 @@ const AddBasicDetails = () => {
   const dispatch = useDispatch();
 
   const { name, email, password } = useSelector((state) => state.user);
+
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        Toast.show(
+          "Hang tight! You're just a few steps away from greatness. 🚀",
+          {
+            type: "info",
+          }
+        );
+        return true;
+      };
+
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+
+      return () =>
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+    }, [])
+  );
 
   const getCurrentLocation = async () => {
     setLoadingLocation(true);
