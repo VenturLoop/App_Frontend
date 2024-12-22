@@ -108,3 +108,5 @@ const Onboarding = () => {
 };
 
 export default Onboarding;
+
+// TODO: Add a other function which return the loading page with venturloop gif with animation

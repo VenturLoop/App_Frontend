@@ -178,3 +178,4 @@ export const referalCodeCheck = async (referralCode) => {
     console.log("Error while updating Item: " + error);
   }
 };
+

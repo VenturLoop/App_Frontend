@@ -24,7 +24,7 @@ const AuthLayout = () => {
   }, [path, currentRoute, dispatch]);
 
   console.log("CurrentRoute", currentRoute);
-  
+
   useEffect(() => {
     saveRoute();
   }, [path, saveRoute]);

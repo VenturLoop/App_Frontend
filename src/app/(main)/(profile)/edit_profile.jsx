@@ -23,8 +23,8 @@ const EditProfile = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [isMindset, setisMindset] = useState("");
-  const [profileImage, setProfileImage] = useState(null); // Stores the uploaded image URI
-
+  const [profileImage, setProfileImage] = useState(null);
+  const [error, setError] = useState("");
   // Profile fields with initial values
   const [formData, setformData] = useState({
     name: "",
@@ -33,12 +33,14 @@ const EditProfile = () => {
     dob: "",
     location: "",
     lookingFor: [],
+    image: "",
     skillset: [],
     commitmentLevel: "",
     interests: [],
     priorStartupExperience: [],
     equityExpectation: "",
   });
+
   const [isLoading, setisLoading] = useState(false);
 
   // Handle text input changes
@@ -65,6 +67,7 @@ const EditProfile = () => {
     setShowDatePicker(false);
   };
 
+  // Function to pick an image from gallery
   const pickImage = async () => {
     try {
       // Request permission to access the media library
@@ -95,6 +98,7 @@ const EditProfile = () => {
       // Update the profile image with the selected image URI
       if (imagePickerResult.assets && imagePickerResult.assets.length > 0) {
         setProfileImage(imagePickerResult.assets[0].uri);
+        uploadImage(imagePickerResult.assets[0]);
       } else {
         console.warn("No assets found in image picker result.");
       }
@@ -104,6 +108,39 @@ const EditProfile = () => {
         "Error",
         "An error occurred while picking the image. Please try again."
       );
+    }
+  };
+
+  // Upload image to the server
+  const uploadImage = async (image) => {
+    console.log("Uploading image", image);
+    const imageFormData = new FormData();
+    imageFormData.append("file", {
+      uri: image.uri,
+      name: "profile-photo.jpg",
+      type: "image/jpeg",
+    });
+    console.log("Uploading image2", imageFormData);
+    let config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: `${baseUrl}/api/fileUpload`, // Make sure to update `baseUrl`
+      data: imageFormData,
+    };
+
+    try {
+      const response = await axios.request(config);
+      if (response.data.status && response.data.data) {
+        const url = response.data.data[0].url;
+        setformData((prevFormData) => ({
+          ...prevFormData,
+          image: url,
+        }));
+        setError(""); // Reset error
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      setError("Failed to upload image. Please try again.");
     }
   };
 
@@ -195,7 +232,7 @@ const EditProfile = () => {
           <View className="w-full gap-3">
             <Text className="text-gray-400 font-semibold">Basic Details</Text>
 
-            {/* Profile Photo First section */}
+            {/* Profile Image Picker */}
             <View className="gap-5 border-t-[0.5px] border-gray-300 py-4 w-full">
               <Text className="text-gray-500 font-semibold">Profile Photo</Text>
               <View className="flex flex-row gap-7 justify-start items-center">
@@ -214,6 +251,7 @@ const EditProfile = () => {
                   </Text>
                 </TouchableOpacity>
               </View>
+              {error && <Text className="text-red-500 text-sm">{error}</Text>}
             </View>
 
             {/* Second Section */}

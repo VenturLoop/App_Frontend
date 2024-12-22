@@ -5,12 +5,14 @@ import imagePath from "../../../constants/imagePath";
 import CustomeButton from "../../../components/buttons/CustomeButton";
 import { router } from "expo-router";
 import InviteReferalModel from "../../../components/models/InviteReferalModel";
+import { useSelector } from "react-redux";
 
 const referal_rewards = () => {
   const [isInviteModalVisible, setInviteModalVisible] = useState(false);
+  const { referalCode } = useSelector((state) => state.user);
 
-  const handleNext = () => {
-    setInviteModalVisible(!isInviteModalVisible);
+  const handleReferalCode = () => {
+    console.log(referalCode);
   };
   return (
     <>
@@ -46,7 +48,7 @@ const referal_rewards = () => {
         <View className="footer bg-white px-5 w-full">
           <CustomeButton
             onButtonPress={() => {
-              handleNext();
+              setInviteModalVisible(true);
             }}
             title="Invite Friends"
           />
@@ -54,7 +56,9 @@ const referal_rewards = () => {
       </>
       <InviteReferalModel
         isModalVisible={isInviteModalVisible}
-        handleModalVisibility={handleNext}
+        handleModalVisibility={() => {
+          setInviteModalVisible(false);
+        }}
       />
     </>
   );

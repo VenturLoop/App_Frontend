@@ -9,8 +9,8 @@ const initialState = {
   loginToken: "", // Store login token
   isSignup: false, // Track signup status
   signupToken: "", // Store signup token
-  referalCode: "", // Store referal Code
-  forgateMail: "", // Store for forgate male
+  referalCode: "", // Store referral code
+  forgateMail: "", // Store for forgot mail
 };
 
 const userSlice = createSlice({
@@ -44,10 +44,27 @@ const userSlice = createSlice({
       state.isSignup = isSignup;
       state.signupToken = signupToken || "";
     },
+
+    // Set referral code
+    setReferralCode: (state, action) => {
+      state.referalCode = action.payload;
+    },
+
+    // Clear referral code
+    clearReferralCode: (state) => {
+      state.referalCode = "";
+    },
   },
 });
 
-export const { updateUser, resetUser, setPremium, setLogin, setSignup } =
-  userSlice.actions;
+export const {
+  updateUser,
+  resetUser,
+  setPremium,
+  setLogin,
+  setSignup,
+  setReferralCode,
+  clearReferralCode,
+} = userSlice.actions;
 
 export default userSlice.reducer;

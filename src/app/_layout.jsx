@@ -7,10 +7,7 @@ import store from "../redux/store";
 import { setLogin } from "../redux/slices/userSlice";
 import * as SecureStore from "expo-secure-store";
 import { ToastProvider } from "react-native-toast-notifications";
-import { Ionicons } from "@expo/vector-icons";
-import { Text, View } from "react-native";
 import CustomToast from "../components/ToastMessage/CustomToast";
-import { setCurrentRoute } from "../redux/slices/routeSlice";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -29,30 +26,18 @@ export default function RootLayout() {
   );
 }
 
-// App initialization and route handling
 function AppInitializer() {
   const dispatch = useDispatch();
   const { isLogin } = useSelector((state) => state.user);
-  console.log(isLogin);
 
   useEffect(() => {
     const checkLoginStatus = async () => {
       try {
-        // Retrieve token and userId from SecureStore
         const token = await SecureStore.getItemAsync("userToken");
-        // const userId = await SecureStore.getItemAsync("userId");
-
-        if (token) {
-          // User is logged in, update Redux state
-          dispatch(setLogin({ isLogin: true, token, userId }));
-        } else {
-          // User is not logged in
-          dispatch(setLogin({ isLogin: false }));
-        }
+        dispatch(setLogin({ isLogin: !!token, token }));
       } catch (error) {
         console.error("Error checking login status:", error);
       } finally {
-        // Hide splash screen after determining login state
         SplashScreen.hideAsync();
       }
     };
@@ -70,10 +55,8 @@ function AppInitializer() {
             open: { animation: "timing", config: { duration: 50 } },
             close: { animation: "timing", config: { duration: 50 } },
           },
-          animationTypeForReplace: "pop",
         }}
       />
-      {/* Conditional redirection based on login state */}
       {isLogin ? (
         <Redirect href="/(main)/(tabs)" />
       ) : (

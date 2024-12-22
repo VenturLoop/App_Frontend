@@ -20,7 +20,7 @@ import TextBox from "react-native-password-eye";
 import { Toast } from "react-native-toast-notifications";
 import { Ionicons } from "@expo/vector-icons";
 import { userLogin } from "../../../api/profile";
-// import Auth from "../../../components/auth/Auth";
+import * as SecureStore from "expo-secure-store";
 
 const Login = () => {
   const router = useRouter();
@@ -65,6 +65,7 @@ const Login = () => {
         // Update Redux state with login info
         dispatch(setLogin({ isLogin: true, loginToken: result.token }));
         // Navigate to the home page or dashboard
+        await SecureStore.setItemAsync("userToken", result.token);
         handleNavigation("/(tabs)");
         Toast.show("Login successful!", { type: "success" });
       } else {
