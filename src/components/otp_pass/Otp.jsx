@@ -62,7 +62,6 @@ const Otp = () => {
     setIsLoading(true);
     try {
       const result = await SentOPT(email, verificationCode);
-      console.log(result);
 
       if (result.success) {
         Toast.show(result.message, { type: "success" });
@@ -106,6 +105,11 @@ const Otp = () => {
     }
   };
 
+  // Navigate to change login email page
+  const handleChangeEmail = () => {
+    router.push("/(signIn)"); // Navigate to sign-in page to change email
+  };
+
   return (
     <SafeAreaView className="py-6 px-4 bg-white h-screen pt-10 flex justify-between gap-5 flex-col">
       {/* Header Section */}
@@ -114,9 +118,18 @@ const Otp = () => {
         <Text className="text-black text-center mt-4 font-bold text-3xl">
           Enter OTP
         </Text>
-        <Text className="text-center text-[#61677D]">
-          Enter the OTP sent to your email for secure verification!
-        </Text>
+        <View>
+          <Text className="text-center px-5 text-[#61677D]">
+            Enter the OTP sent to{" "}
+            <Text className="font-semibold text-slate-900">{email}</Text> for
+            secure verification!
+          </Text>
+          <TouchableOpacity onPress={handleChangeEmail}>
+            <Text className="font-semibold text-center text-sx text-[#2983DC]">
+              Change Email
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* OTP Input Section */}
@@ -180,6 +193,8 @@ const Otp = () => {
             </TouchableOpacity>
           )}
         </View>
+
+        {/* Change Email Button */}
       </View>
     </SafeAreaView>
   );

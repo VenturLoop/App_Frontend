@@ -15,8 +15,11 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import imagePath from "../../../../constants/imagePath";
 import CustomeButton from "../../../../components/buttons/CustomeButton";
 import { Toast } from "react-native-toast-notifications";
+import { useDispatch } from "react-redux";
 import { router } from "expo-router";
+import { setExperience } from "../../../../redux/slices/profileSlice";
 
+// Reusable FormInput component for text inputs 
 const FormInput = ({
   label,
   placeholder,
@@ -53,57 +56,80 @@ const CircularCheckbox = ({ isChecked, onPress }) => (
 );
 
 const MyExperience = () => {
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
-    project_name: "",
-    company_name: "",
+    title: "",
+    company: "",
     isCurrentlyStudying: false,
     startDate: null,
     endDate: null,
     description: "",
   });
 
+  const [experienceList, setExperienceList] = useState([]); // To store multiple experiences
   const [showDatePicker, setShowDatePicker] = useState({
     type: "",
     visible: false,
   });
   const [loading, setLoading] = useState(false);
 
+  // Handle form input changes
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
+  // Format date to DD/MM/YYYY
+  const formatDate = (date) => {
+    if (!date) return null;
+    const d = new Date(date);
+    const day = String(d.getDate()).padStart(2, "0");
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const year = d.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
+  // Handle date changes for start and end dates
   const handleDateChange = (event, selectedDate) => {
     if (selectedDate) {
       const date = new Date(selectedDate);
       setFormData((prev) => ({
         ...prev,
-        [showDatePicker.type]: date, // Save the Date object
+        [showDatePicker.type]: formatDate(date), // Save date in DD/MM/YYYY format
       }));
     }
     setShowDatePicker({ type: "", visible: false });
   };
 
+  // Save the experience data to Redux
   const handleSaveDetails = () => {
-    const { project_name, company_name, startDate, isCurrentlyStudying } =
+    const { title, company, startDate, isCurrentlyStudying, description } =
       formData;
 
-    if (
-      !project_name ||
-      !company_name ||
-      !startDate ||
-      // !endDate ||
-      !isCurrentlyStudying
-    ) {
+    // Validate input fields
+    if (!title || !company || !startDate || !description) {
       Toast.show("Please fill in all the details.", { type: "danger" });
       return;
     }
 
-    // Save details logic here
+    const newExperience = {
+      title,
+      company,
+      startDate,
+      endDate: isCurrentlyStudying ? "Currently Studying" : formData.endDate,
+      description,
+    };
+
+    // Add the new experience to the list
+    setExperienceList((prevList) => [...prevList, newExperience]);
+
+    // Dispatch action to save the experience list
     setLoading(true);
+    dispatch(setExperience(experienceList)); // Dispatch the entire experience list
+
     setTimeout(() => {
       setLoading(false);
       Toast.show("Experience added successfully!", { type: "success" });
-      router.push("/edit_profile");
+      router.push("/edit_profile"); // Navigate after success
     }, 2000);
   };
 
@@ -115,26 +141,23 @@ const MyExperience = () => {
       >
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{
-            gap: 20,
-            justifyContent: "space-between",
-          }}
+          contentContainerStyle={{ gap: 20, justifyContent: "space-between" }}
           className="bg-white py-6 px-3"
           keyboardShouldPersistTaps="handled"
         >
-          <View className="gap-7  flex-1">
+          <View className="gap-7 flex-1">
             {/* Title/Position Input */}
             <FormInput
               placeholder="Title/Position"
-              value={formData.project_name}
-              onChangeText={(text) => handleInputChange("project_name", text)}
+              value={formData.title}
+              onChangeText={(text) => handleInputChange("title", text)}
             />
 
             {/* Company Name Input */}
             <FormInput
               placeholder="Company Name"
-              value={formData.company_name}
-              onChangeText={(text) => handleInputChange("company_name", text)}
+              value={formData.company}
+              onChangeText={(text) => handleInputChange("company", text)}
             />
 
             {/* Currently Studying Checkbox */}
@@ -167,9 +190,7 @@ const MyExperience = () => {
                     formData.startDate ? "text-[#3B4054]" : "text-[#7C8BA0]"
                   }`}
                 >
-                  {formData.startDate
-                    ? new Date(formData.startDate).toLocaleDateString("en-GB") // Format the date as DD/MM/YYYY
-                    : "DD/MM/YYYY"}
+                  {formData.startDate || "DD/MM/YYYY"}
                 </Text>
                 <Image source={imagePath.calender} />
               </TouchableOpacity>
@@ -197,9 +218,7 @@ const MyExperience = () => {
                 >
                   {formData.isCurrentlyStudying
                     ? "Currently Studying"
-                    : formData.endDate
-                    ? new Date(formData.endDate).toLocaleDateString("en-GB") // Format the date as DD/MM/YYYY
-                    : "DD/MM/YYYY"}
+                    : formData.endDate || "DD/MM/YYYY"}
                 </Text>
                 <Image source={imagePath.calender} />
               </TouchableOpacity>
@@ -208,7 +227,11 @@ const MyExperience = () => {
             {/* DateTimePicker Modal */}
             {showDatePicker.visible && (
               <DateTimePicker
-                value={formData[showDatePicker.type] || new Date()}
+                value={
+                  formData[showDatePicker.type]
+                    ? new Date(formData[showDatePicker.type])
+                    : new Date()
+                }
                 mode="date"
                 display={Platform.OS === "ios" ? "spinner" : "default"}
                 onChange={handleDateChange}
@@ -226,6 +249,7 @@ const MyExperience = () => {
               onChangeText={(text) => handleInputChange("description", text)}
             />
           </View>
+
           {/* Footer with Save Button */}
           <View className="">
             <CustomeButton

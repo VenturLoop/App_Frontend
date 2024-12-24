@@ -1,12 +1,14 @@
 import { View, Text, TouchableOpacity, Image } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import imagePath from "../../constants/imagePath";
-import { FontAwesome, Ionicons } from "@expo/vector-icons";
+import { FontAwesome, FontAwesome6, Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 
 const TopNavar = () => {
+  const [notificationCount, setnotificationCount] = useState(1);
+
   return (
-    <View className="flex-row bg-white  px-6 py-4 flex w-full justify-between border-b-[0.5px] pb-3 border-gray-300 items-center">
+    <View className="flex-row bg-white  px-6 py-3 flex w-full justify-between border-b-[0.5px] pb-3 border-gray-300 items-center">
       <TouchableOpacity
         onPress={() => {
           router.push("/(tabs)");
@@ -20,12 +22,35 @@ const TopNavar = () => {
       </TouchableOpacity>
       <View className="flex flex-row items-center gap-5">
         <TouchableOpacity
-        className="p-2"
+          className="p-3"
           onPress={() => {
-            router.push("/edit_preferance");
+            router.push("/notification");
           }}
+          style={{ position: "relative" }}
         >
-          <FontAwesome size={24} color="#2983DC" name="sliders" />
+          <FontAwesome6 size={24} color="#2983DC" name="bell" />
+
+          {notificationCount > 0 && (
+            <View
+              style={{
+                position: "absolute",
+                right: 4,
+                top: 4,
+                backgroundColor: "#2983DC",
+                borderRadius: 10,
+                width: 18,
+                height: 18,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text
+                style={{ color: "white", fontSize: 12, fontWeight: "bold" }}
+              >
+                {notificationCount}
+              </Text>
+            </View>
+          )}
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {

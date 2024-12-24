@@ -4,32 +4,32 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState } from "react";
+import CustomeButton from "../../../../components/buttons/CustomeButton";
+import imagePath from "../../../../constants/imagePath";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { setSkillSet } from "../../../../redux/slices/profileSlice";
 import { useDispatch } from "react-redux";
 import { Toast } from "react-native-toast-notifications";
-import { setSkillSet } from "../../../../../redux/slices/profileSlice";
-import CustomeButton from "../../../../../components/buttons/CustomeButton";
 
-const user_skillset = () => {
+const b_stage = () => {
   const tags = [
-    "Web Developer",
-    "App Developer",
-    "Product",
-    "Team Management",
-    "Marketing",
-    "Sales",
-    "Finance",
-    "Social Media",
-    "Distribution",
-    "Legal",
-    "UI/UX Design",
-    "Product Design",
-    "DevOps",
-    "Internet of Things",
-    "Hardware",
+   "Seed Stage",
+  "Early Stage (Series A)",
+  "Growth Stage (Series B, C, D, etc.)",
+  "Expansion Stage",
+  "Late Stage / Pre-IPO",
+  "Exit Stage",
+  "Pre-Seed Stage",
+  "Bridge Stage",
+  "Series F and Beyond",
+  "Acquisition Stage",
+  "Venture Debt Stage",
+  "Turnaround Stage",
+  "Post-IPO Stage"
   ];
   const [selectedTags, setSelectedTags] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -43,23 +43,31 @@ const user_skillset = () => {
     }
   };
 
-  const handleSaveSkillsets = () => {
-    if (!selectedTags) {
-      Toast.show("Please Select an option", { type: "error" });
-      return;
-    }
-    setLoading(true);
-    Toast.show("Skillset Saved!", { type: "success" });
-    setLoading(true);
-    dispatch(setSkillSet(selectedTags)); // Dispatch action to store skillSet in Redux
-    router.back();
+  //   const handleSaveSkillsets = () => {
+  //     if (!selectedTags) {
+  //       Toast.show("Please Select an option", { type: "error" });
+  //       return;
+  //     }
+  //     setLoading(true);
+  //     Toast.show("Skillset Saved!", { type: "success" });
+  //     setLoading(true);
+  //     dispatch(setSkillSet(selectedTags)); // Dispatch action to store skillSet in Redux
+  //     router.navigate("/your_intrest");
 
-    setLoading(false);
+  //     setLoading(false);
+  //   };
+
+  const handleSaveSkillsets = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      router.back();
+    }, 2000);
   };
 
   return (
     <SafeAreaView className="flex-1 bg-white  h-screen items-center justify-between">
-      <View className="header flex-row px-5 justify-between border-gray-500 border-b-[0.5px] py-4 w-full  items-center">
+      <View className="header flex-row px-5 justify-between border-gray-500 border-b-[0.5px] py-5 w-full  items-center">
         <View className="flex-row items-center justify-center gap-3">
           <TouchableOpacity
             onPress={() => {
@@ -68,9 +76,8 @@ const user_skillset = () => {
           >
             <Ionicons name="arrow-back-outline" size={25} color="black" />
           </TouchableOpacity>
-          <Text className="text-xl font-semibold">Your Skill set</Text>
+          <Text className="text-xl font-semibold">Stages</Text>
         </View>
-        <Text className="text-xl font-semibold text-[#2983DC]">2/6</Text>
       </View>
       <View className="body w-full flex-1 py-3">
         <View className="flex flex-row flex-wrap gap-2 p-4">
@@ -100,11 +107,11 @@ const user_skillset = () => {
       <View className="footer px-5 w-full">
         <CustomeButton
           onButtonPress={handleSaveSkillsets}
-          title={loading ? <ActivityIndicator color="white" /> : "Continue"}
+          title={loading ? <ActivityIndicator color="white" /> : "Save"}
         />
       </View>
     </SafeAreaView>
   );
 };
 
-export default user_skillset;
+export default b_stage;

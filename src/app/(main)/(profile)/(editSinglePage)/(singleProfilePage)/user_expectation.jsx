@@ -1,21 +1,40 @@
-import { View, Text, SafeAreaView, TouchableOpacity } from "react-native";
+import { View, Text, SafeAreaView } from "react-native";
 import React, { useState } from "react";
 import { router } from "expo-router";
 import Slider from "@react-native-community/slider";
-import { Ionicons } from "@expo/vector-icons";
+import { useDispatch } from "react-redux";
+import { setEquityExpectation } from "../../../../../redux/slices/profileSlice";
 import CustomeButton from "../../../../../components/buttons/CustomeButton";
+import { Toast } from "react-native-toast-notifications";
 
 const UserExpectation = () => {
-  const [selectedOption, setSelectedOption] = useState("");
+  const dispatch = useDispatch();
   const [equityRange, setEquityRange] = useState({ min: 0, max: 100 });
+  const [loading, setLoading] = useState(false);
 
   const handleNextButtonPress = () => {
-    // Save the changes or move to the next step
-    router.back();
-  };
+    if (equityRange.min >= equityRange.max) {
+      Toast.show("Minimum equity must be less than maximum equity", {
+        type: "error",
+      });
+      return;
+    }
 
-  const isCustomOption =
-    selectedOption === "offer" || selectedOption === "accept";
+    setLoading(true);
+
+    // Format the equity range as a string and dispatch it
+    const equityRangeString = `${equityRange.min}-${equityRange.max}`;
+
+    // Save the formatted equity range to Redux store
+    dispatch(setEquityExpectation(equityRangeString));
+
+    Toast.show("Equity Expectation Saved!", { type: "success" });
+
+    // Navigate back to the previous screen
+    router.back();
+
+    setLoading(false);
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -36,7 +55,10 @@ const UserExpectation = () => {
             step={1}
             value={equityRange.min}
             onValueChange={(value) =>
-              setEquityRange({ ...equityRange, min: value })
+              setEquityRange({
+                ...equityRange,
+                min: Math.min(value, equityRange.max),
+              })
             }
             minimumTrackTintColor="#2983DC"
             maximumTrackTintColor="#000000"
@@ -48,7 +70,10 @@ const UserExpectation = () => {
             step={1}
             value={equityRange.max}
             onValueChange={(value) =>
-              setEquityRange({ ...equityRange, max: value })
+              setEquityRange({
+                ...equityRange,
+                max: Math.max(value, equityRange.min),
+              })
             }
             minimumTrackTintColor="#2983DC"
             maximumTrackTintColor="#000000"
@@ -56,7 +81,10 @@ const UserExpectation = () => {
         </View>
 
         {/* Next Button */}
-        <CustomeButton title="Next" onButtonPress={handleNextButtonPress} />
+        <CustomeButton
+          title={loading ? "Saving..." : "Next"}
+          onButtonPress={handleNextButtonPress}
+        />
       </View>
     </SafeAreaView>
   );

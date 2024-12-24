@@ -96,6 +96,10 @@ const setting = () => {
     try {
       await SecureStore.deleteItemAsync("userToken");
       dispatch(setLogin({ isLogin: false, loginToken: "" }));
+      await SecureStore.deleteItemAsync("userSignupToken");
+      
+            // Dispatch action to update the Redux state
+            dispatch(setSignup({ isSignup: false, signupToken: "" }));
       Toast.show("Logout Successful", {
         type: "danger",
       });

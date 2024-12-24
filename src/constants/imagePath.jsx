@@ -24,6 +24,10 @@ export default {
   cake: require("../assets/images/cake.png"),
   google: require("../assets/images/google.png"),
   blurInvitationImage: require("../assets/images/blurImage.png"),
+  cofounderblock: require("../assets/images/co-founder.png"),
+  investorImage: require("../assets/images/Investor_company.webp"),
+  investorblock: require("../assets/images/investor.png"),
+  startup: require("../assets/images/startup.png"),
 
   // start_auth2: require("@/src/assets/images/Linkedin.png.png"),
   // start_auth3: require("@/src/assets/images/image2.png"),

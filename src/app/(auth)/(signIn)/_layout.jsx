@@ -1,44 +1,66 @@
 import { Redirect, Stack } from "expo-router";
 import { useSelector } from "react-redux"; // Import useSelector to access Redux state
+import { Easing } from "react-native"; // Import Easing from react-native
 
 export default function SignInLayout() {
-  // Access SignUpToken from Redux state
   const { isSignup } = useSelector((state) => state.user);
-
-  console.log(isSignup);
-
-  // if (isSignup) {
-  //   return <Redirect href={"/(profile)"} />;
-  // }
 
   return (
     <>
       <Stack
         screenOptions={{
           headerShown: false,
-          animation: "fade", // Use a simple fade animation for transitions
+          animation: "fade_from_bottom", // Use a modern animation type
           transitionSpec: {
             open: {
-              animation: "timing",
+              animation: "spring",
               config: {
-                duration: 50, // Fast animation for opening
+                stiffness: 300,
+                damping: 30,
+                mass: 0.5,
+                overshootClamping: false,
+                restDisplacementThreshold: 0.01,
+                restSpeedThreshold: 0.01,
               },
             },
             close: {
               animation: "timing",
               config: {
-                duration: 50, // Fast animation for closing
+                duration: 150,
+                easing: Easing.out(Easing.ease), // Use Easing correctly here
               },
             },
           },
-          animationTypeForReplace: "pop", // Quick replace animation
+          gestureEnabled: true, // Allow swipe-back gestures for fluid navigation
+          animationTypeForReplace: "push", // Push new screens with smooth sliding
+          cardStyleInterpolator: ({ current, layouts }) => ({
+            cardStyle: {
+              transform: [
+                {
+                  translateX: current.progress.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [layouts.screen.width, 0], // Slide from right
+                  }),
+                },
+                {
+                  scale: current.progress.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [0.85, 1], // Subtle zoom effect
+                  }),
+                },
+              ],
+              opacity: current.progress.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0.5, 1], // Fade in
+              }),
+            },
+          }),
         }}
       >
         <Stack.Screen name="index" />
         <Stack.Screen name="add_basic_details" />
         <Stack.Screen name="createPass" />
         <Stack.Screen name="otp" />
-        {/* <Stack.Screen name="(profile)" /> */}
       </Stack>
       {isSignup ? <Redirect href={"/(profile_data)"} /> : null}
     </>

@@ -1,5 +1,5 @@
 import { Redirect, Stack } from "expo-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "../../global.css";
 import * as SplashScreen from "expo-splash-screen";
 import { Provider, useDispatch, useSelector } from "react-redux";
@@ -8,7 +8,9 @@ import { setLogin, setSignup } from "../redux/slices/userSlice";
 import * as SecureStore from "expo-secure-store";
 import { ToastProvider } from "react-native-toast-notifications";
 import CustomToast from "../components/ToastMessage/CustomToast";
+import { setUserId } from "../redux/slices/profileSlice";
 
+// Prevent auto-hiding the splash screen until the app is ready
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -28,37 +30,38 @@ export default function RootLayout() {
 
 function AppInitializer() {
   const dispatch = useDispatch();
-  const { isLogin } = useSelector((state) => state.user);
+  const { isLogin, isSignup } = useSelector((state) => state.user);
+  const [isAppReady, setIsAppReady] = useState(false);
 
   useEffect(() => {
-    const checkLoginStatus = async () => {
+    const initializeApp = async () => {
       try {
-        const token = await SecureStore.getItemAsync("userToken");
-        dispatch(setLogin({ isLogin: !!token, token }));
+        // Check login status
+        const loginToken = await SecureStore.getItemAsync("userToken");
+        dispatch(setLogin({ isLogin: !!loginToken, loginToken }));
+
+        // Check signup status
+        const signupToken = await SecureStore.getItemAsync("userSignupToken");
+        dispatch(setSignup({ isSignup: !!signupToken, token: signupToken }));
+
+        // const userIdSecure = await SecureStore.getItemAsync("userId");
+        // dispatch(setUserId(userIdSecure));
       } catch (error) {
-        console.error("Error checking login status:", error);
+        console.error("Error initializing app:", error);
       } finally {
+        // Mark the app as ready and hide the splash screen
+        setIsAppReady(true);
         SplashScreen.hideAsync();
       }
     };
 
-    checkLoginStatus();
+    initializeApp();
   }, [dispatch]);
 
-  // useEffect(() => {
-  //   const checkSignStatus = async () => {
-  //     try {
-  //       const token = await SecureStore.getItemAsync("userSignupToken");
-  //       dispatch(setSignup({ isSignup: !!token, token }));
-  //     } catch (error) {
-  //       console.error("Error checking login status:", error);
-  //     } finally {
-  //       SplashScreen.hideAsync();
-  //     }
-  //   };
-
-  //   checkSignStatus();
-  // }, [dispatch]);
+  // Wait for the app to be ready before rendering anything
+  if (!isAppReady) {
+    return null; // Optionally render a loading spinner or placeholder
+  }
 
   return (
     <>
@@ -74,6 +77,8 @@ function AppInitializer() {
       />
       {isLogin ? (
         <Redirect href="/(main)/(tabs)" />
+      ) : isSignup ? (
+        <Redirect href="\(auth)\(signIn)\(profile_data)" />
       ) : (
         <Redirect href="/(auth)" />
       )}

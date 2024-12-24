@@ -7,6 +7,7 @@ const MessageLayout = () => {
     <Stack>
       <Stack.Screen name="chat" options={{ headerShown: false }} />
       <Stack.Screen name="request" options={{ headerShown: false }} />
+      <Stack.Screen name="notification" options={{ headerShown: false }} />
     </Stack>
   );
 };

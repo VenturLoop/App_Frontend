@@ -13,6 +13,7 @@ const initialState = {
   forgateMail: "",
   userId: "",
   user: null, // Add user object to initial state
+  
 };
 
 const userSlice = createSlice({

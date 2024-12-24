@@ -14,40 +14,31 @@ import imagePath from "../../../constants/imagePath";
 import HelpModel from "../../../components/models/HelpModel";
 import { Toast } from "react-native-toast-notifications";
 
+const unifiedFeatures = [
+  { feature: "Direct Connect", free: "20", business: "Unlimited" },
+  { feature: "Investor Connect", free: "2/Days", business: "10/Days" },
+  { feature: "Co Founder Invitation", free: "-", business: "Unlimited" },
+  { feature: "See all invitation", free: "-", business: "Yes" },
+  { feature: "Premium Preferences", free: "10", business: "Unlimited" },
+  { feature: "Save Profiles", free: "10/Days", business: "Unlimited" },
+  { feature: "Verified Badge", free: "-", business: "Yes" },
+  { feature: "Early Feature access", free: "-", business: "Yes" },
+];
+
 const plans = [
   {
     title: "Starter",
     duration: "1 Week",
     price: "100.00",
     originalPrice: "200.00",
-
     weeklyRate: "₹100/Week",
-    features: [
-      { feature: "Daily recommendation", free: "20", business: "Unlimited" },
-      { feature: "Direct Connect", free: "2/Days", business: "10/Days" },
-      { feature: "See all invitations", free: "-", business: "Unlimited" },
-      { feature: "Premium Preferences", free: "-", business: "Yes" },
-      { feature: "Save Profiles", free: "10", business: "Unlimited" },
-      { feature: "Invitations", free: "10/Days", business: "Unlimited" },
-      { feature: "Verified Badge", free: "-", business: "Yes" },
-    ],
   },
   {
     title: "Recommended",
     duration: "1 Month",
     price: "200.00",
     originalPrice: "500.00",
-
     weeklyRate: "₹50/Week",
-    features: [
-      { feature: "Daily recommendation", free: "20", business: "Unlimited" },
-      { feature: "Direct Connect", free: "2/Days", business: "10/Days" },
-      { feature: "See all invitations", free: "-", business: "Unlimited" },
-      { feature: "Premium Preferences", free: "-", business: "Yes" },
-      { feature: "Save Profiles", free: "10", business: "Unlimited" },
-      { feature: "Invitations", free: "10/Days", business: "Unlimited" },
-      { feature: "Verified Badge", free: "-", business: "Yes" },
-    ],
   },
   {
     title: "Super Saver",
@@ -55,15 +46,6 @@ const plans = [
     price: "500.00",
     originalPrice: "1000.00",
     weeklyRate: "₹41/Week",
-    features: [
-      { feature: "Daily recommendation", free: "20", business: "Unlimited" },
-      { feature: "Direct Connect", free: "2/Days", business: "10/Days" },
-      { feature: "See all invitations", free: "-", business: "Unlimited" },
-      { feature: "Premium Preferences", free: "-", business: "Yes" },
-      { feature: "Save Profiles", free: "10", business: "Unlimited" },
-      { feature: "Invitations", free: "10/Days", business: "Unlimited" },
-      { feature: "Verified Badge", free: "-", business: "Yes" },
-    ],
   },
 ];
 
@@ -98,9 +80,9 @@ const SubscriptionPage = () => {
 
   return (
     <>
-      <SafeAreaView className="flex-1  justify-between  bg-white ">
+      <SafeAreaView className="flex-1 justify-between bg-white">
         {/* Header */}
-        <View className="header flex-row px-5  justify-between border-b border-gray-300 py-5 w-full items-center">
+        <View className="header flex-row px-5 justify-between border-b border-gray-300 py-5 w-full items-center">
           <View className="flex-row items-center gap-3">
             <TouchableOpacity onPress={() => router.back()}>
               <Ionicons name="arrow-back-outline" size={25} color="black" />
@@ -118,7 +100,7 @@ const SubscriptionPage = () => {
             <FontAwesome6 size={25} name="headset" color="#2983DC" />
           </TouchableOpacity>
         </View>
-        <View className="body w-full justify-between  py-3 flex-1 px-3 ">
+        <View className="body w-full justify-between py-3 flex-1 px-3">
           <View className="flex-1 gap-6">
             {/* Display Current Plan if Premium */}
             {isPremium ? (
@@ -191,7 +173,7 @@ const SubscriptionPage = () => {
             )}
 
             {/* Features Section */}
-            <View className="flex flex-col gap-6 bg-[#F0F6FB] px-4 py-4">
+            <View className="flex flex-col gap-5 bg-[#F0F6FB] px-4 py-4">
               <View className="flex flex-row justify-between gap-1 items-center">
                 <Text className="flex-1 font-bold text-gray-800">
                   What's Included?
@@ -203,7 +185,7 @@ const SubscriptionPage = () => {
                   Business
                 </Text>
               </View>
-              {selectedPlan.features.map((item, index) => (
+              {unifiedFeatures.map((item, index) => (
                 <View
                   key={index}
                   className="flex flex-row justify-between items-center"
@@ -229,11 +211,10 @@ const SubscriptionPage = () => {
               ))}
             </View>
             {!isPremium && (
-              <Text className="text-center  text-sm ">
-                By tapping subscribe ,tou will be charged,your subscription will
-                automatically renue for the same prise and package length untill
-                you cancel via App Store/Play store setting and you agree to our
-                terms & condition
+              <Text className="text-center text-sm">
+                By tapping subscribe, you will be charged the same price and
+                package length until you cancel via App Store/Play Store setting
+                and you agree to our terms & condition.
               </Text>
             )}
           </View>
@@ -243,6 +224,7 @@ const SubscriptionPage = () => {
             background={isPremium}
             onButtonPress={handleSubscribe}
             title="Subscribe"
+            style="my-4"
           />
         </View>
       </SafeAreaView>

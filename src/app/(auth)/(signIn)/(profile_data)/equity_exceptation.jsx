@@ -4,58 +4,35 @@ import {
   Text,
   SafeAreaView,
   TouchableOpacity,
+  TextInput,
   ActivityIndicator,
 } from "react-native";
-import Slider from "@react-native-community/slider";
 import { Ionicons } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import CustomeButton from "../../../../components/buttons/CustomeButton";
 import ReferalPriceModel from "../../../../components/models/ReferalPriceModel";
-import { submitInCompleteProfileData } from "../../../../redux/slices/profileSlice";
 import { submitProfileApi } from "../../../../api/profile";
 import { router } from "expo-router";
 import { Toast } from "react-native-toast-notifications";
 
-const EquitySlider = ({ label, value, onValueChange, disabled }) => (
-  <View style={{ marginVertical: 8 }}>
-    <Text
-      style={{ marginBottom: 4, fontSize: 16, opacity: disabled ? 0.5 : 1 }}
-    >
-      {label}
-    </Text>
-    <Slider
-      minimumValue={1}
-      maximumValue={100}
-      step={1}
-      value={value}
-      onValueChange={onValueChange}
-      disabled={disabled}
-      minimumTrackTintColor={disabled ? "#E2E8F0" : "#007BFF"}
-      maximumTrackTintColor="#E2E8F0"
-      thumbTintColor={disabled ? "#E2E8F0" : "#007BFF"}
-    />
-    <Text style={{ marginTop: 4, fontSize: 16 }}>{value}%</Text>
-  </View>
-);
-
-const equity_exceptation = () => {
+const EquityExpectation = () => {
   const [selectedOption, setSelectedOption] = useState("");
-  const [equityRange, setEquityRange] = useState({ min: 0, max: 0 });
+  const [equityRangePageFromUser, setequityRangePageFromUser] = useState({
+    min: "",
+    max: "",
+  });
+  const [values, setValues] = React.useState([50]);
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
 
-  const dispatch = useDispatch();
   const {
+    userId,
     skillSet,
     industries,
     priorStartupExperience,
     commitmentLevel,
     status,
   } = useSelector((state) => state.profile);
-  const { userId } = useSelector((state) => state.user);
-  const profile = useSelector((state) => state.profile); // Get the user data from the Redux store
-
-  console.log("profile: ", profile);
 
   const handleSaveProfile = async () => {
     if (!selectedOption) {
@@ -63,20 +40,26 @@ const equity_exceptation = () => {
       return;
     }
 
+    // Ensure both min and max equity are provided and valid for specific options
     if (
       (selectedOption === "accept" || selectedOption === "offer") &&
-      (equityRange.min === 0 || equityRange.max === 0)
+      (equityRangePageFromUser.min === "" || equityRangePageFromUser.max === "")
     ) {
-      Toast.show("Please set a valid equity range", { type: "danger" });
+      Toast.show("Please set both min and max equity values", {
+        type: "danger",
+      });
       return;
     }
 
     setLoading(true);
 
     try {
+      // Prepare equity expectation data
       const equityExpectationData =
-        selectedOption === "accept" || selectedOption === "offer"
-          ? `${equityRange.min}-${equityRange.max}%`
+        selectedOption === "accept"
+          ? `Accept:${equityRangePageFromUser.min}-${equityRangePageFromUser.max}%`
+          : selectedOption === "offer"
+          ? `Offer:${equityRangePageFromUser.min}-${equityRangePageFromUser.max}%`
           : selectedOption === "negotiable"
           ? "Fully Negotiable"
           : "Equal Split";
@@ -91,17 +74,7 @@ const equity_exceptation = () => {
         status,
       };
 
-      console.log("Submitting profile with data:", payload);
-
-      const response = await submitProfileApi({
-        userId,
-        skillSet,
-        industries,
-        priorStartupExperience,
-        commitmentLevel,
-        equityExpectation: equityExpectationData,
-        status,
-      });
+      const response = await submitProfileApi(payload);
 
       if (response.success) {
         Toast.show("Data submitted successfully", { type: "success" });
@@ -112,7 +85,6 @@ const equity_exceptation = () => {
         });
       }
     } catch (error) {
-      console.error("Error saving profile:", error);
       Toast.show("Error saving profile. Please try again later.", {
         type: "danger",
       });
@@ -120,110 +92,103 @@ const equity_exceptation = () => {
       setLoading(false);
     }
   };
+  console.log(userId);
 
-  const handleSliderChange = (key, value) => {
-    setEquityRange((prev) => ({ ...prev, [key]: value }));
+  const handleInputChange = (field, value) => {
+    if (/^\d*$/.test(value)) {
+      setequityRangePageFromUser((prev) => ({
+        ...prev, // Ensures previous state is copied
+        [field]: value, // Update the specific field (min or max)
+      }));
+    }
+  };
+
+  const optionLabels = {
+    negotiable: "Fully Negotiable",
+    equal: "Equal Split",
+    accept: "Willing to accept a specific equity range",
+    offer: "Willing to offer a specific equity range",
   };
 
   const isCustomOption =
     selectedOption === "offer" || selectedOption === "accept";
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-      {/* Header Section */}
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: 16,
-          borderBottomWidth: 0.5,
-          borderBottomColor: "#ddd",
-        }}
-      >
-        <TouchableOpacity onPress={() => router.back()}>
-          <Ionicons name="arrow-back-outline" size={25} color="black" />
-        </TouchableOpacity>
-        <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-          Equity Expectation
-        </Text>
-        <Text style={{ fontSize: 18, color: "#2983DC" }}>6/6</Text>
+    <SafeAreaView className="flex-1 bg-white h-screen items-center justify-between">
+      {/* Header */}
+      <View className="header flex-row px-5 justify-between border-b-[0.5px] py-5 border-gray-300 w-full items-center">
+        <View className="flex-row items-center justify-center gap-3">
+          <TouchableOpacity onPress={() => router.back()}>
+            <Ionicons name="arrow-back-outline" size={25} color="black" />
+          </TouchableOpacity>
+          <Text className="text-xl font-semibold">Equity Expectation</Text>
+        </View>
+        <Text className="text-xl font-semibold text-[#2983DC]">6/6</Text>
       </View>
 
-      {/* Body Section */}
-      <View style={{ padding: 16, flex: 1 }}>
-        {/* Options */}
-        {["negotiable", "equal", "accept", "offer"].map((option) => (
-          <TouchableOpacity
-            key={option}
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginBottom: 16,
-            }}
-            onPress={() => setSelectedOption(option)}
-          >
-            <View
-              style={{
-                height: 20,
-                width: 20,
-                borderRadius: 10,
-                borderWidth: 2,
-                borderColor: selectedOption === option ? "#2983DC" : "#ccc",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
+      {/* Body */}
+      <View className="body w-full flex-1 px-5">
+        <View className="flex flex-col space-y-4">
+          {["negotiable", "equal", "accept", "offer"].map((option) => (
+            <TouchableOpacity
+              key={option}
+              onPress={() => setSelectedOption(option)}
+              className="flex py-3 flex-row items-center gap-3 space-x-2"
             >
-              {selectedOption === option && (
-                <View
-                  style={{
-                    height: 10,
-                    width: 10,
-                    borderRadius: 5,
-                    backgroundColor: "#2983DC",
-                  }}
-                />
-              )}
-            </View>
-            <Text
-              style={{
-                marginLeft: 8,
-                fontSize: 16,
-                textTransform: "capitalize",
-              }}
-            >
-              {option === "negotiable"
-                ? "Fully Negotiable"
-                : option === "equal"
-                ? "Equal Split"
-                : option === "accept"
-                ? "Willing to accept a specific equity range"
-                : "Willing to offer a specific equity range"}
-            </Text>
-          </TouchableOpacity>
-        ))}
+              <View
+                className={`w-5 h-5 rounded-full border-2 ${
+                  selectedOption === option
+                    ? "border-[#2983DC] bg-[#2983DC]"
+                    : "border-gray-500"
+                } flex items-center justify-center`}
+              >
+                {selectedOption === option && (
+                  <View className="w-2.5 h-2.5 rounded-full bg-white" />
+                )}
+              </View>
+              <Text className="text-lg tracking-wider text-black">
+                {optionLabels[option]}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
 
-        {/* Sliders */}
+        {/* Inputs for Custom Option */}
         {isCustomOption && (
-          <>
-            <EquitySlider
-              label="Minimum Equity"
-              value={equityRange.min}
-              onValueChange={(value) => handleSliderChange("min", value)}
-              disabled={!isCustomOption}
-            />
-            <EquitySlider
-              label="Maximum Equity"
-              value={equityRange.max}
-              onValueChange={(value) => handleSliderChange("max", value)}
-              disabled={!isCustomOption}
-            />
-          </>
+          <View className="flex-row gap-6 w-full">
+            {/* Minimum Equity Field */}
+            <View className="flex-1 my-2">
+              <Text className="mb-1 text-base font-semibold text-gray-700">
+                Minimum Equity
+              </Text>
+              <TextInput
+                value={equityRangePageFromUser.min}
+                onChangeText={(value) => handleInputChange("min", value)}
+                keyboardType="numeric"
+                placeholder="Enter min equity"
+                className="px-4 py-3 border border-gray-300 rounded-md text-lg font-medium text-gray-800 focus:border-[#2983DC] focus:ring-2 focus:ring-[#2983DC] focus:outline-none transition duration-200"
+              />
+            </View>
+
+            {/* Maximum Equity Field */}
+            <View className="flex-1 my-2">
+              <Text className="mb-1 text-base font-semibold text-gray-700">
+                Maximum Equity
+              </Text>
+              <TextInput
+                value={equityRangePageFromUser.max}
+                onChangeText={(value) => handleInputChange("max", value)}
+                keyboardType="numeric"
+                placeholder="Enter max equity"
+                className="px-4 py-3 border border-gray-300 rounded-md text-lg font-medium text-gray-800 focus:border-[#2983DC] focus:ring-2 focus:ring-[#2983DC] focus:outline-none transition duration-200"
+              />
+            </View>
+          </View>
         )}
       </View>
 
-      {/* Footer Section */}
-      <View style={{ padding: 16 }}>
+      {/* Footer */}
+      <View className="footer px-5 w-full">
         <CustomeButton
           onButtonPress={handleSaveProfile}
           title={
@@ -241,4 +206,4 @@ const equity_exceptation = () => {
   );
 };
 
-export default equity_exceptation;
+export default EquityExpectation;

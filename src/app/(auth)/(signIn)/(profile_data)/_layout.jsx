@@ -1,28 +1,58 @@
 import { View, Text } from "react-native";
 import React from "react";
 import { Stack } from "expo-router";
+import { Easing } from "react-native-reanimated"; // Import Easing for custom easing curves
 
 const ProfileDetailLayout = () => {
   return (
     <Stack
       screenOptions={{
         headerShown: false,
-        animation: "fade", // Use a simple fade animation for transitions
+        animation: "fade_from_bottom", // Use a modern fade-from-bottom transition
         transitionSpec: {
           open: {
-            animation: "timing",
+            animation: "spring", // Use spring animation for natural bouncing effect
             config: {
-              duration: 50, // Fast animation for opening
+              stiffness: 300, // Define stiffness for the spring (controls speed)
+              damping: 30, // Controls how much the animation 'bounces'
+              mass: 0.5, // Lighter mass for faster response
+              overshootClamping: false, // Allow overshoot for a natural feel
+              restDisplacementThreshold: 0.01, 
+              restSpeedThreshold: 0.01,
             },
           },
           close: {
             animation: "timing",
             config: {
-              duration: 50, // Fast animation for closing
+              duration: 200, // Slightly longer close for smooth exit
+              easing: Easing.out(Easing.ease), // Smooth easing for closing
             },
           },
         },
-        animationTypeForReplace: "pop", // Quick replace animation
+        animationTypeForReplace: "push", // Push new screens with a smooth sliding animation
+        cardStyleInterpolator: ({ current, layouts }) => ({
+          cardStyle: {
+            transform: [
+              {
+                translateX: current.progress.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [layouts.screen.width, 0], // Slide in from the right
+                }),
+              },
+              {
+                scale: current.progress.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0.95, 1], // Subtle zoom effect during transition
+                }),
+              },
+            ],
+            opacity: current.progress.interpolate({
+              inputRange: [0, 1],
+              outputRange: [0.5, 1], // Fade in effect
+            }),
+          },
+        }),
+        gestureEnabled: true, // Enable swipe gestures for smoother navigation
       }}
     >
       <Stack.Screen name="index" />

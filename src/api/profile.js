@@ -263,7 +263,6 @@ export const getUserDataProfile = async (userId) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ userId }),
       }
     );
     const data = await res.json();
@@ -274,16 +273,46 @@ export const getUserDataProfile = async (userId) => {
 };
 
 // 12 Update user when edit profile save button is clicked
-export const UpdateUserProfileInEditProfile = async (profileData) => {
+export const UpdateUserProfileInEditProfile = async ({
+  userId,
+  status,
+  profilePhoto,
+  birthday,
+  bio,
+  location,
+  skillSet,
+  industries,
+  priorStartupExperience,
+  commitmentLevel,
+  equityExpectation,
+  education, // Array of updated education data (objects)
+  experience, // Array of updated experience data (objects)
+  projects,
+}) => {
   try {
     const res = await fetch(
-      `https://backend-v2-osaw.onrender.com/api/user/${profileData.userId}`,
+      `https://backend-v2-osaw.onrender.com/api/user/${userId}`,
       {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(profileData),
+        body: JSON.stringify({
+          userId,
+          status,
+          profilePhoto,
+          birthday,
+          bio,
+          location,
+          skillSet,
+          industries,
+          priorStartupExperience,
+          commitmentLevel,
+          equityExpectation,
+          education,
+          experience,
+          projects,
+        }),
       }
     );
 

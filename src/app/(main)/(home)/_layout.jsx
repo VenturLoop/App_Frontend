@@ -6,6 +6,7 @@ const HomeLayout = () => {
   return (
     <Stack>
       <Stack.Screen name="message_invite" options={{ headerShown: false }} />
+      <Stack.Screen name="home_user" options={{ headerShown: false }} />
     </Stack>
   );
 };

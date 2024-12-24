@@ -16,6 +16,8 @@ import imagePath from "../../../../constants/imagePath";
 import CustomeButton from "../../../../components/buttons/CustomeButton";
 import { router } from "expo-router";
 import { Toast } from "react-native-toast-notifications";
+import { useDispatch } from "react-redux";
+import { setEducation } from "../../../../redux/slices/profileSlice";
 
 const FormInput = ({
   label,
@@ -53,6 +55,7 @@ const CircularCheckbox = ({ isChecked, onPress }) => (
 );
 
 const Education = () => {
+  const dispatch = useDispatch(); // Initialize dispatch
   const [formData, setFormData] = useState({
     degree: "",
     institution: "",
@@ -75,11 +78,11 @@ const Education = () => {
 
   const handleDateChange = (event, selectedDate) => {
     if (selectedDate) {
-      // Store the date as a Date object (not formatted as a string)
       const date = new Date(selectedDate);
+      const formattedDate = date.toLocaleDateString("en-GB"); // Format the date as DD/MM/YYYY
       setFormData((prev) => ({
         ...prev,
-        [showDatePicker.type]: date, // Save the Date object
+        [showDatePicker.type]: formattedDate, // Save the formatted date as a string
       }));
     }
     setShowDatePicker({ type: "", visible: false });
@@ -100,17 +103,29 @@ const Education = () => {
       !field_of_study ||
       !institution ||
       !startDate ||
-      // !endDate ||
       !isCurrentlyStudying
     ) {
       Toast.show("Please fill in all the details.", { type: "danger" });
       return;
     }
 
-    // Save details logic here
+    // Dispatch to Redux
+    const educationData = [
+      {
+        degree,
+        institution,
+        field_of_study,
+        isCurrentlyStudying,
+        startDate,
+        endDate,
+        description: formData.description,
+      },
+    ];
+
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
+      dispatch(setEducation(educationData)); // Dispatch the action
       Toast.show("Education added successfully!", { type: "success" });
       router.push("/edit_profile");
     }, 2000);
@@ -125,20 +140,17 @@ const Education = () => {
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
-            // paddingBottom: 100,
             gap: 15,
           }}
           className="bg-white py-4 px-3"
           keyboardShouldPersistTaps="handled"
         >
-          {/* Title/Position Input */}
           <FormInput
             placeholder="Degree"
             value={formData.degree}
             onChangeText={(text) => handleInputChange("degree", text)}
           />
 
-          {/* School/College Input */}
           <FormInput
             placeholder="School/College"
             value={formData.institution}
@@ -150,7 +162,6 @@ const Education = () => {
             onChangeText={(text) => handleInputChange("field_of_study", text)}
           />
 
-          {/* Currently Studying Checkbox */}
           <View className="flex-row items-center mb-4">
             <CircularCheckbox
               isChecked={formData.isCurrentlyStudying}
@@ -166,7 +177,6 @@ const Education = () => {
             </Text>
           </View>
 
-          {/* Start Date Picker */}
           <View className="gap-4 w-full">
             <Text className="font-semibold text-lg">Starting Date</Text>
             <TouchableOpacity
@@ -180,16 +190,12 @@ const Education = () => {
                   formData.startDate ? "text-[#3B4054]" : "text-[#7C8BA0]"
                 }`}
               >
-                {formData.startDate
-                  ? new Date(formData.startDate).toLocaleDateString("en-GB") // Format the date as DD/MM/YYYY
-                  : "DD/MM/YYYY"}
+                {formData.startDate ? formData.startDate : "DD/MM/YYYY"}
               </Text>
-
               <Image source={imagePath.calender} />
             </TouchableOpacity>
           </View>
 
-          {/* End Date Picker */}
           <View className="gap-4 w-full">
             <Text className="font-semibold text-lg">Ending Date</Text>
             <TouchableOpacity
@@ -212,25 +218,26 @@ const Education = () => {
                 {formData.isCurrentlyStudying
                   ? "Currently Studying"
                   : formData.endDate
-                  ? new Date(formData.endDate).toLocaleDateString("en-GB") // Format the date as DD/MM/YYYY
+                  ? formData.endDate
                   : "DD/MM/YYYY"}
               </Text>
-
               <Image source={imagePath.calender} />
             </TouchableOpacity>
           </View>
 
-          {/* DateTimePicker Modal */}
           {showDatePicker.visible && (
             <DateTimePicker
-              value={formData[showDatePicker.type] || new Date()}
+              value={
+                formData[showDatePicker.type]
+                  ? new Date(formData[showDatePicker.type])
+                  : new Date()
+              }
               mode="date"
               display={Platform.OS === "ios" ? "spinner" : "default"}
               onChange={handleDateChange}
             />
           )}
 
-          {/* Description Input */}
           <FormInput
             label="Description"
             placeholder="Add details about your experience"
@@ -240,8 +247,6 @@ const Education = () => {
             value={formData.description}
             onChangeText={(text) => handleInputChange("description", text)}
           />
-
-          {/* Footer with Save Button */}
 
           <CustomeButton
             onButtonPress={handleSaveDetails}

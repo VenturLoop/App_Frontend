@@ -9,15 +9,16 @@ import {
   ScrollView,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import CustomeButton from "../../../../../components/buttons/CustomeButton";
+import CustomeButton from "../../../../components/buttons/CustomeButton";
+import imagePath from "../../../../constants/imagePath";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { debounce } from "lodash"; // Debounce library to optimize the search input
 import { useDispatch } from "react-redux";
+import { setIndustries } from "../../../../redux/slices/profileSlice";
 import { Toast } from "react-native-toast-notifications";
-import { setIndustries } from "../../../../../redux/slices/profileSlice";
 
-const user_intrest = () => {
+const f_preferance_sector = () => {
   const [selectedTags, setSelectedTags] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredTags, setFilteredTags] = useState([]);
@@ -25,73 +26,36 @@ const user_intrest = () => {
 
   // Sample tags
   const tags = [
-    "AI/ML",
-    "AR/VR",
-    "Advertising",
-    "Agritech",
-    "Analysis",
-    "AudioTech",
-    "Auto Tech",
-    "BioTech",
-    "ClimateTech/CleanTech",
-    "Cloud Infrastructure",
-    "ConstructionTech",
-    "Creator/Passion Economy",
-    "Data Services",
-    "DeepTech",
-    "Developer Tools",
-    "Direct-to-Consumer DTC",
-    "E-commerse",
-    "Education",
-    "EnergyTech",
-    "Enterprise",
-    "Entertainment and Sports",
-    "Fashion",
-    "FinTech",
-    "Food and Beverage",
-    "Future of Work",
-    "Gaming",
-    "Generetive Tech/AI",
-    "Gig Economy",
-    "GovTech",
-    "Hardware",
-    "HealthTech",
-    "Human Capital/HRTech",
-    "Insurance",
-    "Internet of Things",
-    "LegalTech",
-    "Lodging/Hospitality",
-    "Logistics",
-    "Manufacturing",
-    "Marketplace",
-    "Material Science",
-    "Media/Content",
-    "Medica; Devices",
-    "Mental Health",
-    "Messaging",
-    "Parenting/Families",
-    "Payments",
-    "Pharmaceuticals",
-    "Productivity Tools",
-    "Real Estate/PropTech",
-    "Retail",
-    "Robotics",
-    "SaaS",
-    "Sales & CRM",
-    "Security",
-    "Semiconductors",
-    "Smart Cities/UrbanTech",
-    "SMB software",
-    "Social Impact",
-    "Social Network",
-    "Space",
-    "Supply Chain Tech",
-    "Transportation",
-    "Travel",
-    "Web3/Blockchain",
-    "Wellness & Fitness",
-    "Other",
+    "Agriculture and AgTech",
+  "Artificial Intelligence (AI)",
+  "Automotive and Electric Vehicles",
+  "Biotechnology",
+  "Blockchain and Cryptocurrencies",
+  "Clean Energy",
+  "Consumer Goods",
+  "Cybersecurity",
+  "Education (EdTech)",
+  "E-commerce",
+  "Fashion and Apparel",
+  "Fintech",
+  "Food and Beverage",
+  "Gaming",
+  "HealthTech",
+  "Legal Tech",
+  "Logistics and Supply Chain",
+  "Media and Entertainment",
+  "Real Estate",
+  "Retail",
+  "RegTech (Regulatory Technology)",
+  "Smart Cities",
+  "SaaS (Software as a Service)",
+  "Sports Tech",
+  "Sustainability and Environment",
+  "Telecommunications",
+  "Travel and Hospitality",
+  "Wealthtech"
   ];
+  
 
   // Debounce search functionality to optimize performance
   const handleSearch = debounce((query) => {
@@ -121,12 +85,13 @@ const user_intrest = () => {
       Toast.show("Please Select an option", { type: "error" });
       return;
     }
+    // Toast.show("Intrests Saved!", { type: "success" });
     setLoading(true);
-    Toast.show("Intrests Updated!", { type: "success" });
-    setLoading(true);
-    dispatch(setIndustries(selectedTags)); // Dispatch action to store skillSet in Redux
-    router.back();
-    setLoading(false);
+    // dispatch(setIndustries(selectedTags)); // Dispatch action to store skillSet in Redux
+    setTimeout(() => {
+      router.back();
+      setLoading(false);
+    }, 2000);
   };
 
   // Initialize filteredTags with all tags initially
@@ -136,22 +101,22 @@ const user_intrest = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white h-screen items-center justify-between">
-      <View className="header flex-row px-5 justify-between border-b-[0.5px] border-gray-300 py-4 w-full items-center">
+      <View className="header flex-row px-5 justify-between border-b-[0.5px] border-gray-300 py-5 w-full items-center">
         <View className="flex-row items-center justify-center gap-3">
           <TouchableOpacity onPress={() => router.back()}>
             <Ionicons name="arrow-back-outline" size={25} color="black" />
           </TouchableOpacity>
-          <Text className="text-xl font-semibold">Your Interests</Text>
+          <Text className="text-xl font-semibold">Preferred Sector</Text>
         </View>
-        <Text className="text-xl font-semibold text-[#2983DC]">3/6</Text>
+        {/* <Text className="text-xl font-semibold text-[#2983DC]">3/6</Text> */}
       </View>
       <View className="body w-full flex-1 px-6 p-4">
         {/* Search Bar */}
         <TextInput
-          placeholder="Search interests"
+          placeholder="Search geography"
           value={searchQuery}
           onChangeText={handleSearchChange}
-          className="w-full border text-lg font-medium border-[#2983DC] rounded-full px-4 py-3 my-4 text-gray-700"
+          className="w-full border text-lg font-medium border-[#2983DC] rounded-full px-8 py-3 my-4 text-gray-700"
         />
 
         {/* Tag List */}
@@ -191,11 +156,11 @@ const user_intrest = () => {
       <View className="footer px-5 w-full">
         <CustomeButton
           onButtonPress={handleSaveSkillsets}
-          title={loading ? <ActivityIndicator color="white" /> : "Continue"}
+          title={loading ? <ActivityIndicator color="white" /> : "Save"}
         />
       </View>
     </SafeAreaView>
   );
 };
 
-export default user_intrest;
+export default f_preferance_sector;

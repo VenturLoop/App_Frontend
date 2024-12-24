@@ -15,8 +15,21 @@ import { Ionicons } from "@expo/vector-icons";
 import imagePath from "../../../constants/imagePath";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { router } from "expo-router";
+import * as Location from "expo-location";
 import * as ImagePicker from "expo-image-picker";
 import { Toast } from "react-native-toast-notifications";
+import { useDispatch, useSelector } from "react-redux";
+import { Alert } from "react-native";
+import axios from "axios";
+import {
+  setBio,
+  setBirthday,
+  setUserLocation,
+  setProfilePhoto,
+} from "../../../redux/slices/profileSlice";
+import { updateUser } from "../../../redux/slices/userSlice";
+import { UpdateUserProfileInEditProfile } from "../../../api/profile";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const EditProfile = () => {
   const [birthdate, setBirthdate] = useState("");
@@ -24,6 +37,8 @@ const EditProfile = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [isMindset, setisMindset] = useState("");
   const [profileImage, setProfileImage] = useState(null);
+  const [location, setLocation] = useState("");
+  const [loadingLocation, setLoadingLocation] = useState(false);
   const [error, setError] = useState("");
   // Profile fields with initial values
   const [formData, setformData] = useState({
@@ -43,6 +58,21 @@ const EditProfile = () => {
 
   const [isLoading, setisLoading] = useState(false);
 
+  const dispatch = useDispatch();
+
+  const profileRedux = useSelector((state) => state.profile);
+  const userRedux = useSelector((state) => state.user);
+  const educationData = profileRedux.education;
+  const experienceData = profileRedux.experience;
+
+  console.log("profileRedux", profileRedux);
+  // console.log("userRedux In Edit", userRedux);
+  // console.log("userData", userData);
+  // console.log("educationData", educationData);
+  // console.log("experienceData", experienceData);
+
+  const userData = userRedux?.user?.profile;
+
   // Handle text input changes
   const handleInputChange = (id, newValue) => {
     setProfileFields((prevFields) =>
@@ -58,23 +88,75 @@ const EditProfile = () => {
     }, 500); // Wait for modal close animation before routing
   };
 
+  const getCurrentLocation = async () => {
+    setLoadingLocation(true);
+    try {
+      // Request location permissions
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.log("Permission to access location was denied");
+        setLoadingLocation(false);
+        return;
+      }
+
+      // Get current location
+      const userLocation = await Location.getCurrentPositionAsync({});
+      const { latitude, longitude } = userLocation.coords;
+
+      // Fetch city/state using Nominatim API
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`,
+        {
+          headers: {
+            "User-Agent": "YourAppName/1.0 (your-email@example.com)", // Add your app's name and email here
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if (data.address) {
+        const { city, state, city_district, country } = data.address;
+        dispatch(
+          setUserLocation(
+            `${city_district || ""}${city ? city : ""} ${state || ""} ${
+              country || ""
+            }`
+          )
+        );
+      } else {
+        console.log("Unable to fetch location details");
+        setLocation("Unknown City, Unknown State");
+      }
+    } catch (error) {
+      console.error("Error fetching location:", error);
+    } finally {
+      setLoadingLocation(false);
+    }
+  };
+
   const handleDateSelect = (event, date) => {
     if (date) {
       setSelectedDate(date);
       const formattedDate = date.toLocaleDateString("en-GB"); // Formats as dd/mm/yyyy
       setBirthdate(formattedDate);
+      dispatch(setBirthday(formattedDate));
     }
     setShowDatePicker(false);
   };
 
-  // Function to pick an image from gallery
+  // Function to pick an image from the file manager and upload it
   const pickImage = async () => {
     try {
       // Request permission to access the media library
-      const permissionResponse =
+      const { granted } =
         await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-      if (!permissionResponse.granted) {
+      if (!granted) {
         Alert.alert(
           "Permission Required",
           "Camera roll permissions are required to upload your profile photo."
@@ -83,22 +165,24 @@ const EditProfile = () => {
       }
 
       // Launch image picker
-      const imagePickerResult = await ImagePicker.launchImageLibraryAsync({
+      const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ["images"],
         allowsEditing: true,
         aspect: [1, 1],
         quality: 1,
       });
 
-      // Check if the user canceled the action
-      if (imagePickerResult.canceled) {
-        return; // Exit if no image was selected
+      if (result.canceled) {
+        console.log("Image picker canceled");
+        return;
       }
 
-      // Update the profile image with the selected image URI
-      if (imagePickerResult.assets && imagePickerResult.assets.length > 0) {
-        setProfileImage(imagePickerResult.assets[0].uri);
-        uploadImage(imagePickerResult.assets[0]);
+      // Update profile photo with the selected image URI
+      if (result.assets && result.assets.length > 0) {
+        const selectedImage = result.assets[0];
+        setProfileImage(selectedImage.uri);
+        dispatch(setProfilePhoto(selectedImage.uri));
+        await uploadImage(selectedImage);
       } else {
         console.warn("No assets found in image picker result.");
       }
@@ -111,32 +195,37 @@ const EditProfile = () => {
     }
   };
 
-  // Upload image to the server
+  // Function to upload image to the server
   const uploadImage = async (image) => {
-    console.log("Uploading image", image);
-    const imageFormData = new FormData();
-    imageFormData.append("file", {
-      uri: image.uri,
-      name: "profile-photo.jpg",
-      type: "image/jpeg",
-    });
-    console.log("Uploading image2", imageFormData);
-    let config = {
-      method: "post",
-      maxBodyLength: Infinity,
-      url: `${baseUrl}/api/fileUpload`, // Make sure to update `baseUrl`
-      data: imageFormData,
-    };
-
     try {
-      const response = await axios.request(config);
-      if (response.data.status && response.data.data) {
-        const url = response.data.data[0].url;
+      const formData = new FormData();
+      formData.append("file", {
+        uri: image.uri,
+        name: "profile-photo.jpg",
+        type: "image/jpeg",
+      });
+
+      const config = {
+        method: "POST",
+        url: `https://backend-v2-osaw.onrender.com/api/fileUpload`, // Ensure baseUrl is defined
+        data: formData,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+
+      const response = await axios(config);
+
+      if (response.data?.status && response.data?.data?.length > 0) {
+        const imageUrl = response.data.data[0].url;
         setformData((prevFormData) => ({
           ...prevFormData,
-          image: url,
+          image: imageUrl,
         }));
-        setError(""); // Reset error
+        setError(""); // Clear any previous errors
+      } else {
+        console.warn("Unexpected response format:", response.data);
+        setError("Failed to upload image. Please try again.");
       }
     } catch (error) {
       console.error("Error uploading image:", error);
@@ -144,13 +233,70 @@ const EditProfile = () => {
     }
   };
 
-  const handleSave = () => {
+  const handleSave2 = async () => {
+    // Fetch the profile state at the top level of the component, not inside the function
+    const {
+      status,
+      profilePhoto,
+      birthday,
+      bio,
+      location,
+      skillSet,
+      industries,
+      priorStartupExperience,
+      commitmentLevel,
+      equityExpectation,
+      education,
+      experience,
+      projects,
+    } = profileRedux;
+
     setisLoading(true);
-    setTimeout(() => {
+    try {
+      // Make sure all fields are filled (you can customize the validations based on requirements)
+      // if (!profileData.name || !profileData.email || !profileData.location) {
+      //   Toast.error("Please fill in all fields.");
+      //   return;
+      // }
+
+      const userId = await AsyncStorage.getItem("userLocalId");
+
+      if (!userId) {
+        Toast.error("User ID not found");
+        return;
+      }
+
+      // Call API to save profile data
+      const result = await UpdateUserProfileInEditProfile({
+        userId,
+        status,
+        profilePhoto,
+        birthday,
+        bio,
+        location,
+        skillSet,
+        industries,
+        priorStartupExperience,
+        commitmentLevel,
+        equityExpectation,
+        education,
+        experience,
+        projects,
+      });
+
+      console.log(result);
+      // If update is successful
+      if (result.success) {
+        router.navigate("/(main)/(tabs)/profile");
+        Toast.show("Profile updated successfully", { type: "success" });
+      } else {
+        Toast.show(result.message, { type: "success" });
+      }
+    } catch (error) {
+      Toast.error("Error saving profile. Please try again.");
+    } finally {
       setisLoading(false);
-      router.navigate("/(main)/(tabs)/profile");
-      Toast.show("Profile updated successfully", { type: "success" });
-    }, 2000);
+    }
   };
 
   return (
@@ -164,7 +310,7 @@ const EditProfile = () => {
           <Text className="text-xl font-semibold">Edit Profile</Text>
         </View>
 
-        <TouchableOpacity onPress={handleSave}>
+        <TouchableOpacity onPress={handleSave2}>
           {isLoading ? (
             <ActivityIndicator color="#2983DC" />
           ) : (
@@ -218,7 +364,7 @@ const EditProfile = () => {
               className="border-y-[0.5px] px-3  font-semibold border-gray-300 py-4 flex flex-row justify-between items-center"
             >
               <Text className="text-gray-500  font-semibold">
-                Looking for Co-founder
+                {profileRedux.status ? profileRedux.status : userData.status}
               </Text>
               <Ionicons
                 name="chevron-forward-outline"
@@ -260,10 +406,13 @@ const EditProfile = () => {
               <View className="gap-2">
                 <Text className="text-gray-500 font-semibold">Name</Text>
                 <TextInput
-                  placeholder=""
-                  className="bg-[#2982dc14] w-full text-gray-500 font-semibold px-6  py-4 rounded-xl "
-                  keyboardType="email-address"
-                  // Add value
+                  value={userRedux.name ? userRedux.name : userRedux.user.name} // Controlled component
+                  onChangeText={(newName) => {
+                    dispatch(updateUser({ field: "name", value: newName }));
+                  }} // Call function on value change
+                  // placeholder="Enter your name"
+                  className="bg-[#2982dc14] w-full text-gray-500 font-semibold px-6 py-4 rounded-xl"
+                  keyboardType="default" // Use appropriate keyboard type
                 />
               </View>
               {/* Date of Birth */}
@@ -281,7 +430,9 @@ const EditProfile = () => {
                         birthdate ? "text-gray-500" : "text-gray-400"
                       }`}
                     >
-                      {birthdate ? birthdate : "DD/MM/YYYY"}
+                      {profileRedux.birthday
+                        ? profileRedux.birthday
+                        : userData.birthday}
                     </Text>
                     <Image source={imagePath.calender} />
                   </TouchableOpacity>
@@ -304,8 +455,8 @@ const EditProfile = () => {
                   multiline
                   numberOfLines={4}
                   maxLength={200}
-                  value={isMindset}
-                  onChangeText={(text) => setisMindset(text)}
+                  value={profileRedux.bio}
+                  onChangeText={(text) => dispatch(setBio(text))}
                   className="bg-[#2982dc14] w-full flex flex-row items-center justify-between placeholder:text-[#7C8BA0] px-6 rounded-lg py-4"
                   // Accessible label for screen readers
                   accessibilityLabel="Mindset input field"
@@ -320,16 +471,30 @@ const EditProfile = () => {
                 )}
               </View>
 
-              {/* Location */}
-              <View className="gap-3">
-                <Text className="text-gray-500 font-semibold">Location</Text>
-                <TextInput
-                  placeholder="Change location "
-                  className="bg-[#2982dc14] w-full placeholder:text-[#7C8BA0] px-6 py-4 rounded-lg p-2"
-                  readOnly
-                  value="Chor Bazar, Delhi, India"
-                  keyboardType="email-address"
-                />
+              {/* Location Input */}
+              <View className="gap-4 w-full">
+                <Text className="font-semibold text-lg">Location</Text>
+                <TouchableOpacity
+                  className="bg-[#2982dc14] w-full flex flex-row items-center justify-between placeholder:text-[#7C8BA0] px-6 rounded-lg py-4"
+                  onPress={getCurrentLocation}
+                >
+                  <Text
+                    className={`text-md ${
+                      profileRedux.location
+                        ? "text-[#3B4054]"
+                        : "text-[#7C8BA0]"
+                    }`}
+                  >
+                    {profileRedux.location
+                      ? profileRedux.location
+                      : "Search Location"}
+                  </Text>
+                  {loadingLocation ? (
+                    <ActivityIndicator size="small" color="#2983DC" />
+                  ) : (
+                    <Image source={imagePath.location} />
+                  )}
+                </TouchableOpacity>
               </View>
             </View>
 
@@ -349,7 +514,9 @@ const EditProfile = () => {
                       Choose sector/industries
                     </Text>
                     <Text className="text-gray-400  text-sm ">
-                      AR/VR, Advertising
+                      {profileRedux.industries
+                        ? profileRedux.industries
+                        : userData.industries}
                     </Text>
                   </View>
                   <Ionicons
@@ -370,7 +537,9 @@ const EditProfile = () => {
                       My Skillset
                     </Text>
                     <Text className="text-gray-400  text-sm ">
-                      Web developer, Marketing
+                      {profileRedux.skillSet
+                        ? profileRedux.skillSet
+                        : userData.skillSet}
                     </Text>
                   </View>
                   <Ionicons
@@ -391,7 +560,9 @@ const EditProfile = () => {
                       Prior Startup experience
                     </Text>
                     <Text className="text-gray-400  text-sm ">
-                      Ready to go full time with the right co founder
+                      {profileRedux.priorStartupExperience
+                        ? profileRedux.priorStartupExperience
+                        : userData.priorStartupExperience}
                     </Text>
                   </View>
                   <Ionicons
@@ -412,7 +583,9 @@ const EditProfile = () => {
                       Commitment Level
                     </Text>
                     <Text className="text-gray-400  text-sm ">
-                      No prior startup experience
+                      {profileRedux.commitmentLevel
+                        ? profileRedux.commitmentLevel
+                        : userData.commitmentLevel}
                     </Text>
                   </View>
                   <Ionicons
@@ -432,7 +605,11 @@ const EditProfile = () => {
                     <Text className="text-gray-500 font-semibold">
                       Equity Expectation
                     </Text>
-                    <Text className="text-gray-400  text-sm ">Equity</Text>
+                    <Text className="text-gray-400  text-sm ">
+                      {profileRedux.equityExpectation
+                        ? profileRedux.equityExpectation
+                        : userData.equityExpectation}
+                    </Text>
                   </View>
                   <Ionicons
                     name="chevron-forward-outline"
@@ -444,9 +621,10 @@ const EditProfile = () => {
             </View>
 
             {/* Fourth section */}
+            {/* Fourth section */}
             <View className="gap-3 mt-5">
-              <View className=" flex flex-row justify-between pr-2 items-center ">
-                <Text className="text-gray-600  font-semibold">
+              <View className="flex flex-row justify-between pr-2 items-center">
+                <Text className="text-gray-600 font-semibold">
                   My Education
                 </Text>
                 <TouchableOpacity
@@ -459,34 +637,57 @@ const EditProfile = () => {
                   <Ionicons name="add-outline" size={20} color="#2983DC" />
                 </TouchableOpacity>
               </View>
-              {/* Education bar */}
-              <View className="flex flex-row border-y-[0.5px] py-4 px-1 border-gray-300">
-                <View className="bg-blue-50 w-16 h-16 rounded-xl flex items-center justify-center shadow-sm">
-                  <Ionicons name="school-outline" size={28} color="#2983DC" />
-                </View>
-                <View className="px-4">
-                  <Text className="text-gray-800 font-semibold">
-                    Rajiv Gandhi Institute of Knowledge Technologies
-                  </Text>
-                  <Text className="text-sm text-gray-500 font-medium">
-                    Bachelores in Technology - BTech
-                  </Text>
-                  <View className="flex flex-row gap-3">
-                    <Text className="text-sm text-gray-500 font-medium">
-                      Oct 2016-Dec 2020
-                    </Text>
-                    <Text className="text-sm text-gray-500 font-medium">
-                      4 yrs 3 Months
-                    </Text>
+
+              {/* Displaying education items */}
+              {profileRedux.education && profileRedux.education.length > 0 ? (
+                profileRedux.education.map((item, index) => (
+                  <View
+                    key={index}
+                    className="flex flex-row border-y-[0.5px] py-4 px-1 border-gray-300"
+                  >
+                    <View className="bg-blue-50 w-16 h-16 rounded-xl flex items-center justify-center shadow-sm">
+                      <Ionicons
+                        name="school-outline"
+                        size={28}
+                        color="#2983DC"
+                      />
+                    </View>
+                    <View className="px-4">
+                      <Text className="text-gray-800 font-semibold">
+                        {item.institution}
+                      </Text>
+                      <Text className="text-sm text-gray-500 font-medium">
+                        {item.degree} - {item.field_of_study}
+                      </Text>
+                      <View className="flex flex-row gap-3">
+                        <Text className="text-sm text-gray-500 font-medium">
+                          {item.startDate} - {item.endDate || "Present"}
+                        </Text>
+                        <Text className="text-sm text-gray-500 font-medium">
+                          {item.isCurrentlyStudying
+                            ? "Currently Studying"
+                            : item.endDate
+                            ? `${
+                                new Date(item.endDate).getFullYear() -
+                                new Date(item.startDate).getFullYear()
+                              } years`
+                            : "N/A"}
+                        </Text>
+                      </View>
+                    </View>
                   </View>
-                </View>
-              </View>
+                ))
+              ) : (
+                <Text className="text-gray-500 font-medium">
+                  No education data available
+                </Text>
+              )}
             </View>
 
             {/* Fifth section */}
             <View className="gap-3 mt-5">
-              <View className=" flex flex-row justify-between pr-2 items-center ">
-                <Text className="text-gray-600  font-semibold">
+              <View className="flex flex-row justify-between pr-2 items-center">
+                <Text className="text-gray-600 font-semibold">
                   My Experience
                 </Text>
                 <TouchableOpacity
@@ -499,34 +700,94 @@ const EditProfile = () => {
                   <Ionicons name="add-outline" size={20} color="#2983DC" />
                 </TouchableOpacity>
               </View>
-              {/* Education bar */}
+
+              {/* Experience List */}
               <View className="flex flex-row border-y-[0.5px] py-4 border-gray-300">
-                <Text className="text-gray-800 font-normal text-sm">
-                  No Experience listed
-                </Text>
+                {/* Check if experience exists */}
+                {profileRedux.experience &&
+                profileRedux.experience.length > 0 ? (
+                  profileRedux.experience.map((exp, index) => (
+                    <View key={index} className="flex flex-col">
+                      <Text className="text-gray-800 font-semibold text-sm">
+                        {exp.project_name} at {exp.company_name}
+                      </Text>
+                      <Text className="text-gray-600 text-xs">
+                        {exp.startDate
+                          ? `Start Date: ${formatDate(exp.startDate)}`
+                          : "Start Date: Not provided"}
+                      </Text>
+                      <Text className="text-gray-600 text-xs">
+                        {exp.endDate
+                          ? `End Date: ${formatDate(exp.endDate)}`
+                          : "End Date: Ongoing"}
+                      </Text>
+                    </View>
+                  ))
+                ) : (
+                  <Text className="text-gray-800 font-normal text-sm">
+                    No Experience listed
+                  </Text>
+                )}
               </View>
             </View>
 
             {/* sixth section */}
             <View className="gap-3 mt-5">
-              <View className=" flex flex-row justify-between pr-2 items-center ">
-                <Text className="text-gray-600  font-semibold">My Project</Text>
+              <View className="flex flex-row justify-between pr-2 items-center">
+                <Text className="text-gray-600 font-semibold">My Project</Text>
                 <TouchableOpacity
-                  onPress={() => {
-                    handleNavigation("/myproject");
-                  }}
+                  onPress={() => handleNavigation("/myproject")}
                   className="flex flex-row font-semibold items-center justify-center"
                 >
                   <Text className="text-[#2983DC] font-medium">Add</Text>
                   <Ionicons name="add-outline" size={20} color="#2983DC" />
                 </TouchableOpacity>
               </View>
-              {/* Education bar */}
-              <View className="flex flex-row border-y-[0.5px] py-4 border-gray-300">
-                <Text className="text-gray-800 font-normal text-sm">
-                  No Project
-                </Text>
-              </View>
+
+              {/* Displaying Project Data */}
+              <ScrollView showsVerticalScrollIndicator={false}>
+                {profileRedux.project && profileRedux.project.length > 0 ? (
+                  profileRedux.project.map((project, index) => (
+                    <View
+                      key={index}
+                      className="flex flex-row border-y-[0.5px] py-4 px-1 border-gray-300"
+                    >
+                      <View className="bg-blue-50 w-16 h-16 rounded-xl flex items-center justify-center shadow-sm">
+                        <Ionicons
+                          name="laptop-outline"
+                          size={28}
+                          color="#2983DC"
+                        />
+                      </View>
+                      <View className="px-4">
+                        <Text className="text-gray-800 font-semibold">
+                          {project.project_name}
+                        </Text>
+                        <Text className="text-sm text-gray-500 font-medium">
+                          <TouchableOpacity
+                            onPress={() =>
+                              handleNavigation(project.project_link)
+                            }
+                          >
+                            <Text className="text-[#2983DC]">
+                              {project.project_link}
+                            </Text>
+                          </TouchableOpacity>
+                        </Text>
+                        <Text className="text-sm text-gray-500 font-medium">
+                          {project.startDate}
+                        </Text>
+                      </View>
+                    </View>
+                  ))
+                ) : (
+                  <View className="flex flex-row border-y-[0.5px] py-4 px-1 border-gray-300">
+                    <Text className="text-gray-800 font-normal text-sm">
+                      No Project
+                    </Text>
+                  </View>
+                )}
+              </ScrollView>
             </View>
           </View>
         </View>

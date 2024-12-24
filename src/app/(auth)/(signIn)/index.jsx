@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateUser } from "../../../redux/slices/userSlice";
 import { Toast } from "react-native-toast-notifications";
 import { signInwithEmail } from "../../../api/profile";
+import { setEmail, setName } from "../../../redux/slices/profileSlice";
 
 const Index = () => {
   const [isChecked, setChecked] = useState(false);
@@ -31,8 +32,6 @@ const Index = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const user = useSelector((state) => state.user); // Get the user data from the Redux store
 
-  console.log("User: ", user);
-
   const handleNavigation = (route) => {
     setTimeout(() => {
       router.push(route);
@@ -44,7 +43,6 @@ const Index = () => {
     setErrorMessage(""); // Clear error message when user starts typing
   };
 
-  console.log(formData);
 
   const validateForm = () => {
     const { name, email } = formData;
@@ -74,12 +72,14 @@ const Index = () => {
       setLoading(true); // Start the loading state
       try {
         const res = await signInwithEmail(formData);
-        console.log(res);
+     
 
         if (res.success) {
           handleNavigation("/(signIn)/otp");
-          dispatch(updateUser({ field: "name", value: formData.name }));
-          dispatch(updateUser({ field: "email", value: formData.email }));
+          dispatch(updateUser({ field: "name", value: formData.name })); // in userSlice
+          dispatch(setName(formData.name)); // in profileSlice
+          dispatch(updateUser({ field: "email", value: formData.email })); //in userSlice
+          dispatch(setEmail(formData.email)); // in profileSlice
           Toast.show(res.message, { type: "success" });
         } else {
           Toast.show(res.message, {
@@ -96,7 +96,6 @@ const Index = () => {
     }
   };
 
-  // console.log(userInfo?.name);
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -148,16 +147,22 @@ const Index = () => {
             <TextInput
               placeholder="Name"
               value={formData.name}
-              onChangeText={(value) => handleInputChange("name", value)}
+              onChangeText={(value) =>
+                handleInputChange("name", value.trimStart())
+              } // Trim leading spaces for name
               className="bg-[#2982dc14] w-full placeholder:font-medium px-6 py-5 rounded-lg text-gray-500"
+              autoCapitalize="words" // Capitalize first letter of each word
             />
             <TextInput
               placeholder="Email Address"
               value={formData.email}
-              onChangeText={(value) => handleInputChange("email", value)}
+              onChangeText={(value) => handleInputChange("email", value.trim())} // Trim all extra spaces
               className="bg-[#2982dc14] w-full placeholder:font-medium px-6 py-5 rounded-lg text-gray-500"
               keyboardType="email-address"
+              autoCapitalize="none" // Prevent auto-capitalization for emails
+              autoCorrect={false} // Disable auto-correct for email input
             />
+
             {/* {errorMessage ? (
               <Text className="text-red-500 text-sm">{errorMessage}</Text>
             ) : null} */}

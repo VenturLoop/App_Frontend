@@ -73,17 +73,22 @@ import {
   Dimensions,
   FlatList,
 } from "react-native";
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import { useFocusEffect } from "@react-navigation/native"; // Importing useFocusEffect
 import Request from "../../../components/message/Request";
 import UserMessages from "../../../components/message/UserMessages";
 import PreviewProfile from "../../../components/profile/PreviewProfile";
 import MyProfile from "../../../components/profile/MyProfile";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserDataProfile } from "../../../api/profile";
+import { setUser } from "../../../redux/slices/userSlice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width } = Dimensions.get("window"); // Get device width for swiping logic
 
 const profile = () => {
   const [activeTab, setActiveTab] = useState("message"); // Default active tab
+  const [PageLoading, setPageLoading] = useState(false);
   const tabs = [
     { key: "myprofile", label: "My Profile", component: <MyProfile /> },
     {
@@ -102,6 +107,8 @@ const profile = () => {
       flatListRef.current?.scrollToIndex({ index: 0, animated: true });
     }, [])
   );
+
+
 
   // Handle tab change when tab buttons are clicked
   const handleTabChange = (key) => {

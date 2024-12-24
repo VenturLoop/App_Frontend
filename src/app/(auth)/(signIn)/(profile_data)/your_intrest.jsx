@@ -1,31 +1,22 @@
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
   SafeAreaView,
   TouchableOpacity,
-  Image,
   TextInput,
   ActivityIndicator,
   ScrollView,
 } from "react-native";
-import React, { useState, useEffect } from "react";
-import CustomeButton from "../../../../components/buttons/CustomeButton";
-import imagePath from "../../../../constants/imagePath";
-import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { debounce } from "lodash"; // Debounce library to optimize the search input
 import { useDispatch } from "react-redux";
-import { setIndustries } from "../../../../redux/slices/profileSlice";
+import { router } from "expo-router";
 import { Toast } from "react-native-toast-notifications";
+import { debounce } from "lodash";
+import CustomeButton from "../../../../components/buttons/CustomeButton";
+import { setIndustries } from "../../../../redux/slices/profileSlice";
 
 const YourInterest = () => {
-  const [selectedTags, setSelectedTags] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filteredTags, setFilteredTags] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch();
-
-  // Sample tags
   const tags = [
     "AI/ML",
     "AR/VR",
@@ -95,49 +86,65 @@ const YourInterest = () => {
     "Other",
   ];
 
-  // Debounce search functionality to optimize performance
-  const handleSearch = debounce((query) => {
-    const filtered = tags.filter((tag) =>
-      tag.toLowerCase().includes(query.toLowerCase())
-    );
-    setFilteredTags(filtered);
-  }, 300); // 300ms debounce time
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredTags, setFilteredTags] = useState(tags);
+  const [loading, setLoading] = useState(false);
 
-  // Update search query and call the handleSearch
+  const dispatch = useDispatch();
+
+  // Debounced search handler
+  const handleSearch = useCallback(
+    debounce((query) => {
+      const filtered = tags.filter((tag) =>
+        tag.toLowerCase().includes(query.toLowerCase())
+      );
+      setFilteredTags(filtered);
+    }, 300),
+    []
+  );
+
+  // Update the search query and trigger search
   const handleSearchChange = (query) => {
     setSearchQuery(query);
-    handleSearch(query); // Call debounced search function
+    handleSearch(query);
   };
 
+  // Toggle tag selection
   const toggleTag = (tag) => {
-    if (selectedTags.includes(tag)) {
-      setSelectedTags(selectedTags.filter((t) => t !== tag));
-    } else {
-      setSelectedTags([...selectedTags, tag]);
-    }
+    setSelectedTags((prevTags) =>
+      prevTags.includes(tag)
+        ? prevTags.filter((t) => t !== tag)
+        : [...prevTags, tag]
+    );
   };
 
-  const handleSaveSkillsets = () => {
-    if (!selectedTags) {
-      Toast.show("Please Select an option", { type: "error" });
+  // Save selected industries to Redux and navigate
+  const handleSaveSkillsets = async () => {
+    if (selectedTags.length === 0) {
+      Toast.show("Please select at least one interest", { type: "error" });
       return;
     }
     setLoading(true);
-    Toast.show("Intrests Saved!", { type: "success" });
-    setLoading(true);
-    dispatch(setIndustries(selectedTags)); // Dispatch action to store skillSet in Redux
-    router.navigate("/commitment");
-    setLoading(false);
+    try {
+      dispatch(setIndustries(selectedTags)); // Save to Redux
+      Toast.show("Interests saved!", { type: "success" });
+      router.navigate("/commitment");
+    } catch (error) {
+      Toast.show("An error occurred, please try again.", { type: "error" });
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // Initialize filteredTags with all tags initially
   useEffect(() => {
+    // Initialize filteredTags on component mount
     setFilteredTags(tags);
   }, []);
 
   return (
     <SafeAreaView className="flex-1 bg-white h-screen items-center justify-between">
-      <View className="header flex-row px-5 justify-between border-b-[0.5px] border-gray-300 py-4 w-full items-center">
+      <View className="header flex-row px-5 justify-between border-b-[0.5px] border-gray-300 py-5 w-full items-center">
         <View className="flex-row items-center justify-center gap-3">
           <TouchableOpacity onPress={() => router.back()}>
             <Ionicons name="arrow-back-outline" size={25} color="black" />
@@ -146,7 +153,8 @@ const YourInterest = () => {
         </View>
         <Text className="text-xl font-semibold text-[#2983DC]">3/6</Text>
       </View>
-      <View className="body w-full flex-1 px-6 p-4">
+
+      <View className="body w-full flex-1 px-6 py-4">
         {/* Search Bar */}
         <TextInput
           placeholder="Search interests"
@@ -157,8 +165,8 @@ const YourInterest = () => {
 
         {/* Tag List */}
         <ScrollView
-          className="flex-1 w-full "
-          showsHorizontalScrollIndicator={false}
+          className="flex-1 w-full"
+          showsVerticalScrollIndicator={false}
         >
           <View className="flex flex-row mt-4 flex-wrap gap-2">
             {filteredTags.length > 0 ? (
@@ -189,6 +197,7 @@ const YourInterest = () => {
           </View>
         </ScrollView>
       </View>
+
       <View className="footer px-5 w-full">
         <CustomeButton
           onButtonPress={handleSaveSkillsets}

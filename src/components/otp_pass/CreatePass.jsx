@@ -19,6 +19,7 @@ import imagePath from "../../constants/imagePath";
 import CustomeButton from "../buttons/CustomeButton";
 import { Ionicons } from "@expo/vector-icons"; // For password visibility toggle icon
 import { Toast } from "react-native-toast-notifications";
+import { setPassword } from "../../redux/slices/profileSlice";
 
 const CreatePass = () => {
   const [newPassword, setNewPassword] = useState("");
@@ -97,6 +98,7 @@ const CreatePass = () => {
         // Dispatch action without interfering with UI animations
         setTimeout(() => {
           dispatch(updateUser({ field: "password", value: newPassword }));
+          dispatch(setPassword(newPassword));
           handleNavigation("/add_basic_details");
         }, 100); // Minimal delay to ensure smooth transition
       } else {

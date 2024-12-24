@@ -1,73 +1,8 @@
 import { Stack, usePathname, useRouter } from "expo-router";
 import { useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { setRoute } from "../../redux/slices/routeSlice"; // Assuming a Redux slice is defined
-import { setSignup } from "@/src/redux/slices/userSlice";
-import * as SecureStore from "expo-secure-store";
 
 const AuthLayout = () => {
-  const router = useRouter();
-  const path = usePathname();
-  const dispatch = useDispatch();
-  const { currentRoute } = useSelector((state) => state.route); // Redux route state
-  const { isLogin, isSignup } = useSelector((state) => state.user);
-
-  // Save the current route to both Redux and AsyncStorage
-  const saveRoute = useCallback(async () => {
-    if (path && path !== currentRoute) {
-      try {
-        await AsyncStorage.setItem("lastVisitedRoute", path);
-        dispatch(setRoute(path)); // Update Redux state
-      } catch (error) {
-        console.error("Error saving route:", error);
-      }
-    }
-  }, [path, currentRoute, dispatch]);
-
-  console.log("CurrentRoute", currentRoute);
-
-  useEffect(() => {
-    saveRoute();
-  }, [path, saveRoute]);
-
-  useEffect(() => {
-    const checkLoginStatus = async () => {
-      try {
-        const token = await SecureStore.getItemAsync("userSignInToken");
-        dispatch(setSignup({ isSignup: !!token, token }));
-      } catch (error) {
-        console.error("Error checking login status:", error);
-      } finally {
-        SplashScreen.hideAsync();
-      }
-    };
-
-    checkLoginStatus();
-  }, [dispatch]);
-
-  // Compare Redux route with AsyncStorage route and navigate if they match
-  useEffect(() => {
-    const navigateToLastRoute = async () => {
-      try {
-        const savedRoute = await AsyncStorage.getItem("lastVisitedRoute");
-        console.log("SaveRoute:", saveRoute);
-        if (
-          savedRoute &&
-          savedRoute === currentRoute &&
-          !isLogin &&
-          !isSignup
-        ) {
-          router.replace(savedRoute); // Navigate only if routes match
-        }
-      } catch (error) {
-        console.error("Error retrieving last route:", error);
-      }
-    };
-
-    navigateToLastRoute();
-  }, [currentRoute, isLogin, isSignup, router]);
-
   return (
     <Stack
       screenOptions={{

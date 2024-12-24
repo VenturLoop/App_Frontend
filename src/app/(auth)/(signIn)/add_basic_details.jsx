@@ -29,6 +29,7 @@ import {
   updateUser,
 } from "../../../redux/slices/userSlice";
 import * as SecureStore from "expo-secure-store";
+import { setReferalCode, setUserId } from "../../../redux/slices/profileSlice";
 
 const AddBasicDetails = () => {
   const [birthdate, setBirthdate] = useState("");
@@ -68,7 +69,6 @@ const AddBasicDetails = () => {
       // Request location permissions
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
-        console.log("Permission to access location was denied");
         setLoadingLocation(false);
         return;
       }
@@ -101,7 +101,6 @@ const AddBasicDetails = () => {
           }`
         );
       } else {
-        console.log("Unable to fetch location details");
         setLocation("Unknown City, Unknown State");
       }
     } catch (error) {
@@ -145,17 +144,22 @@ const AddBasicDetails = () => {
         location
       );
 
-      console.log(result);
-
       if (result?.success) {
         dispatch(setSignup({ isSignup: true, signupToken: result.jwtToken }));
         dispatch(
           updateUser({ field: "referalCode", value: result.referralCode })
         );
         dispatch(updateUser({ field: "userId", value: result.user.id }));
+        dispatch(setUserId(result.user.id));
+        dispatch(setReferalCode(result.referralCode));
         dispatch(setUser(result.user));
         await SecureStore.setItemAsync("userSignupToken", result.jwtToken);
-        Toast.show("Details added successfully", { type: "success" });
+        // await SecureStore.setItemAsync("userId", result.user.id);
+
+        // Toast.show(
+        //   "Your details have been successfully updated. Proceed with confidence.",
+        //   { type: "success" }
+        // );
         router.push("/(profile_data)");
       } else {
         Toast.show(result?.message || "Please try again.", { type: "error" });
@@ -167,8 +171,6 @@ const AddBasicDetails = () => {
       setLoading(false); // Stop loading state
     }
   };
-
-  // console.log("signupToken : " + signupToken);
 
   return (
     <SafeAreaView className="flex-1 bg-white">

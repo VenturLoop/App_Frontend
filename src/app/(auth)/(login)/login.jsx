@@ -13,14 +13,14 @@ import {
 import React, { useState } from "react";
 import { Link, useRouter } from "expo-router";
 import { useDispatch } from "react-redux";
-import { setLogin } from "../../../redux/slices/userSlice"; // Adjust import path as needed
+import { setLogin, setUser, updateUser } from "../../../redux/slices/userSlice"; // Adjust import path as needed
 import imagePath from "../../../constants/imagePath";
 import CustomeButton from "../../../components/buttons/CustomeButton";
-import TextBox from "react-native-password-eye";
 import { Toast } from "react-native-toast-notifications";
 import { Ionicons } from "@expo/vector-icons";
 import { userLogin } from "../../../api/profile";
 import * as SecureStore from "expo-secure-store";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Login = () => {
   const router = useRouter();
@@ -31,6 +31,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setshowPassword] = useState(false);
 
+  // Email validation function
   const isValidEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
@@ -64,9 +65,15 @@ const Login = () => {
       if (result.success) {
         // Update Redux state with login info
         dispatch(setLogin({ isLogin: true, loginToken: result.token }));
-        // Navigate to the home page or dashboard
+        dispatch(updateUser({ field: "userId", value: result.user.id }));
+        dispatch(setUser(result.user));
+
+        // Store token in SecureStore and AsyncStorage
         await SecureStore.setItemAsync("userToken", result.token);
-        handleNavigation("/(tabs)"); 
+        await AsyncStorage.setItem("userLocalToken", result.token);
+        await AsyncStorage.setItem("userLocalId", result.user.id.toString());
+
+        handleNavigation("/(tabs)");
         Toast.show("Login successful!", { type: "success" });
       } else {
         Toast.show(result.message, { type: "error" });
@@ -78,6 +85,12 @@ const Login = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleEmailChange = (input) => {
+    // Remove spaces and trim the input
+    const formattedEmail = input.trim();
+    setEmail(formattedEmail);
   };
 
   return (
@@ -107,34 +120,14 @@ const Login = () => {
           </View>
 
           {/* Login Inputs */}
-          <View className=" justify-start flex-1 gap-4">
-            {/* <Auth/> */}
-
-            {/* <TouchableOpacity
-              // onPress={() => handleNavigation("/(profile_data)")}
-              className="border border-[#2983DC] rounded-xl w-full justify-center py-4 px-6 flex-row items-center"
-            >
-              <Image
-                className="w-6 h-6 mr-3"
-                resizeMode="contain"
-                source={imagePath.google}
-              />
-              <Text className="text-[#61677D] font-medium text-lg">Google</Text>
-            </TouchableOpacity>
-            <View className="flex-row items-center my-4">
-              <View className="flex-1 h-px bg-gray-300" />
-              <Text className="mx-2 text-lg font-semibold text-gray-400">
-                Or
-              </Text>
-              <View className="flex-1 h-px bg-gray-300" />
-            </View> */}
+          <View className="justify-start flex-1 gap-4">
             <TextInput
               placeholder="Email Address"
-              className="bg-[#2982dc14] w-full px-6 py-5  font-medium text-lg rounded-lg text-slate-700"
+              className="bg-[#2982dc14] w-full px-6 py-5 font-medium text-lg rounded-lg text-slate-700"
               underlineColorAndroid={"transparent"}
               keyboardType="email-address"
               value={email}
-              onChangeText={setEmail}
+              onChangeText={handleEmailChange}
             />
 
             {/* Password Input */}

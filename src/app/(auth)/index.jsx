@@ -1,25 +1,38 @@
-import { router, usePathname, useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { Text, View, TouchableOpacity, Image } from "react-native";
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  ActivityIndicator,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Swiper from "react-native-swiper";
 import CustomeButton from "../../components/buttons/CustomeButton";
 import { splashScreensWelcome } from "../../constants/splashScreen";
-import LoginSignupModel from "../../components/models/Login_Signup";
 import AuthModel from "../../components/models/AuthModel";
+import { router } from "expo-router";
+
+// Custom loading screen component with animation
+const LoadingScreen = () => (
+  <SafeAreaView className="flex-1 justify-center items-center bg-white">
+    <ActivityIndicator size="large" color="#2983DC" />
+    <Text className="text-lg mt-4 text-[#2983DC]">Loading...</Text>
+  </SafeAreaView>
+);
 
 const Onboarding = () => {
   const swiperRef = useRef(null);
-  // const path = usePathname();
-  // console.log("router", path);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // Added loading state
 
   const isLastSlide = activeIndex === splashScreensWelcome.length - 1;
 
-  const toggleModal = () => {
-    setModalVisible(!isModalVisible);
-  };
+  // Toggle modal visibility
+  const toggleModal = () => setModalVisible(!isModalVisible);
+
+  // Handle next button click
   const handleNext = () => {
     if (isLastSlide) {
       toggleModal();
@@ -28,28 +41,34 @@ const Onboarding = () => {
     }
   };
 
+  // Handle navigation after modal closes
   const handleNavigation = (route) => {
     if (isModalVisible) {
       setModalVisible(false);
       setTimeout(() => {
-        router.push(route);
-      }, 200); // Wait for modal close animation before routing
+        router.push(route); // Navigate after modal close
+      }, 200);
     }
   };
 
-  const handleSignUpfunction = () => {
-    handleNavigation("/(signIn)");
-  };
+  // Handle sign-up and login navigation
+  const handleSignUp = () => handleNavigation("/(signIn)");
+  const handleLogin = () => handleNavigation("/login");
 
-  const handleLoginfunction = () => {
-    handleNavigation("/login");
-  };
+  // Simulate loading state for onboarding screen
+  useEffect(() => {
+    setTimeout(() => setIsLoading(false), 2000); // Simulating 2-second load
+  }, []);
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <SafeAreaView
       className={`flex-1 h-screen ${
-        isModalVisible ? " rounded-t-3xl  " : ""
-      } bg-white `}
+        isModalVisible ? "rounded-t-3xl" : ""
+      } bg-white`}
     >
       {/* Swiper Component */}
       <Swiper
@@ -97,16 +116,12 @@ const Onboarding = () => {
       {/* Login/Signup Modal */}
       <AuthModel
         isModalVisible={isModalVisible}
-        handleModalVisibility={() => {
-          setModalVisible(false);
-        }}
-        handleLogin={handleLoginfunction}
-        handleSignup={handleSignUpfunction}
+        handleModalVisibility={() => setModalVisible(false)}
+        handleLogin={handleLogin}
+        handleSignup={handleSignUp}
       />
     </SafeAreaView>
   );
 };
 
 export default Onboarding;
-
-// TODO: Add a other function which return the loading page with venturloop gif with animation

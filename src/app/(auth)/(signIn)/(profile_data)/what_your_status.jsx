@@ -1,94 +1,107 @@
+import React, { useState } from "react";
 import {
   View,
   Text,
   SafeAreaView,
   TouchableOpacity,
-  Image,
   ActivityIndicator,
 } from "react-native";
-import React, { useState } from "react";
 import CustomeButton from "../../../../components/buttons/CustomeButton";
-import imagePath from "../../../../constants/imagePath";
 import { router } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { setStatus } from "../../../../redux/slices/profileSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Toast } from "react-native-toast-notifications";
+import { setStatus } from "../../../../redux/slices/profileSlice";
 
-const what_your_status = () => {
-  const [selected, setSelected] = useState("");
-  const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch();
+const WhatYourStatus = () => {
+  const [selected, setSelected] = useState(""); // Track selected label
+  const [loading, setLoading] = useState(false); // Track loading state
+  const dispatch = useDispatch(); // Dispatch action to Redux
 
-  const user = useSelector((state) => state.user); // Get the user data from the Redux store
-
-  console.log("User: ", user);
-
+  // Options for status selection
   const options = [
-    { id: "co-founder", label: "Looking for a co-founder" },
-    { id: "team-mates", label: "Looking for team Mates" },
-    { id: "startups", label: "Looking for startups" },
-    { id: "investors", label: "Looking for Investors" },
+    { label: "Looking for a co-founder" },
+    { label: "Looking for team mates" },
+    { label: "Looking for startups" },
+    { label: "Looking for investors" },
   ];
 
-  const handleStatusSave = () => {
+  // Handle saving the selected status
+  const handleStatusSave = async () => {
     if (!selected) {
-      Toast.show("Please Select option", { type: "error" });
-      return
-    };
+      Toast.show("Please select an option", { type: "error" });
+      return;
+    }
     setLoading(true);
-    Toast.show("Status Saved!", { type: "success" });
-    dispatch(setStatus(selected));
-    router.navigate("/skillset");
-    setLoading(false);
+    try {
+      // Dispatch the status to Redux
+      dispatch(setStatus(selected));
+
+      // Show success message
+      Toast.show("Status saved successfully!", { type: "success" });
+
+      // Navigate to the next page
+      router.navigate("/skillset");
+    } catch (error) {
+      Toast.show("Error saving status, please try again.", { type: "error" });
+    } finally {
+      setLoading(false); // Ensure loading is reset after the operation
+    }
   };
+
   return (
-    <SafeAreaView className="flex-1 bg-white  h-screen items-center justify-between">
-      <View className="header flex-row px-5 justify-between border-b-[0.5px] border-gray-500 py-4 w-full  items-center">
-        <View className="flex-row items-center justify-center gap-3">
+    <SafeAreaView className="flex-1 bg-white h-screen items-center justify-between">
+      {/* Header */}
+      <View className="header flex-row px-5 justify-between border-b-[0.5px] border-gray-500 py-5 w-full items-center">
+        <View className="flex-row items-center gap-3">
           <TouchableOpacity onPress={() => router.back()}>
             <Ionicons name="arrow-back-outline" size={25} color="black" />
           </TouchableOpacity>
           <Text className="text-xl font-semibold">
-            What you are looking for?
+            What are you looking for?
           </Text>
         </View>
         <Text className="text-xl font-semibold text-[#2983DC]">1/6</Text>
       </View>
-      <View className="body w-full flex-1">
-        <View className="flex flex-col  space-y-4 p-4">
+
+      {/* Body */}
+      <View className="body pt-2 w-full flex-1 px-4">
+        <View className="flex flex-col space-y-4">
           {options.map((option) => (
             <TouchableOpacity
-              key={option.id}
-              onPress={() => setSelected(option.id)}
-              className="flex py-3 flex-row items-center gap-3 space-x-2"
+              key={option.label} // Use label as the key
+              onPress={() => setSelected(option.label)} // Set the selected label directly
+              className="flex py-3 flex-row items-center gap-3"
             >
               <View
                 className={`w-5 h-5 rounded-full border-2 ${
-                  selected === option.id
+                  selected === option.label
                     ? "border-[#2983DC] bg-[#2983DC]"
                     : "border-gray-500"
                 } flex items-center justify-center`}
               >
-                {selected === option.id && (
+                {selected === option.label && (
                   <View className="w-2.5 h-2.5 rounded-full bg-white" />
                 )}
               </View>
-              <Text className=" text-lg tracking-wider text-black">
+              <Text className="text-lg tracking-wider text-black">
                 {option.label}
               </Text>
             </TouchableOpacity>
           ))}
         </View>
       </View>
+
+      {/* Footer */}
       <View className="footer px-5 w-full">
         <CustomeButton
           onButtonPress={handleStatusSave}
           title={loading ? <ActivityIndicator color="white" /> : "Continue"}
+          // style="mb-4"
         />
       </View>
     </SafeAreaView>
   );
 };
 
-export default what_your_status;
+export default WhatYourStatus;

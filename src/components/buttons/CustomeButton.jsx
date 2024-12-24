@@ -13,7 +13,7 @@ const CustomeButton = ({
     <TouchableOpacity
       onPress={onButtonPress}
       className={` rounded-xl ${
-        style ? style : "my-10"
+        style ? style : "my-6"
       } w-full flex justify-center items-center py-4 ${
         background === true ? "bg-gray-500 opacity-50" : "bg-[#2983DC]"
       } text-center`}

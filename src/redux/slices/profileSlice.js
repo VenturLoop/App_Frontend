@@ -2,6 +2,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  userId: "",
+  name: "",
+  email: "",
+  password: "",
+  referalCode: "",
   status: "", // New field for status
   profilePhoto: "", // New field for profile photo URL
   birthday: "", // New field for birthday
@@ -21,6 +26,21 @@ const userProfileSlice = createSlice({
   name: "userProfile",
   initialState,
   reducers: {
+    setUserId: (state, action) => {
+      state.userId = action.payload; // Handle user ID
+    },
+    setName: (state, action) => {
+      state.name = action.payload; // Handle name
+    },
+    setEmail: (state, action) => {
+      state.email = action.payload; // Handle email
+    },
+    setPassword: (state, action) => {
+      state.password = action.payload; // Handle password
+    },
+    setReferalCode: (state, action) => {
+      state.referalCode = action.payload; // Handle referral code
+    },
     setStatus: (state, action) => {
       state.status = action.payload; // Handle status
     },
@@ -33,7 +53,7 @@ const userProfileSlice = createSlice({
     setBio: (state, action) => {
       state.bio = action.payload; // Handle bio text
     },
-    setLocation: (state, action) => {
+    setUserLocation: (state, action) => {
       state.location = action.payload; // Handle location
     },
     setSkillSet: (state, action) => {
@@ -60,8 +80,7 @@ const userProfileSlice = createSlice({
     setProjects: (state, action) => {
       state.projects = action.payload; // Handle projects data (array of objects)
     },
-    // Action to submit the entire user profile to the API
-    submitProfileData: (state, action) => {
+    submitProfileData: (state) => {
       const {
         status,
         profilePhoto,
@@ -78,35 +97,37 @@ const userProfileSlice = createSlice({
         projects,
       } = state;
 
-      return {
-        ...state,
-        apiCallData: {
-          status,
-          profilePhoto,
-          birthday,
-          bio,
-          location,
-          skillSet,
-          industries,
-          priorStartupExperience,
-          commitmentLevel,
-          equityExpectation,
-          education,
-          experience,
-          projects,
-        },
+      // Prepare API call data
+      state.apiCallData = {
+        status,
+        profilePhoto,
+        birthday,
+        bio,
+        location,
+        skillSet,
+        industries,
+        priorStartupExperience,
+        commitmentLevel,
+        equityExpectation,
+        education,
+        experience,
+        projects,
       };
     },
-    // Action to create minimal API call data
   },
 });
 
 export const {
+  setUserId,
+  setName,
+  setEmail,
+  setPassword,
+  setReferalCode,
   setStatus,
   setProfilePhoto,
   setBirthday,
   setBio,
-  setLocation,
+  setUserLocation,
   setSkillSet,
   setIndustries,
   setPriorStartupExperience,
